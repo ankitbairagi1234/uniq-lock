@@ -174,14 +174,63 @@ class TotalRetailerListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final type = title.toLowerCase().contains("active")
-        ? RetailerListType.active
-        : title.toLowerCase().contains("today")
+    // final type = title.toLowerCase().contains("active")
+    //     ? RetailerListType.active
+    //     : title.toLowerCase().contains("today")
+    //     ? RetailerListType.today
+    //     : RetailerListType.total;
+
+    final lower = title.toLowerCase();
+
+    // final isDistributor = lower.contains("distributor") && !lower.contains("sub");
+    // final isSubDistributor = lower.contains("sub distributor");
+
+    print("lower is >>>>>>>>>>${lower}");
+    final isDistributor = lower.contains("distributor") && !lower.contains("sub");
+    final isSubDistributor = lower.contains("sub distributor");
+    final isSubRetailer = lower.contains("sub-retailer"); // 👈 FIRST CHECK
+    final isRetailer = lower.contains("retailer") && !isSubRetailer;
+    // final isRetailer = lower.contains("retailer");
+    // final isSubRetailer = lower.contains("sub-retailer");
+    print("is Sub retailr >>>>>>>>>${isSubRetailer}");
+
+    // final status = lower.contains("active")
+    //     ? "active"
+    //     : lower.contains("deactive")
+    //     ? "inactive"
+    //     : null;
+    final status = lower.contains("deactive")
+        ? "inactive"   // 👈 API expects this
+        : lower.contains("active")
+        ? "active"
+        : null;
+
+    final type = lower.contains("today")
         ? RetailerListType.today
         : RetailerListType.total;
 
-    final c = Get.put(RetailerController(listType: type), tag: title);
 
+    // final c = Get.put(RetailerController(listType: type), tag: title);
+
+    final c = Get.put(
+      RetailerController(
+        listType: type,
+        vendorType: isDistributor
+            ? "distributor"
+            : isSubDistributor
+            ? "sub_distributor"
+            : isSubRetailer
+            ? "retailer"   // ✅ FIXED
+            : isRetailer
+            ? "vendor"
+            : null,
+
+        status: status,
+        tag: title, // 🔥 ADD THIS
+
+      ),
+      tag: title,
+    );
     return Scaffold(
       backgroundColor: const Color(0xFFF6F8FF),
       body: Column(
@@ -266,6 +315,8 @@ class TotalRetailerListPage extends StatelessWidget {
               }
 
               return ListView.builder(
+                controller: c.scrollController, // 🔥 ADD THIS
+
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: c.filteredList.length,
                 itemBuilder: (_, i) => RetailerCard(

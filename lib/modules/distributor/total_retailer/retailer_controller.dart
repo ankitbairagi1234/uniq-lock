@@ -259,12 +259,27 @@ enum RetailerListType { total, active, today }
 class RetailerController extends GetxController {
   final RetailerListType listType;
 
-  RetailerController({this.listType = RetailerListType.total});
+  final String? vendorType;
+  final String? status;
+  final String? tag;
+
+
+  RetailerController({
+    this.listType = RetailerListType.total,
+    this.vendorType,
+    this.status,
+    this.tag,
+  });
+  // RetailerController({this.listType = RetailerListType.total});
 
   RxList<RetailerModel> retailerList = <RetailerModel>[].obs;
   RxList<RetailerModel> filteredList = <RetailerModel>[].obs;
 
   final searchCtrl = TextEditingController();
+
+  int page = 1;
+  final int limit = 20;
+  bool hasMore = true;
 
   final isLoading = false.obs;
   final isLoadingMore = false.obs; // ✅ restore
@@ -283,11 +298,20 @@ class RetailerController extends GetxController {
 
   String get distributorId => distributorController.userId.value;
 
+  final ScrollController scrollController = ScrollController();
+
   @override
   void onInit() {
     super.onInit();
     searchCtrl.addListener(_search);
     debugPrint("🆔 DISTRIBUTOR ID:INIT- $distributorId");
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 200) {
+        fetchRetailers(loadMore: true);
+      }
+    });
 
     fetchRetailers();
   }
@@ -333,74 +357,209 @@ class RetailerController extends GetxController {
   //   }
   // }
 
-  Future<void> fetchRetailers() async {
-    print("📡 API CALL: get retailer list");
-    isLoading.value = true;
+  // Future<void> fetchRetailers() async {
+  //   print("📡 API CALL: get retailer list");
+  //   isLoading.value = true;
+  //
+  //   debugPrint("🆔 DISTRIBUTOR ID: $distributorId");
+  //
+  //   try {
+  //     final list = await _service.getRetailersFromHierarchy(distributorId);
+  //
+  //     debugPrint("📊 TOTAL LIST FROM API: ${list.length}");
+  //
+  //     List<DistributorRetailerItem> filtered = list;
+  //
+  //     /// ✅ ACTIVE FILTER
+  //     if (listType == RetailerListType.active) {
+  //       filtered = list.where((e) {
+  //         debugPrint("🔎 ACTIVE CHECK => ${e.retailerName} | status: ${e.status}");
+  //         return e.status == true;
+  //       }).toList();
+  //
+  //       debugPrint("✅ ACTIVE FILTER COUNT: ${filtered.length}");
+  //     }
+  //
+  //     /// ✅ TODAY FILTER (FIXED 🔥)
+  //     if (listType == RetailerListType.today) {
+  //       final now = DateTime.now();
+  //       final today = DateTime(now.year, now.month, now.day);
+  //
+  //       debugPrint("📅 TODAY DATE: $today");
+  //
+  //       filtered = list.where((e) {
+  //         if (e.createdAt.isEmpty) {
+  //           debugPrint("❌ EMPTY DATE => ${e.retailerName}");
+  //           return false;
+  //         }
+  //
+  //         DateTime? created;
+  //
+  //         try {
+  //           created = DateTime.parse(e.createdAt).toLocal(); // 🔥 IMPORTANT FIX
+  //         } catch (err) {
+  //           debugPrint("❌ DATE PARSE ERROR => ${e.createdAt}");
+  //           return false;
+  //         }
+  //
+  //         final createdDate =
+  //         DateTime(created.year, created.month, created.day);
+  //
+  //         debugPrint(
+  //             "🧪 CHECK => ${e.retailerName} | API: ${e.createdAt} | PARSED: $createdDate");
+  //
+  //         return createdDate == today;
+  //       }).toList();
+  //
+  //       debugPrint("✅ TODAY FILTER COUNT: ${filtered.length}");
+  //     }
+  //
+  //     retailerList.assignAll(
+  //       filtered.map((e) => RetailerModel.fromApi(e)).toList(),
+  //     );
+  //
+  //     debugPrint("📦 FINAL LIST COUNT: ${retailerList.length}");
+  //
+  //     _search();
+  //   } catch (e) {
+  //     debugPrint("❌ Retailer fetch error: $e");
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 
-    debugPrint("🆔 DISTRIBUTOR ID: $distributorId");
+  // Future<void> fetchRetailers({bool loadMore = false}) async {
+  //   if (loadMore) {
+  //     if (!hasMore || isLoadingMore.value) return;
+  //     isLoadingMore.value = true;
+  //     page++;
+  //   } else {
+  //     isLoading.value = true;
+  //     page = 1;
+  //     hasMore = true;
+  //   }
+  //
+  //   try {
+  //     List<DistributorRetailerItem> list = [];
+  //
+  //     if (listType == RetailerListType.total) {
+  //       list = await _service.getAllRetailers(page: page, limit: limit);
+  //     } else if (listType == RetailerListType.active) {
+  //       list = await _service.getActiveRetailersNew(page: page, limit: limit);
+  //     } else if (listType == RetailerListType.today) {
+  //       // list = await _service.getRetailersFromHierarchy(distributorId);
+  //       list = await _service.getAllTodayRetailers(
+  //         page: page,
+  //         limit: limit,
+  //         todayOnly: true, // 🔥 USE SAME API
+  //       );
+  //     }
+  //
+  //     debugPrint("📊 PAGE $page COUNT: ${list.length}");
+  //
+  //     if (list.length < limit) {
+  //       hasMore = false;
+  //     }
+  //
+  //     final mapped =
+  //     list.map((e) => RetailerModel.fromApi(e)).toList();
+  //
+  //     if (loadMore) {
+  //       retailerList.addAll(mapped);
+  //     } else {
+  //       retailerList.assignAll(mapped);
+  //     }
+  //
+  //     _search();
+  //   } catch (e) {
+  //     debugPrint("❌ PAGINATION ERROR: $e");
+  //   } finally {
+  //     isLoading.value = false;
+  //     isLoadingMore.value = false;
+  //   }
+  // }
+  Future<void> fetchRetailers({bool loadMore = false}) async {
+    if (loadMore) {
+      if (!hasMore || isLoadingMore.value) return;
+      isLoadingMore.value = true;
+      page++;
+    } else {
+      isLoading.value = true;
+      page = 1;
+      hasMore = true;
+    }
 
     try {
-      final list = await _service.getRetailersFromHierarchy(distributorId);
+      List<DistributorRetailerItem> list = [];
 
-      debugPrint("📊 TOTAL LIST FROM API: ${list.length}");
+      /// 🔥 DISTRIBUTOR / SUB DISTRIBUTOR (NEW FLOW)
+      if (listType == RetailerListType.total && vendorType != null) {
+        debugPrint("🟢 VENDOR TYPE: $vendorType | STATUS: $status");
 
-      List<DistributorRetailerItem> filtered = list;
-
-      /// ✅ ACTIVE FILTER
-      if (listType == RetailerListType.active) {
-        filtered = list.where((e) {
-          debugPrint("🔎 ACTIVE CHECK => ${e.retailerName} | status: ${e.status}");
-          return e.status == true;
-        }).toList();
-
-        debugPrint("✅ ACTIVE FILTER COUNT: ${filtered.length}");
+        list = await _service.getVendors(
+          type: vendorType!, // distributor / sub_distributor
+          status: status,    // active / deactive / null
+          page: page,
+          limit: limit,
+        );
       }
 
-      /// ✅ TODAY FILTER (FIXED 🔥)
-      if (listType == RetailerListType.today) {
-        final now = DateTime.now();
-        final today = DateTime(now.year, now.month, now.day);
+      /// 🔥 NORMAL TOTAL RETAILERS
+      else if (listType == RetailerListType.total) {
+        debugPrint("🟡 NORMAL TOTAL RETAILERS");
 
-        debugPrint("📅 TODAY DATE: $today");
-
-        filtered = list.where((e) {
-          if (e.createdAt.isEmpty) {
-            debugPrint("❌ EMPTY DATE => ${e.retailerName}");
-            return false;
-          }
-
-          DateTime? created;
-
-          try {
-            created = DateTime.parse(e.createdAt).toLocal(); // 🔥 IMPORTANT FIX
-          } catch (err) {
-            debugPrint("❌ DATE PARSE ERROR => ${e.createdAt}");
-            return false;
-          }
-
-          final createdDate =
-          DateTime(created.year, created.month, created.day);
-
-          debugPrint(
-              "🧪 CHECK => ${e.retailerName} | API: ${e.createdAt} | PARSED: $createdDate");
-
-          return createdDate == today;
-        }).toList();
-
-        debugPrint("✅ TODAY FILTER COUNT: ${filtered.length}");
+        list = await _service.getAllRetailers(
+          page: page,
+          limit: limit,
+        );
       }
 
-      retailerList.assignAll(
-        filtered.map((e) => RetailerModel.fromApi(e)).toList(),
-      );
+      /// 🔥 ACTIVE RETAILERS
+      else if (listType == RetailerListType.active) {
+        debugPrint("🟢 ACTIVE RETAILERS");
+
+        list = await _service.getActiveRetailersNew(
+          page: page,
+          limit: limit,
+        );
+      }
+
+      /// 🔥 TODAY RETAILERS
+      else if (listType == RetailerListType.today) {
+        debugPrint("📅 TODAY RETAILERS");
+
+        list = await _service.getAllTodayRetailers(
+          page: page,
+          limit: limit,
+          todayOnly: true,
+        );
+      }
+
+      debugPrint("📊 PAGE $page COUNT: ${list.length}");
+
+      /// ✅ PAGINATION CHECK
+      if (list.length < limit) {
+        hasMore = false;
+      }
+
+      final mapped =
+      list.map((e) => RetailerModel.fromApi(e)).toList();
+
+      /// ✅ ADD / REPLACE DATA
+      if (loadMore) {
+        retailerList.addAll(mapped);
+      } else {
+        retailerList.assignAll(mapped);
+      }
 
       debugPrint("📦 FINAL LIST COUNT: ${retailerList.length}");
 
       _search();
     } catch (e) {
-      debugPrint("❌ Retailer fetch error: $e");
+      debugPrint("❌ PAGINATION ERROR: $e");
     } finally {
       isLoading.value = false;
+      isLoadingMore.value = false;
     }
   }
   /// ✅ SEARCH (same as before)
@@ -484,6 +643,8 @@ class RetailerController extends GetxController {
   @override
   void onClose() {
     searchCtrl.dispose();
+    scrollController.dispose(); // 🔥 ADD THIS
+
     super.onClose();
   }
 }

@@ -371,13 +371,6 @@ import 'package:zlock_smart_finance/modules/distributor/total_retailer/view_reta
 //   }
 // }
 
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
-import 'package:zlock_smart_finance/app/constants/app_colors.dart';
-import 'package:zlock_smart_finance/modules/distributor/total_retailer/retailer_controller.dart';
-import 'package:zlock_smart_finance/modules/distributor/total_retailer/retailer_model.dart';
-import 'package:zlock_smart_finance/modules/distributor/total_retailer/view_retailer_page.dart';
 
 class RetailerCard extends StatelessWidget {
   final RetailerModel retailer;
@@ -495,10 +488,16 @@ class RetailerCard extends StatelessWidget {
 
               ElevatedButton(
                 onPressed: () =>
-                    Get.to(() => ViewRetailerPage(
-                        retailerId: retailer.customId,
-                        retailer: retailer, // ✅ PASS FULL DATA
-                    )),
+                    // Get.to(() => ViewRetailerPage(
+                    //     retailerId: retailer.customId,
+                    //     retailer: retailer, // ✅ PASS FULL DATA
+                    // )),
+                Get.to(() => ViewRetailerPage(
+                  retailerId: retailer.customId,
+                  retailer: retailer,
+                  controllerTag: controller.tag, // 🔥 ADD THIS
+                )),
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF3D5CFF),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),

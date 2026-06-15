@@ -92,6 +92,7 @@ class AllTransactionsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 itemCount: c.transactions.length + (c.isLoadingMore.value ? 1 : 0),
                 itemBuilder: (_, i) {
+                  print("Transaaction length>>>>>>${c.transactions.length}");
                   if (i == c.transactions.length) {
                     return const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),

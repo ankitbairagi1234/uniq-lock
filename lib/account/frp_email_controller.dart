@@ -11,7 +11,7 @@ class FrpEmailController extends GetxController {
   RxBool isSaving = false.obs;
 
   final FrpEmailService service = FrpEmailService();
-  final RetailerController retailerController = Get.find();
+  final RetailerDashboardController retailerController = Get.find();
 
   // Future<void> saveEmail() async {
   //   final email = emailController.text.trim();

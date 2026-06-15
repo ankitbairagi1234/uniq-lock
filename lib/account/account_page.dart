@@ -12,6 +12,8 @@ import 'package:zlock_smart_finance/app/constants/app_colors.dart';
 import 'package:zlock_smart_finance/app/utils/common_bottom_button.dart';
 import 'package:zlock_smart_finance/modules/auth/role/role_screen.dart';
 import 'package:zlock_smart_finance/modules/distributor/dashboard/distributor_dash_controller.dart';
+import 'package:zlock_smart_finance/modules/retailer/key_balance/key_transactions_page.dart';
+import 'package:zlock_smart_finance/modules/retailer/wallet_transaction/wallet_transaction_page.dart';
 import 'package:zlock_smart_finance/modules/two_factor_auth/all_auth_setup/change_password.dart';
 
 import '../modules/retailer/dashboard/retailer_dashboard_controller.dart';
@@ -160,7 +162,7 @@ class RetailAccountPage extends StatelessWidget {
                     icon: "assets/accounts/update.svg", // jo bhi icon ho
                     title: "App Update",
                     onTap: () {
-                      final dash = Get.find<RetailerController>();
+                      final dash = Get.find<RetailerDashboardController>();
                       controller.checkForUpdateManual(dash.appUpdateData);
                     },
                   ),
@@ -185,17 +187,30 @@ class RetailAccountPage extends StatelessWidget {
                     },
                     // onTap: () => controller.onMenuTap("/customEmail"),
                   ),
+                  // SettingsTile(
+                  //   icon: "assets/accounts/wishlist.svg",
+                  //   title: "Wishlist",
+                  //   // onTap: () => controller.onMenuTap("/wishlist"),
+                  //   onTap: () {
+                  //     // Get.to(WishlistPage());
+                  //     Get.snackbar(
+                  //       "Wishlist",
+                  //       "Coming Soon",
+                  //       snackPosition: SnackPosition.BOTTOM,
+                  //     );
+                  //   },
+                  // ),
                   SettingsTile(
-                    icon: "assets/accounts/wishlist.svg",
-                    title: "Wishlist",
+                    icon: "assets/accounts/wallet.svg",
+                    title: "Wallet",
                     // onTap: () => controller.onMenuTap("/wishlist"),
                     onTap: () {
-                      // Get.to(WishlistPage());
-                      Get.snackbar(
-                        "Wishlist",
-                        "Coming Soon",
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
+                      Get.to(WalletTransactionPage());
+                      // Get.snackbar(
+                      //   "Wallet",
+                      //   "Coming Soon",
+                      //   snackPosition: SnackPosition.BOTTOM,
+                      // );
                     },
                   ),
 

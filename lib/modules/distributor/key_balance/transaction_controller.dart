@@ -115,7 +115,7 @@ class TransactionController extends GetxController {
   final _service = KeyTransactionsService();
 
   int _page = 1;
-  final int _limit = 20;
+  final int _limit = 100;
   int _total = 0;
 
   // ✅ FILTER TYPE (credit / debit)
@@ -199,19 +199,95 @@ class TransactionController extends GetxController {
   }
 
   // ---------------- MAPPING (SAME LOGIC 🔥) ----------------
+  // List<TransactionModel> _mapTransactions(List<KeyLedgerItem> items) {
+  //   return items
+  //       .where((e) {
+  //     final source = (e.source ?? "").toLowerCase();
+  //     // return source == "transfer";
+  //     return source == "transfer" || source == "direct";
+  //   })
+  //       .where((e) {
+  //     if (filterType.isEmpty) return true;
+  //     final type = (e.type ?? "").toLowerCase();
+  //     return type == filterType;
+  //   })
+  //       .map((e) {
+  //     final isCredit = (e.type ?? "").toLowerCase() == "credit";
+  //
+  //     final dt = DateTime.tryParse(e.createdAt ?? "")?.toLocal();
+  //
+  //     String dateStr = "-";
+  //     String timeStr = "-";
+  //
+  //     if (dt != null) {
+  //       final now = DateTime.now();
+  //       final today = DateTime(now.year, now.month, now.day);
+  //       final d0 = DateTime(dt.year, dt.month, dt.day);
+  //
+  //       final diff = today.difference(d0).inDays;
+  //
+  //       if (diff == 0) {
+  //         dateStr = "Today";
+  //       } else if (diff == 1) {
+  //         dateStr = "Yesterday";
+  //       } else {
+  //         dateStr = "${dt.day}-${dt.month}-${dt.year}";
+  //       }
+  //
+  //       // time → 02.35 pm format
+  //       final hour = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
+  //       final minute = dt.minute.toString().padLeft(2, '0');
+  //       final ampm = dt.hour >= 12 ? "pm" : "am";
+  //
+  //       timeStr = "$hour.$minute $ampm";
+  //     }
+  //
+  //     final amountStr = "${isCredit ? "+" : "-"}₹${e.totalUnits}";
+  //
+  //     final name = e.counterpartyName.isNotEmpty == true
+  //         ? e.counterpartyName
+  //         : "Transaction";
+  //
+  //     final byText = isCredit
+  //         ? "Sent By: $name"
+  //         : "Received By: $name";
+  //
+  //     return TransactionModel(
+  //       isCredit: isCredit,
+  //       partyName: name,
+  //       date: dateStr,
+  //       time: timeStr,
+  //       amount: amountStr,
+  //       byText: byText,
+  //     );
+  //   })
+  //       .toList();
+  // }
+
   List<TransactionModel> _mapTransactions(List<KeyLedgerItem> items) {
-    return items
-        .where((e) {
+    debugPrint("📦 TOTAL API ITEMS: ${items.length}");
+
+    final filtered = items.where((e) {
       final source = (e.source ?? "").toLowerCase();
-      return source == "transfer";
-    })
-        .where((e) {
-      if (filterType.isEmpty) return true;
       final type = (e.type ?? "").toLowerCase();
-      return type == filterType;
-    })
-        .map((e) {
+
+      debugPrint("👉 ITEM => type: $type | source: $source");
+
+      // ✅ FIX: include direct also
+      final isValidSource = source == "transfer" || source == "direct";
+
+      final isValidType =
+      filterType.isEmpty ? true : type == filterType;
+
+      return isValidSource && isValidType;
+    }).toList();
+
+    debugPrint("✅ FILTERED COUNT: ${filtered.length}");
+
+    return filtered.map((e) {
       final isCredit = (e.type ?? "").toLowerCase() == "credit";
+
+      debugPrint("💰 FINAL => ${e.type} | ${e.source} | units: ${e.totalUnits}");
 
       final dt = DateTime.tryParse(e.createdAt ?? "")?.toLocal();
 
@@ -233,7 +309,6 @@ class TransactionController extends GetxController {
           dateStr = "${dt.day}-${dt.month}-${dt.year}";
         }
 
-        // time → 02.35 pm format
         final hour = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
         final minute = dt.minute.toString().padLeft(2, '0');
         final ampm = dt.hour >= 12 ? "pm" : "am";
@@ -259,10 +334,8 @@ class TransactionController extends GetxController {
         amount: amountStr,
         byText: byText,
       );
-    })
-        .toList();
+    }).toList();
   }
-
   @override
   void onClose() {
     scrollCtrl.dispose();

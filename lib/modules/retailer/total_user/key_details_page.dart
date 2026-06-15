@@ -68,7 +68,7 @@ class KeyDetailsPage extends StatelessWidget {
                       // ✅ bottom tiles dynamic
                       Obx(() => _bottomTiles()),
 
-                      const SizedBox(height: 30),
+                      const SizedBox(height:50),
                     ],
                   );
                 }),
@@ -509,7 +509,7 @@ class KeyDetailsPage extends StatelessWidget {
       borderRadius: BorderRadius.circular(18),
 
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(8),
         // decoration: BoxDecoration(
         //   borderRadius: BorderRadius.circular(18),
         //
@@ -882,7 +882,7 @@ class KeyDetailsPage extends StatelessWidget {
 
   Widget _bottomTile(String title, String value, String icon) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(6),
       decoration: _box(),
       child: Row(
         children: [
@@ -894,7 +894,7 @@ class KeyDetailsPage extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: 10,
                   fontWeight: FontWeight.w600,
                   color: Color(0xff2C4ACF),
                 ),

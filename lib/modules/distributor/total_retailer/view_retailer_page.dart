@@ -11,8 +11,13 @@ import 'package:zlock_smart_finance/model/retailer_details_response.dart';
 class ViewRetailerPage extends StatelessWidget {
   final String retailerId;
   final RetailerModel? retailer;
+  final String? controllerTag;
 
-  const ViewRetailerPage({super.key, required this.retailerId,  this.retailer,});
+  const ViewRetailerPage({super.key, required this.retailerId,
+    this.retailer,
+    this.controllerTag, // 🔥 NEW
+
+  });
 
   String formatDate(String isoDate) {
     try {
@@ -108,10 +113,13 @@ class ViewRetailerPage extends StatelessWidget {
           // ),
           Expanded(
             child: Obx(() {
-              final RetailerController rc = Get.isRegistered<RetailerController>()
-                  ? Get.find<RetailerController>()
-                  : Get.put(RetailerController());
+              // final RetailerController rc = Get.isRegistered<RetailerController>()
+              //     ? Get.find<RetailerController>()
+              //     : Get.put(RetailerController());
 
+              final RetailerController rc = controllerTag != null
+                  ? Get.find<RetailerController>(tag: controllerTag!)
+                  : Get.put(RetailerController());
               if (c.isLoading.value) {
                 return const Center(
                   child: CircularProgressIndicator(),

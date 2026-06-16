@@ -1903,36 +1903,67 @@ class _RetailerDashboardState extends State<RetailerDashboard> {
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(14),
+                            // decoration: BoxDecoration(
+                            //   borderRadius: BorderRadius.circular(22),
+                            //
+                            //   gradient: const LinearGradient(
+                            //     colors: [
+                            //       Color(0xFF1A1A1A),
+                            //       Color(0xFF0D0D0D),
+                            //     ],
+                            //     begin: Alignment.topLeft,
+                            //     end: Alignment.bottomRight,
+                            //   ),
+                            //
+                            //   boxShadow: [
+                            //     BoxShadow(
+                            //       color: const Color(0xFFD4AF37).withOpacity(0.25),
+                            //       blurRadius: 18,
+                            //       offset: const Offset(0, 10),
+                            //     ),
+                            //     BoxShadow(
+                            //       color: Colors.black.withOpacity(0.6),
+                            //       blurRadius: 16,
+                            //       offset: const Offset(0, 10),
+                            //     ),
+                            //   ],
+                            //
+                            //   border: Border.all(
+                            //     color: const Color(0x33D4AF37),
+                            //   ),
+                            // ),
+
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(22),
 
                               gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFF1A1A1A),
-                                  Color(0xFF0D0D0D),
-                                ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
+                                colors: [
+                                  Color(0xFF1C1C1C),
+                                  Color(0xFF0A0A0A),
+                                ],
                               ),
-
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(0xFFD4AF37).withOpacity(0.25),
-                                  blurRadius: 18,
-                                  offset: const Offset(0, 10),
-                                ),
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.6),
-                                  blurRadius: 16,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
 
                               border: Border.all(
-                                color: const Color(0x33D4AF37),
+                                color: const Color(0x66D9B65A),
+                                width: 1.2,
                               ),
-                            ),
 
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     color: const Color(0xFFD9B65A).withOpacity(0.30),
+                              //     blurRadius: 24,
+                              //     spreadRadius: 1,
+                              //     offset: const Offset(0, 8),
+                              //   ),
+                              //   BoxShadow(
+                              //     color: Colors.black.withOpacity(0.65),
+                              //     blurRadius: 18,
+                              //     offset: const Offset(0, 10),
+                              //   ),
+                              // ],
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -2063,31 +2094,56 @@ class _RetailerDashboardState extends State<RetailerDashboard> {
           /// 🔥 MAIN CARD
           Container(
             padding: const EdgeInsets.fromLTRB(14, 20, 14, 14),
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.circular(20),
+            //
+            //   gradient: const LinearGradient(
+            //     colors: [
+            //       Color(0xFF1A1A1A),
+            //       Color(0xFF0D0D0D),
+            //     ],
+            //     begin: Alignment.topLeft,
+            //     end: Alignment.bottomRight,
+            //   ),
+            //
+            //   border: Border.all(
+            //     color: const Color(0x33D4AF37),
+            //   ),
+            //
+            //   boxShadow: [
+            //     BoxShadow(
+            //       color: const Color(0xFFD4AF37).withOpacity(0.25),
+            //       blurRadius: 16,
+            //       offset: const Offset(0, 8),
+            //     ),
+            //   ],
+            // ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
 
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF1A1A1A),
-                  Color(0xFF0D0D0D),
-                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1C1C1C),
+                  Color(0xFF0A0A0A),
+                ],
               ),
 
               border: Border.all(
-                color: const Color(0x33D4AF37),
+                color: const Color(0x66D9B65A),
+                width: 1.2,
               ),
 
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFD4AF37).withOpacity(0.25),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
-                ),
-              ],
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: const Color(0xFFD9B65A).withOpacity(0.30),
+              //     blurRadius: 22,
+              //     spreadRadius: 1,
+              //     offset: const Offset(0, 8),
+              //   ),
+              // ],
             ),
-
             child: Column(
               children: [
 
@@ -2175,17 +2231,31 @@ class _RetailerDashboardState extends State<RetailerDashboard> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
 
+                // gradient: const LinearGradient(
+                //   colors: [
+                //     Color(0xFFD4AF37),
+                //     Color(0xFFF5D76E),
+                //   ],
+                // ),
+
                 gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFFD4AF37),
-                    Color(0xFFF5D76E),
+                    Color(0xFFF4E19C), // highlight
+                    Color(0xFFD9B65A), // UniQ gold
+                    Color(0xFFB8860B), // dark metallic gold
                   ],
                 ),
 
+                border: Border.all(
+                  color: Color(0x80FFF4C2),
+                  width: 0.8,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFD4AF37).withOpacity(0.6),
-                    blurRadius: 12,
+                    color: const Color(0x99D9B65A),
+                    blurRadius: 25,
                   )
                 ],
               ),
@@ -2428,31 +2498,56 @@ class _RetailerDashboardState extends State<RetailerDashboard> {
             Container(
               width: 115,
               padding: const EdgeInsets.fromLTRB(12, 20, 12, 12),
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(20),
+              //
+              //   gradient: const LinearGradient(
+              //     colors: [
+              //       Color(0xFF1A1A1A),
+              //       Color(0xFF0D0D0D),
+              //     ],
+              //     begin: Alignment.topLeft,
+              //     end: Alignment.bottomRight,
+              //   ),
+              //
+              //   border: Border.all(
+              //     color: const Color(0x33D4AF37),
+              //   ),
+              //
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: const Color(0xFFD4AF37).withOpacity(0.25),
+              //       blurRadius: 16,
+              //       offset: const Offset(0, 8),
+              //     ),
+              //   ],
+              // ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
 
                 gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF1A1A1A),
-                    Color(0xFF0D0D0D),
-                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1C1C1C),
+                    Color(0xFF0A0A0A),
+                  ],
                 ),
 
                 border: Border.all(
-                  color: const Color(0x33D4AF37),
+                  color: const Color(0x66D9B65A), // Logo gold border
+                  width: 1.2,
                 ),
 
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFD4AF37).withOpacity(0.25),
-                    blurRadius: 16,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: const Color(0xFFD9B65A).withOpacity(0.35),
+                //     blurRadius: 22,
+                //     spreadRadius: 1,
+                //     offset: const Offset(0, 8),
+                //   ),
+                // ],
               ),
-
               child: Obx(() {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2485,6 +2580,40 @@ class _RetailerDashboardState extends State<RetailerDashboard> {
             ),
 
             /// 🔥 FLOATING ICON (TOP)
+            // Positioned(
+            //   top: -18,
+            //   left: 12,
+            //   child: Container(
+            //     height: 38,
+            //     width: 38,
+            //     decoration: BoxDecoration(
+            //       shape: BoxShape.circle,
+            //
+            //       gradient: const LinearGradient(
+            //         colors: [
+            //           Color(0xFFD4AF37),
+            //           Color(0xFFF5D76E),
+            //         ],
+            //       ),
+            //
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: const Color(0xFFD4AF37).withOpacity(0.6),
+            //           blurRadius: 10,
+            //         )
+            //       ],
+            //     ),
+            //     child: Center(
+            //       child: SvgPicture.asset(
+            //         iconPath,
+            //         height: 18,
+            //         width: 18,
+            //         color: Colors.black,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            /// 🔥 FLOATING ICON (TOP)
             Positioned(
               top: -18,
               left: 12,
@@ -2495,25 +2624,39 @@ class _RetailerDashboardState extends State<RetailerDashboard> {
                   shape: BoxShape.circle,
 
                   gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                     colors: [
-                      Color(0xFFD4AF37),
-                      Color(0xFFF5D76E),
+                      Color(0xFFF4E19C), // highlight gold
+                      Color(0xFFD9B65A), // main UniQ gold
+                      Color(0xFFB8860B), // dark metallic gold
                     ],
+                  ),
+
+                  border: Border.all(
+                    color: Color(0x80FFF4C2),
+                    width: 0.8,
                   ),
 
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFD4AF37).withOpacity(0.6),
-                      blurRadius: 10,
-                    )
+                      color: Color(0x66D9B65A),
+                      blurRadius: 18,
+                      spreadRadius: 2,
+                      offset: Offset(0, 4),
+                    ),
                   ],
                 ),
+
                 child: Center(
                   child: SvgPicture.asset(
                     iconPath,
                     height: 18,
                     width: 18,
-                    color: Colors.black,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.black,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
@@ -2782,31 +2925,57 @@ class FeatureCard extends StatelessWidget {
             Container(
               height: 70,
               padding: const EdgeInsets.fromLTRB(12, 20, 12, 10),
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(20),
+              //
+              //   gradient: const LinearGradient(
+              //     colors: [
+              //       Color(0xFF1A1A1A),
+              //       Color(0xFF0D0D0D),
+              //     ],
+              //     begin: Alignment.topLeft,
+              //     end: Alignment.bottomRight,
+              //   ),
+              //
+              //   border: Border.all(
+              //     color: const Color(0x33D4AF37),
+              //   ),
+              //
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: const Color(0xFFD4AF37).withOpacity(0.25),
+              //       blurRadius: 16,
+              //       offset: const Offset(0, 8),
+              //     ),
+              //   ],
+              // ),
+
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
 
                 gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF1A1A1A),
-                    Color(0xFF0D0D0D),
-                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1C1C1C),
+                    Color(0xFF0A0A0A),
+                  ],
                 ),
 
                 border: Border.all(
-                  color: const Color(0x33D4AF37),
+                  color: const Color(0x66D9B65A), // Logo gold border
+                  width: 1.2,
                 ),
 
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFD4AF37).withOpacity(0.25),
-                    blurRadius: 16,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: const Color(0xFFD9B65A).withOpacity(0.35),
+                //     blurRadius: 22,
+                //     spreadRadius: 1,
+                //     offset: const Offset(0, 8),
+                //   ),
+                // ],
               ),
-
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
@@ -2830,23 +2999,51 @@ class FeatureCard extends StatelessWidget {
               child: Container(
                 height: 40,
                 width: 40,
+                // decoration: BoxDecoration(
+                //   shape: BoxShape.circle,
+                //
+                //   gradient: const LinearGradient(
+                //     colors: [
+                //       Color(0xFFD4AF37),
+                //       Color(0xFFF5D76E),
+                //     ],
+                //   ),
+                //
+                //   boxShadow: [
+                //     BoxShadow(
+                //       color: const Color(0xFFD4AF37).withOpacity(0.6),
+                //       blurRadius: 12,
+                //     )
+                //   ],
+                // ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
 
                   gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                     colors: [
-                      Color(0xFFD4AF37),
-                      Color(0xFFF5D76E),
+                      Color(0xFFF4E19C), // highlight gold
+                      Color(0xFFD9B65A), // main UniQ gold
+                      Color(0xFFB8860B), // dark metallic gold
                     ],
+                  ),
+
+                  border: Border.all(
+                    color: Color(0x80FFF4C2),
+                    width: 0.8,
                   ),
 
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFD4AF37).withOpacity(0.6),
-                      blurRadius: 12,
-                    )
+                      color: Color(0x66D9B65A),
+                      blurRadius: 18,
+                      spreadRadius: 2,
+                      offset: Offset(0, 4),
+                    ),
                   ],
                 ),
+
                 child: Center(
                   child: SvgPicture.asset(
                     iconPath,
@@ -2935,29 +3132,60 @@ class AvailabilityCard extends StatelessWidget {
             Container(
               height: 85,
               padding: const EdgeInsets.fromLTRB(14, 18, 14, 14),
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(18),
+              //
+              //   gradient: const LinearGradient(
+              //     colors: [
+              //       Color(0xFF1A1A1A),
+              //       Color(0xFF0D0D0D),
+              //     ],
+              //   ),
+              //
+              //   border: Border.all(
+              //     color: const Color(0x33D4AF37),
+              //   ),
+              //
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: const Color(0xFFD4AF37).withOpacity(0.25),
+              //       blurRadius: 14,
+              //       offset: const Offset(0, 6),
+              //     ),
+              //   ],
+              // ),
+
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
 
                 gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF1A1A1A),
-                    Color(0xFF0D0D0D),
+                    Color(0xFF1C1C1C),
+                    Color(0xFF0A0A0A),
                   ],
                 ),
 
                 border: Border.all(
-                  color: const Color(0x33D4AF37),
+                  color: const Color(0x66D9B65A),
+                  width: 1.1,
                 ),
 
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFD4AF37).withOpacity(0.25),
-                    blurRadius: 14,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: const Color(0xFFD9B65A).withOpacity(0.30),
+                //     blurRadius: 20,
+                //     spreadRadius: 1,
+                //     offset: const Offset(0, 6),
+                //   ),
+                //   BoxShadow(
+                //     color: Colors.black.withOpacity(0.60),
+                //     blurRadius: 14,
+                //     offset: const Offset(0, 8),
+                //   ),
+                // ],
               ),
-
               child: Row(
                 children: [
                   const SizedBox(width: 46), // space for floating icon
@@ -3010,19 +3238,29 @@ class AvailabilityCard extends StatelessWidget {
                   shape: BoxShape.circle,
 
                   gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                     colors: [
-                      Color(0xFFD4AF37),
-                      Color(0xFFF5D76E),
+                      Color(0xFFF4E19C),
+                      Color(0xFFD9B65A),
+                      Color(0xFFB8860B),
                     ],
+                  ),
+
+                  border: Border.all(
+                    color: Color(0x80FFF4C2),
+                    width: 0.8,
                   ),
 
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFD4AF37).withOpacity(0.6),
-                      blurRadius: 12,
-                    )
+                      color: Color(0x99D9B65A),
+                      blurRadius: 25,
+                      spreadRadius: 3,
+                    ),
                   ],
-                ),
+
+              ),
                 child: Center(
                   child: SvgPicture.asset(
                     iconPath,

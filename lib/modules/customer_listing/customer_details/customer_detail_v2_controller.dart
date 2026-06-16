@@ -8,6 +8,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zlock_smart_finance/app/services/device_location_service.dart';
+import 'package:zlock_smart_finance/app/services/dio_client.dart';
+import 'package:zlock_smart_finance/app/services/key_details_service.dart';
+import 'package:zlock_smart_finance/app/services/retailer_api.dart';
+import 'package:zlock_smart_finance/app/services/update_emi_service.dart';
+import 'package:zlock_smart_finance/model/key_details_response.dart';
+import 'package:zlock_smart_finance/model/update_emi_response.dart';
+import 'package:zlock_smart_finance/modules/customer_listing/customer_details/customer_detail_v2_page.dart';
 import 'package:zlock_smart_finance/modules/customer_listing/customer_details/customer_detail_v2_response.dart';
 import 'package:zlock_smart_finance/modules/customer_listing/customer_details/customer_detail_v2_service.dart';
 
@@ -36,6 +43,7 @@ import 'package:zlock_smart_finance/app/services/upload_doc_service.dart';
 import 'package:zlock_smart_finance/app/utils/imei_scanner_screen.dart';
 import 'package:zlock_smart_finance/modules/retailer/dashboard/dashboard_retailer.dart';
 import '../../../app/routes/app_routes.dart';
+import '../../../app/utils/change_emi_status_bottom.dart';
 
 enum CustomerDetailV2EmiStatus { paid, unpaid }
 
@@ -44,22 +52,38 @@ extension CustomerDetailV2EmiStatusX on CustomerDetailV2EmiStatus {
       this == CustomerDetailV2EmiStatus.paid ? "Paid" : "Unpaid";
 }
 
+// class CustomerDetailV2EmiRow {
+//   final String emiId;
+//   String date;
+//   String amount;
+//   CustomerDetailV2EmiStatus status;
+//   DateTime? paidDate;
+//
+//   CustomerDetailV2EmiRow({
+//     required this.emiId,
+//     required this.date,
+//     required this.amount,
+//     required this.status,
+//     this.paidDate,
+//   });
+// }
+
 class CustomerDetailV2EmiRow {
-  final String emiId;
+  final int emiNumber;
+
   String date;
   String amount;
   CustomerDetailV2EmiStatus status;
   DateTime? paidDate;
 
   CustomerDetailV2EmiRow({
-    required this.emiId,
+    required this.emiNumber,
     required this.date,
     required this.amount,
     required this.status,
     this.paidDate,
   });
 }
-
 class CustomerDetailV2Controller extends GetxController {
 
   final box = GetStorage();
@@ -81,6 +105,7 @@ class CustomerDetailV2Controller extends GetxController {
   final selectedPayDate = Rxn<DateTime>();
 
   final emis = <CustomerDetailV2EmiRow>[].obs;
+  final emiSchedule = RxList<EmiScheduleItem>();
 
   final _service = CustomerDetailV2Service();
   final _commandService = DeviceCommandService();
@@ -97,12 +122,23 @@ class CustomerDetailV2Controller extends GetxController {
   }
 
 
+  // ✅ Details data
+  final details = Rxn<KeyDetailsData>();
+
+  final _detailsService = KeyDetailsService();
+
+  final _emiService = EmiService();
+  final isUpdatingEmi = false.obs; // optional loader
+
   RxDouble latitude = 0.0.obs;
   RxDouble longitude = 0.0.obs;
 
   RxString lastUpdatedText = "Updating...".obs;
   Timer? _locationTimer;
   DateTime? _lastFetchTime;
+
+  final RxList<Map<String, dynamic>> simHistory =
+      <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
@@ -214,6 +250,18 @@ class CustomerDetailV2Controller extends GetxController {
     try {
       final resp = await _service.getCustomerById(customerId: id);
       customer.value = resp;
+      await fetchEmiSchedule();
+
+      /// ✅ SYNC COMMAND STATES FROM API
+      commands["ACTIVE_RESTRICTION"]?.value =
+          resp?.keyActions?.restriction ?? false;
+
+      commands["Lock Device"]?.value =
+          resp?.keyActions?.lockDevice ?? false;
+
+      commands["Social Media"]?.value =
+          resp?.keyActions?.socialMediaLock ?? false;
+
       _buildEmiRows();
 
       debugPrint("✅ Customer detail loaded");
@@ -299,39 +347,69 @@ class CustomerDetailV2Controller extends GetxController {
 
   String _fmtMoney(num v) => _moneyFmt.format(v);
 
-  void _buildEmiRows() {
-    final emi = customer.value?.emi;
-    if (emi == null) {
-      emis.clear();
-      return;
-    }
+  // void _buildEmiRows() {
+  //   final emi = customer.value?.emi;
+  //   if (emi == null) {
+  //     emis.clear();
+  //     return;
+  //   }
+  //
+  //   final total = emi.tenureMonths ?? 0;
+  //   final paid = emi.totalEmiPaid ?? 0;
+  //   final list = <CustomerDetailV2EmiRow>[];
+  //
+  //   for (int i = 0; i < total; i++) {
+  //     final isPaid = i < paid;
+  //
+  //     list.add(
+  //       CustomerDetailV2EmiRow(
+  //         emiId: "${customer.value?.id ?? ''}_$i",
+  //         date: _fmtDate(emi.startDate),
+  //         amount: _fmtMoney(emi.emiAmount ?? 0),
+  //         status: isPaid
+  //             ? CustomerDetailV2EmiStatus.paid
+  //             : CustomerDetailV2EmiStatus.unpaid,
+  //       ),
+  //     );
+  //   }
+  //
+  //   emis.assignAll(list);
+  // }
 
-    final total = emi.tenureMonths ?? 0;
-    final paid = emi.totalEmiPaid ?? 0;
+  void _buildEmiRows() {
     final list = <CustomerDetailV2EmiRow>[];
 
-    for (int i = 0; i < total; i++) {
-      final isPaid = i < paid;
-
+    for (final emi in emiSchedule) {
       list.add(
         CustomerDetailV2EmiRow(
-          emiId: "${customer.value?.id ?? ''}_$i",
-          date: _fmtDate(emi.startDate),
-          amount: _fmtMoney(emi.emiAmount ?? 0),
-          status: isPaid
+          emiNumber: emi.emiNumber,
+          date: emi.dueDate == null
+              ? "-"
+              : _fmtDate(emi.dueDate),
+
+          amount: _fmtMoney(
+            emi.emiAmount,
+          ),
+
+          status: emi.status.toLowerCase() == "paid"
               ? CustomerDetailV2EmiStatus.paid
               : CustomerDetailV2EmiStatus.unpaid,
+
+          paidDate: emi.paidDate == null
+              ? null
+              : DateTime.tryParse(
+            emi.paidDate!,
+          ),
         ),
       );
     }
 
     emis.assignAll(list);
   }
-
-  void openChangeStatusSheet(BuildContext context, int index) {
-    selectedStatus.value = emis[index].status;
-    selectedPayDate.value = emis[index].paidDate;
-  }
+  // void openChangeStatusSheet(BuildContext context, int index) {
+  //   selectedStatus.value = emis[index].status;
+  //   selectedPayDate.value = emis[index].paidDate;
+  // }
 
   Future<void> pickPayDate(BuildContext context) async {
     final initial = selectedPayDate.value ?? DateTime.now();
@@ -352,7 +430,7 @@ class CustomerDetailV2Controller extends GetxController {
     'Mobile No': false.obs,
     'Lock Device': false.obs,
     // 'Sim Lock': false.obs,
-    'Offline Lock': false.obs,
+    // 'Offline Lock': false.obs,
     // 'Offline Unlock': false.obs,
     'Offline Location': false.obs,
     // 'Volume': false.obs,
@@ -371,16 +449,38 @@ class CustomerDetailV2Controller extends GetxController {
     'ACTIVE_RESTRICTION': false.obs,
     // 'DEACTIVE_RESTRICTION': false.obs,
 
+    'Scheduler Lock': false.obs,
+
+
   };
+  // final orderedCommands = [
+  //   "Lock Device",
+  //   "Location",
+  //   "Mobile No",
+  //   "Scheduler Lock", // ✅ ADD HERE
+  //   "Active Restriction",
+  //   "Offline Lock",
+  //   "Offline Unlock",
+  //   "App Update",
+  //
+  //   "Audio",
+  // ];
+
   final orderedCommands = [
     "Lock Device",
     "Location",
     "Mobile No",
+
+    // "Scheduler Lock", // hidden temporarily
+
     "Active Restriction",
     "Offline Lock",
+    "Offline Unlock",
+
+    // "App Update", // hidden temporarily
+
     "Audio",
   ];
-
   List<String> socialApps = [
     "WhatsApp",
     "WA Business",
@@ -394,6 +494,8 @@ class CustomerDetailV2Controller extends GetxController {
     "Lock Device": "Lock Device",
     // "Sim Lock": "Sim Lock",
     "Offline Lock": "Offline Lock",
+    "Offline Unlock": "Offline Unlock", // ✅ ADD
+
     // "Volume": "Volume",
     // "Wallpaper": "Wallpaper",
     "Audio": "Audio",
@@ -425,12 +527,32 @@ class CustomerDetailV2Controller extends GetxController {
 
     return list;
   }
+  // List<String> specialCommands = [
+  //   "Location",
+  //   "Mobile No",
+  //   "Offline Lock",
+  //   "Offline Unlock",
+  //   "Remove Key",
+  //
+  //   "Scheduler Lock",
+  //   "App Update",
+  //   "Audio", // ✅ ADD THIS
+  //
+  //
+  // ];
+
   List<String> specialCommands = [
     "Location",
     "Mobile No",
+    "Offline Lock",
+    "Offline Unlock",
     "Remove Key",
-  ];
 
+    // "Scheduler Lock", // hidden temporarily
+    // "App Update",     // hidden temporarily
+
+    "Audio",
+  ];
 
   final Set<String> noToggleCommands = {'Location', 'Mobile No', 'Remove Key'};
   final RxMap<String, bool> commandLoading = <String, bool>{}.obs;
@@ -446,7 +568,7 @@ class CustomerDetailV2Controller extends GetxController {
     "Offline Location": {true: "GET_LOCATION", false: "GET_LOCATION"},
     "Lock Device": {true: "LOCK_DEVICE", false: "UNLOCK_DEVICE"},
     // "Sim Lock": {true: "LOCK_SIM", false: "UNLOCK_SIM"},
-    "Offline Lock": {true: "LOCK_DEVICE", false: "UNLOCK_DEVICE"},
+    // "Offline Lock": {true: "LOCK_DEVICE", false: "UNLOCK_DEVICE"},
     // "Offline Unlock": {true: "UNLOCK_DEVICE", false: "LOCK_DEVICE"},
     "Mobile No": {true: "GET_MOBILE_NUMBER", false: "GET_MOBILE_NUMBER"},
     // "Volume": {true: "VOLUME_ON", false: "VOLUME_OFF"},
@@ -480,6 +602,14 @@ class CustomerDetailV2Controller extends GetxController {
       true: "ACTIVE_RESTRICTION",
       false: "DEACTIVE_RESTRICTION",
     },
+    "Scheduler Lock": {
+      true: "SCHEDULER_LOCK",
+      false: "SCHEDULER_LOCK",
+    },
+    "App Update": {
+      true: "UPDATE_APP",
+      false: "UPDATE_APP",
+    },
   };
 
   final Map<String, String> _packageMap = {
@@ -493,10 +623,10 @@ class CustomerDetailV2Controller extends GetxController {
 
   final Set<String> comingSoonCommands = {
     "Sim Lock",
-    "Offline Lock",
+    // "Offline Lock",
     "Volume",
     "Wallpaper",
-    "Audio",
+    // "Audio",
   };
 
   Future<void> onCommandToggle(String key, bool value) async {
@@ -604,6 +734,221 @@ class CustomerDetailV2Controller extends GetxController {
     }
   }
 
+
+
+
+
+  // If you toggle overdue switch in UI call this
+
+  void openChangeStatusSheet(BuildContext context, int index) {
+    // prefill
+    selectedStatus.value = emis[index].status;
+    selectedPayDate.value = emis[index].paidDate;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (_) => ChangeStatusSheet2(ctrl: this, index: index),
+    );
+  }
+
+  String _apiStatusFromUi(CustomerDetailV2EmiStatus s) {
+    // ✅ UI unpaid => API PENDING (as per your requirement)
+    return (s == CustomerDetailV2EmiStatus.paid) ? "PAID" : "PENDING";
+  }
+
+  String _toApiPaidAt(DateTime dt) {
+    // backend accepts ISO. send UTC ISO string
+    return dt.toUtc().toIso8601String();
+  }
+
+  Future<void> fetchEmiSchedule() async {
+    try {
+      final id = customerId.value.trim();
+
+      final res = await ApiClient.dio.get(
+        RetailerAPI.getCustomerEmi(id),
+      );
+
+      final response =
+      EmiScheduleResponse.fromJson(res.data);
+
+      emiSchedule.assignAll(
+        response.data?.schedule ?? [],
+      );
+
+      _buildEmiRows();
+    } catch (e) {
+      debugPrint("❌ EMI FETCH ERROR => $e");
+    }
+  }
+  // Future<void> updateEmiFromSheet(int index) async {
+  //   if (index < 0 || index >= emis.length) {
+  //     Get.snackbar("Error", "Invalid EMI index", snackPosition: SnackPosition.BOTTOM);
+  //     return;
+  //   }
+  //
+  //   final row = emis[index];
+  //   final emiId = row.emiId.trim();
+  //   if (emiId.isEmpty) {
+  //     Get.snackbar("Error", "EMI ID missing", snackPosition: SnackPosition.BOTTOM);
+  //     return;
+  //   }
+  //
+  //   // ✅ if marking PAID then paid date must be selected
+  //   if (selectedStatus.value == CustomerDetailV2EmiStatus.paid && selectedPayDate.value == null) {
+  //     Get.snackbar("Error", "Please choose EMI pay date", snackPosition: SnackPosition.BOTTOM);
+  //     return;
+  //   }
+  //
+  //   if (isUpdatingEmi.value) return;
+  //   isUpdatingEmi.value = true;
+  //
+  //   try {
+  //     // find original overdueAmount from details list (null safe)
+  //     final item = details.value?.emi?.list
+  //         .firstWhereOrNull((e) => e.id == emiId);
+  //
+  //     final overdue = addOverdueAmount.value ? (item?.overdueAmount ?? 0) : 0;
+  //
+  //     final body = <String, dynamic>{
+  //       "paymentMode": "CASH", // (future me dropdown se)
+  //       "status": _apiStatusFromUi(selectedStatus.value),
+  //       "overdueAmount": overdue,
+  //       // paidAt only when date selected
+  //       if (selectedPayDate.value != null) "paidAt": _toApiPaidAt(selectedPayDate.value!),
+  //     };
+  //
+  //     final resp = await _emiService.updateEmi(emiId: emiId, body: body);
+  //
+  //     if (resp == null || resp.status != 200) {
+  //       Get.snackbar("Error", resp?.message ?? "Failed to update EMI",
+  //           snackPosition: SnackPosition.BOTTOM);
+  //       return;
+  //     }
+  //
+  //     // ✅ SUCCESS: refresh details (and rebuild EMI list + progress)
+  //     await fetchKeyDetails();
+  //
+  //     Get.snackbar("Success", resp.message, snackPosition: SnackPosition.BOTTOM);
+  //   } finally {
+  //     isUpdatingEmi.value = false;
+  //   }
+  // }
+
+  Future<void> updateEmiFromSheet(int index) async {
+    if (index < 0 || index >= emis.length) {
+      Get.snackbar(
+        "Error",
+        "Invalid EMI index",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    final row = emis[index];
+
+    if (selectedStatus.value == CustomerDetailV2EmiStatus.paid &&
+        selectedPayDate.value == null) {
+      Get.snackbar(
+        "Error",
+        "Please choose EMI pay date",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    if (isUpdatingEmi.value) return;
+    isUpdatingEmi.value = true;
+
+    try {
+      final body = <String, dynamic>{
+        "id": customerId.value.trim(), // customer id
+        "emi_number": row.emiNumber,
+        "status": selectedStatus.value ==
+            CustomerDetailV2EmiStatus.paid
+            ? "paid"
+            : "pending", // pending = unpaid
+
+        "paid_amount": row.amount
+            .replaceAll("₹", "")
+            .replaceAll(",", "")
+            .trim(),
+
+        "payment_mode": "cash",
+        "transaction_id": "",
+      };
+
+      debugPrint("✅ UPDATE EMI BODY => $body");
+
+      final resp = await _emiService.updateEmi(
+        body: body,
+      );
+
+      if (resp == null) {
+        Get.snackbar(
+          "Error",
+          resp?.message ?? "Failed to update EMI",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      /// Refresh latest EMI schedule
+      await fetchEmiSchedule();
+
+      Get.snackbar(
+        "Success",
+        resp.message,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      debugPrint("❌ UPDATE EMI ERROR => $e");
+
+      Get.snackbar(
+        "Error",
+        "Failed to update EMI",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isUpdatingEmi.value = false;
+    }
+  }
+  Future<void> fetchKeyDetails() async {
+    final k = actualDeviceId.trim();
+    if (k.isEmpty) {
+      debugPrint("❌ keyId missing for details API");
+      return;
+    }
+
+    if (isDetailsLoading.value) return;
+
+    isDetailsLoading.value = true;
+
+    try {
+      final resp = await _detailsService.getKeyDetails(k);
+
+      if (resp == null || resp.status != 200 || resp.data == null) {
+        debugPrint("❌ Failed to load key details");
+        details.value = null;
+        emis.clear(); // ✅ clear table
+        return;
+      }
+
+      details.value = resp.data;
+      debugPrint("✅ DETAILS LOADED for keyId=$k");
+
+      // ✅ IMPORTANT: Build EMI rows right after details set
+      _buildEmiRows();
+
+    } finally {
+      isDetailsLoading.value = false;
+    }
+  }
+
   Future<void> lockNow() async {
     final id = actualDeviceId;
 
@@ -696,152 +1041,6 @@ class CustomerDetailV2Controller extends GetxController {
   final agreementPath = "".obs;
 
 
-
-  // Future<void> generateAgreementFromCustomerDetail() async {
-  //   if (isGeneratingAgreement.value) return;
-  //
-  //   try {
-  //     isGeneratingAgreement.value = true;
-  //
-  //     // final Uint8List? signBytes = await signatureController.toPngBytes();
-  //     //
-  //     // if (signBytes == null || signBytes.isEmpty) {
-  //     //   Get.snackbar("Error", "Signature required",
-  //     //       snackPosition: SnackPosition.BOTTOM);
-  //     //   return;
-  //     // }
-  //     Uint8List? signBytes;
-  //
-  //     final signatureUrl = customer.value?.signature ?? "";
-  //
-  //     if (signatureUrl.isNotEmpty) {
-  //       try {
-  //         final response = await Dio().get(
-  //           signatureUrl,
-  //           options: Options(responseType: ResponseType.bytes),
-  //         );
-  //
-  //         signBytes = Uint8List.fromList(response.data);
-  //       } catch (e) {
-  //         debugPrint("❌ Signature load error: $e");
-  //       }
-  //     }
-  //
-  //     if (signBytes == null || signBytes.isEmpty) {
-  //       Get.snackbar(
-  //         "Error",
-  //         "Signature not available",
-  //         snackPosition: SnackPosition.BOTTOM,
-  //       );
-  //       return;
-  //     }
-  //
-  //     final pdf = pw.Document();
-  //
-  //     String line(String v, {int len = 30}) {
-  //       if (v.trim().isEmpty) return "_" * len;
-  //       return v;
-  //     }
-  //
-  //     final now = DateTime.now();
-  //     final dateStr =
-  //         "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}";
-  //
-  //     final logo = pw.MemoryImage(
-  //       (await rootBundle.load('assets/images/lock_pe.png'))
-  //           .buffer
-  //           .asUint8List(),
-  //     );
-  //
-  //     pdf.addPage(
-  //       pw.MultiPage(
-  //         pageFormat: PdfPageFormat.a4,
-  //         margin: const pw.EdgeInsets.all(24),
-  //         build: (context) => [
-  //
-  //           /// 🔹 LOGO
-  //           pw.Center(child: pw.Image(logo, height: 60)),
-  //           pw.SizedBox(height: 10),
-  //
-  //           pw.Text(
-  //             "EMI Device Purchase Agreement",
-  //             style: pw.TextStyle(
-  //               fontSize: 14,
-  //               fontWeight: pw.FontWeight.bold,
-  //             ),
-  //           ),
-  //
-  //           pw.SizedBox(height: 12),
-  //
-  //           /// ✅ REAL DATA FROM CONTROLLER
-  //           pw.Text("Customer Name: ${line(customerName)}"),
-  //           pw.Text("Mobile: ${line(customerPhone)}"),
-  //           pw.Text("Email: ${line(customerEmail)}"),
-  //           pw.Text("Loan ID: ${line(loanId)}"),
-  //
-  //           pw.SizedBox(height: 10),
-  //
-  //           pw.Text("Device: ${line(brandModel)}"),
-  //           pw.Text("IMEI: ${line(imei1)}"),
-  //
-  //           pw.SizedBox(height: 10),
-  //
-  //           pw.Text("Loan Amount: ₹ ${loanAmount.toStringAsFixed(0)}"),
-  //           pw.Text("EMI Amount: ₹ ${emiAmount.toStringAsFixed(0)}"),
-  //           pw.Text("Tenure: $tenure months"),
-  //
-  //           pw.SizedBox(height: 20),
-  //
-  //           pw.Text("Agreement Date: $dateStr"),
-  //
-  //           pw.SizedBox(height: 30),
-  //
-  //           /// 🔹 SIGNATURE
-  //           pw.Row(
-  //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               pw.Column(
-  //                 children: [
-  //                   pw.Text("Customer Signature"),
-  //                   pw.Container(
-  //                     width: 150,
-  //                     height: 60,
-  //                     child: pw.Image(
-  //                       pw.MemoryImage(signBytes!),
-  //                       fit: pw.BoxFit.contain,
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //               pw.Column(
-  //                 children: [
-  //                   pw.Text("Authorized Signature"),
-  //                   pw.SizedBox(height: 60),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //
-  //     final dir = await getExternalStorageDirectory();
-  //     final file = File("${dir!.path}/Agreement_${now.millisecondsSinceEpoch}.pdf");
-  //
-  //     await file.writeAsBytes(await pdf.save());
-  //
-  //     Get.snackbar("Success", "Agreement Generated",
-  //         snackPosition: SnackPosition.BOTTOM);
-  //
-  //     await OpenFilex.open(file.path);
-  //
-  //   } catch (e) {
-  //     Get.snackbar("Error", "PDF generation failed",
-  //         snackPosition: SnackPosition.BOTTOM);
-  //   } finally {
-  //     isGeneratingAgreement.value = false;
-  //   }
-  // }
 
   Future<void> generateAgreementFromCustomerDetail() async {
     if (isGeneratingAgreement.value) return;
@@ -1138,6 +1337,377 @@ class CustomerDetailV2Controller extends GetxController {
     );
   }
 
+  Future<void> sendUpdateAppCommand(DeviceCommandRequest req) async {
+    try {
+      await _commandService.sendCommand(req);
+    } catch (e) {
+      debugPrint("❌ UPDATE APP ERROR => $e");
+      rethrow;
+    }
+  }
+
+  // Future<List<String>> fetchSimNumbers() async {
+  //   final id = actualDeviceId;
+  //
+  //   debugPrint("📱 Device ID => $id");
+  //
+  //   if (id.isEmpty) {
+  //     Get.snackbar("Error", "Device ID missing");
+  //     return [];
+  //   }
+  //
+  //   try {
+  //     /// 🔹 SEND COMMAND
+  //     await _commandService.sendCommand(
+  //       DeviceCommandRequest(
+  //         deviceId: id,
+  //         commandType: "GET_NUMBER",
+  //       ),
+  //     );
+  //
+  //     /// ⏳ WAIT
+  //     await Future.delayed(const Duration(seconds: 3));
+  //
+  //     final dio = Dio();
+  //
+  //     final response = await dio.get(
+  //       "https://lockpepro.com/api/mdm/devices/$id/sim-info",
+  //       options: Options(
+  //         headers: {
+  //           "Authorization": "Bearer ${box.read("token")}",
+  //           "Accept": "application/json",
+  //         },
+  //       ),
+  //     );
+  //
+  //     if (response.data is! Map) return [];
+  //
+  //     final data = response.data;
+  //
+  //     if (data["success"] != true) return [];
+  //
+  //     final simInfo = data["current_sim_info"] ?? {};
+  //
+  //     List<String> numbers = [];
+  //
+  //     /// 🔥 DYNAMIC SIM PARSER (BEST)
+  //     for (int i = 1; i <= 5; i++) {
+  //       final key = "sim${i}_number";
+  //
+  //       if (simInfo.containsKey(key)) {
+  //         final value = simInfo[key]?.toString().trim();
+  //
+  //         if (value != null &&
+  //             value.isNotEmpty &&
+  //             value != "null") {
+  //           numbers.add(value);
+  //         }
+  //       }
+  //     }
+  //
+  //     debugPrint("📲 NUMBERS => $numbers");
+  //
+  //     return numbers;
+  //   } catch (e) {
+  //     debugPrint("❌ ERROR => $e");
+  //     return [];
+  //   }
+  // }
+
+  Future<List<String>> fetchSimNumbers() async {
+    final id = actualDeviceId;
+
+    debugPrint("📱 Device ID => $id");
+
+    if (id.isEmpty) {
+      Get.snackbar("Error", "Device ID missing");
+      return [];
+    }
+
+    try {
+      /// 🔹 SEND COMMAND
+      await _commandService.sendCommand(
+        DeviceCommandRequest(
+          deviceId: id,
+          commandType: "GET_NUMBER",
+        ),
+      );
+
+      /// ⏳ WAIT
+      await Future.delayed(const Duration(seconds: 3));
+
+      final dio = Dio();
+
+      final response = await dio.get(
+        "https://lockpepro.com/api/mdm/devices/$id/sim-info",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer ${box.read("token")}",
+            "Accept": "application/json",
+          },
+        ),
+      );
+
+      debugPrint("✅ FULL API RESPONSE => ${response.data}");
+
+      if (response.data is! Map) {
+        debugPrint("❌ RESPONSE IS NOT MAP");
+        return [];
+      }
+
+      final data = response.data;
+
+      debugPrint("✅ SUCCESS => ${data["success"]}");
+
+      if (data["success"] != true) {
+        debugPrint("❌ API SUCCESS FALSE");
+        return [];
+      }
+
+      /// 🔥 FIXED KEY
+      final simInfo = data["current_sim_info"] ?? {};
+      /// 🔥 STORE HISTORY
+      simHistory.assignAll(
+        List<Map<String, dynamic>>.from(
+          data["sim_history"] ?? [],
+        ),
+      );
+
+      debugPrint(
+        "📜 SIM HISTORY COUNT => ${simHistory.length}",
+      );
+
+      debugPrint("📲 SIM INFO => $simInfo");
+
+      List<String> numbers = [];
+
+      /// 🔥 DYNAMIC SIM PARSER
+      for (int i = 1; i <= 5; i++) {
+        final key = "sim${i}_number";
+
+        debugPrint("🔍 CHECKING KEY => $key");
+
+        if (simInfo.containsKey(key)) {
+          final value = simInfo[key]?.toString().trim();
+
+          debugPrint("📞 VALUE => $value");
+
+          if (value != null &&
+              value.isNotEmpty &&
+              value != "null") {
+            numbers.add(value);
+
+            debugPrint("✅ ADDED NUMBER => $value");
+          }
+        }
+      }
+
+      debugPrint("📲 FINAL NUMBERS => $numbers");
+
+      return numbers;
+    } catch (e) {
+      debugPrint("❌ ERROR => $e");
+      return [];
+    }
+  }
+  Future<void> scheduleLockApi(String scheduleAt) async {
+    try {
+      final deviceId = actualDeviceId;
+
+      if (deviceId.isEmpty) {
+        debugPrint("❌ DEVICE ID MISSING");
+        Get.snackbar("Error", "Device ID missing");
+        return;
+      }
+
+      final payload = {
+        "device_id": deviceId,
+        "command_type": "LOCK_DEVICE",
+        "schedule_type": "one_time",
+        "scheduled_at": scheduleAt,
+        "label": "Scheduled Lock",
+        "delivery_method": "fcm"
+      };
+
+      debugPrint("📤 API URL => https://lockpepro.com/api/scheduled-commands");
+      debugPrint("📤 PAYLOAD => $payload");
+
+      final dio = Dio();
+
+      final res = await dio.post(
+        "https://lockpepro.com/api/scheduled-commands",
+        data: payload,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+
+            /// 🔥 IMPORTANT (if auth required)
+            "Authorization": "Bearer ${box.read("token")}",
+          },
+        ),
+      );
+
+      debugPrint("✅ STATUS CODE => ${res.statusCode}");
+      debugPrint("✅ RESPONSE => ${res.data}");
+
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        // Get.snackbar("Success", "Lock Scheduled Successfully");
+        /// ✅ CLOSE POPUP FIRST
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+
+        /// ✅ SMALL DELAY (VERY IMPORTANT)
+        Future.delayed(const Duration(milliseconds: 200), () {
+          Get.snackbar(
+            "Success",
+            "Lock scheduled successfully",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(12),
+            duration: const Duration(seconds: 2),
+          );
+        });
+      } else {
+        Get.snackbar("Error", "Failed to schedule");
+      }
+    } catch (e) {
+      debugPrint("❌ FULL ERROR => $e");
+
+      if (e is DioException) {
+        debugPrint("❌ ERROR DATA => ${e.response?.data}");
+        debugPrint("❌ STATUS => ${e.response?.statusCode}");
+      }
+
+      Get.snackbar("Error", "Scheduler failed");
+    }
+  }
+
+  Future<void> sendOfflineCommandApi({
+    required String number,
+    required bool isLock,
+  }) async {
+    try {
+      final payload = {
+        "phone": number,
+        "deviceName": brandModel,
+      };
+
+      final url = isLock
+          ? "/sms/send-lock"
+          : "/sms/send-unlock";
+
+      debugPrint("📤 OFFLINE URL => $url");
+      debugPrint("📤 BODY => $payload");
+
+      final res = await Dio().post(
+        "https://lockpepro.com/api$url",
+        data: payload,
+      );
+
+      debugPrint("✅ RESPONSE => ${res.data}");
+
+      // Get.snackbar(
+      //   "Success",
+      //   isLock ? "Device Locked" : "Device Unlocked",
+      // );
+    } catch (e) {
+      debugPrint("❌ OFFLINE ERROR => $e");
+      Get.snackbar("Error", "Failed");
+    }
+  }
+
+
+  Future<void> handleOfflineCommand(bool isLock) async {
+    final id = actualDeviceId;
+
+    debugPrint("🟡 OFFLINE COMMAND CLICKED");
+    debugPrint("➡️ Type: ${isLock ? "LOCK" : "UNLOCK"}");
+    debugPrint("➡️ Device ID: $id");
+
+    if (id.isEmpty) {
+      Get.snackbar("Error", "Device ID missing");
+      return;
+    }
+
+    // /// 🔹 OPEN UI FIRST
+    // Get.find<CustomerDetailV2Page>()
+    //     .showOfflineNumberDialog(isLock: isLock);
+  }
+
+
+  Future<void> handleOfflineFlow(bool isLock) async {
+    if (actualDeviceId.isEmpty) {
+      Get.snackbar("Error", "Device ID missing");
+      return;
+    }
+
+    List<String> numbers = [];
+
+    try {
+      numbers = await fetchSimNumbers();
+      debugPrint("📱 SIM => $numbers");
+    } catch (e) {
+      debugPrint("❌ SIM ERROR => $e");
+    }
+
+    // showNumberInputPopup(numbers, isLock);
+  }
+
+  Future<bool> sendAudioAlert(String message) async {
+    try {
+
+      if (actualDeviceId.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Device ID missing",
+        );
+        return false;
+      }
+
+      final response = await Dio().post(
+        "https://lockpepro.com/api/play-alert",
+        data: {
+          "device_id": actualDeviceId,
+          "message": message,
+        },
+      );
+
+      debugPrint("✅ AUDIO RESPONSE => ${response.data}");
+
+      if (response.statusCode == 200 &&
+          response.data["success"] == true) {
+
+        // Get.snackbar(
+        //   "Success",
+        //   response.data["message"] ?? "Voice alert sent",
+        // );
+
+        return true;
+      }
+
+      Get.snackbar(
+        "Error",
+        response.data["message"] ?? "Failed to send alert",
+      );
+
+      return false;
+
+    } catch (e) {
+
+      debugPrint("❌ AUDIO ALERT ERROR => $e");
+
+      Get.snackbar(
+        "Error",
+        "Something went wrong",
+      );
+
+      return false;
+    }
+  }
+
   Future<void> viewDoc(String url) async {
     final cleanUrl = url.trim();
 
@@ -1215,22 +1785,6 @@ class CustomerDetailV2Controller extends GetxController {
     );
   }
 
-  // void updateLastUpdated(String createdAt) {
-  //   try {
-  //     DateTime utcTime = DateTime.parse(createdAt);
-  //
-  //     // Convert to local time (important)
-  //     DateTime localTime = utcTime.toLocal();
-  //
-  //     // Format nicely
-  //     String formatted = DateFormat('dd MMM yyyy, hh:mm a').format(localTime);
-  //
-  //     lastUpdatedText.value = "Updated on $formatted";
-  //   } catch (e) {
-  //     lastUpdatedText.value = "Updated just now";
-  //   }
-  // }
-
   void updateFromApiTime(String? createdAt) {
     if (createdAt == null || createdAt.isEmpty) {
       lastUpdatedText.value = "Updated just now";
@@ -1256,3 +1810,17 @@ class CustomerDetailV2Controller extends GetxController {
     }
   }
 }
+extension _DocType on String {
+  String get _cleanUrl => split('?').first;
+  String get ext {
+    final u = _cleanUrl.toLowerCase();
+    final parts = u.split('.');
+    return parts.length > 1 ? parts.last : "";
+  }
+
+  bool get isPdf => ext == "pdf";
+  bool get isDoc => ext == "doc" || ext == "docx";
+  bool get isImage => ["png", "jpg", "jpeg", "webp"].contains(ext);
+}
+
+

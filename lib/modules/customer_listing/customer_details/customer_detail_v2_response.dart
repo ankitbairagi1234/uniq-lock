@@ -160,16 +160,55 @@ class CustomerDetailV2Item {
   }
 }
 
+// class KeyActions {
+//   final bool remove;
+//
+//   KeyActions({
+//     required this.remove,
+//   });
+//
+//   factory KeyActions.fromJson(Map<String, dynamic> json) {
+//     return KeyActions(
+//       remove: json["remove"] == true,
+//     );
+//   }
+// }
+
+// class KeyActions {
+//   final bool remove;
+//   final bool lockDevice;
+//
+//   KeyActions({
+//     required this.remove,
+//     required this.lockDevice,
+//   });
+//
+//   factory KeyActions.fromJson(Map<String, dynamic> json) {
+//     return KeyActions(
+//       remove: json["remove"] == true,
+//       lockDevice: json["lockDevice"] == true,
+//     );
+//   }
+// }
 class KeyActions {
   final bool remove;
+  final bool lockDevice;
+  final bool restriction;
+  final bool socialMediaLock;
 
   KeyActions({
     required this.remove,
+    required this.lockDevice,
+    required this.restriction,
+    required this.socialMediaLock,
   });
 
   factory KeyActions.fromJson(Map<String, dynamic> json) {
     return KeyActions(
       remove: json["remove"] == true,
+      lockDevice: json["lockDevice"] == true,
+      restriction: json["restriction"] == true,
+      socialMediaLock: json["socialMediaLock"] == true,
     );
   }
 }

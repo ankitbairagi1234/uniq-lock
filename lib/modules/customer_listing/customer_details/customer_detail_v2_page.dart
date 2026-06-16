@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:zlock_smart_finance/app/constants/map_open_halper.dart';
 import 'package:zlock_smart_finance/app/utils/date_formate.dart';
+import 'package:zlock_smart_finance/model/device_command_model.dart';
 import 'package:zlock_smart_finance/modules/customer_listing/customer_details/customer_detail_v2_controller.dart';
 import 'package:zlock_smart_finance/modules/retailer/Add_new_key/new_key_controller.dart';
 
@@ -412,8 +414,9 @@ class CustomerDetailV2Page extends StatelessWidget {
 
   Widget _commandsTab() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+      // padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
 
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -431,7 +434,7 @@ class CustomerDetailV2Page extends StatelessWidget {
             );
           }),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 8),
 
           /// 🔴 SPECIAL COMMANDS (NOW HERE)
           // GridView.builder(
@@ -459,27 +462,63 @@ class CustomerDetailV2Page extends StatelessWidget {
           // ),
 
           GridView.builder(
+            padding: EdgeInsets.only(top: 5,bottom: 5),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: ctrl.orderedCommands.length,
+            // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            //   crossAxisCount: 3,
+            //   childAspectRatio: 0.77,
+            //   crossAxisSpacing: 12,
+            //   mainAxisSpacing: 12,
+            // ),
+
+            // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            //   crossAxisCount: 3,
+            //   childAspectRatio: 0.92,
+            //   crossAxisSpacing: 10,
+            //   mainAxisSpacing: 10,
+            // ),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              childAspectRatio: 1,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
+              childAspectRatio: 1.02,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
             ),
+
+            // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            //   crossAxisCount: 3,
+            //   childAspectRatio: 1.08,
+            //   crossAxisSpacing: 8,
+            //   mainAxisSpacing: 8,
+            // ),
+
             itemBuilder: (_, i) {
               final title = ctrl.orderedCommands[i];
 
               /// 👉 SPECIAL COMMANDS (Location, Mobile No)
+              // if (ctrl.specialCommands.contains(title)) {
+              //   return _actionCard(
+              //     title: title,
+              //     iconPath: ctrl.iconFor(title),
+              //     onTap: () => onSpecialCommandTap(title),
+              //   );
+              // }
+
               if (ctrl.specialCommands.contains(title)) {
                 return _actionCard(
                   title: title,
                   iconPath: ctrl.iconFor(title),
-                  onTap: () => onSpecialCommandTap(title),
+                  onTap: () {
+                    if (title == "Audio") {
+                      showAudioAlertDialog();
+                      return;
+                    }
+
+                    onSpecialCommandTap(title);
+                  },
                 );
               }
-
               /// 👉 NORMAL COMMANDS
               final internalKey =
                   ctrl.displayToInternalCommand[title] ?? title;
@@ -494,19 +533,240 @@ class CustomerDetailV2Page extends StatelessWidget {
                   iconPath: ctrl.iconFor(internalKey),
                   value: command?.value ?? false,
                   loading: ctrl.isCommandLoading(internalKey),
+                  // onChanged: isComingSoon
+                  //     ? (_) {
+                  //   Get.snackbar(
+                  //       "Coming Soon", "$title will be available soon");
+                  // }
+                  //     : (v) => ctrl.onCommandToggle(internalKey, v),
                   onChanged: isComingSoon
-                      ? (_) {
-                    Get.snackbar(
-                        "Coming Soon", "$title will be available soon");
-                  }
-                      : (v) => ctrl.onCommandToggle(internalKey, v),
+                      ? (_) {}
+                      : (v) async {
+
+                    /// ✅ AUDIO POPUP
+                    if (internalKey == "Audio") {
+                      showAudioAlertDialog();
+                      return;
+                    }
+
+
+                    /// ✅ CONFIRMATION ONLY FOR THESE 2
+                    if (internalKey == "Lock Device" ||
+                        internalKey == "ACTIVE_RESTRICTION") {
+
+                      // final confirm = await Get.dialog<bool>(
+                      //   Dialog(
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(20),
+                      //     ),
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.all(20),
+                      //       child: Column(
+                      //         mainAxisSize: MainAxisSize.min,
+                      //         children: [
+                      //
+                      //           Icon(
+                      //             Icons.warning_amber_rounded,
+                      //             size: 36,
+                      //             color: Colors.orange,
+                      //           ),
+                      //
+                      //           const SizedBox(height: 12),
+                      //
+                      //           const Text(
+                      //             "Confirmation",
+                      //             style: TextStyle(
+                      //               fontSize: 18,
+                      //               fontWeight: FontWeight.bold,
+                      //             ),
+                      //           ),
+                      //
+                      //           const SizedBox(height: 10),
+                      //
+                      //           Text(
+                      //             internalKey == "Lock Device"
+                      //                 ? (v
+                      //                 ? "Are you sure you want to lock this device?"
+                      //                 : "Are you sure you want to unlock this device?")
+                      //                 : (v
+                      //                 ? "Are you sure you want to enable active restriction?"
+                      //                 : "Are you sure you want to disable active restriction?"),
+                      //             textAlign: TextAlign.center,
+                      //             style: const TextStyle(color: Colors.grey),
+                      //           ),
+                      //
+                      //           const SizedBox(height: 20),
+                      //
+                      //           Row(
+                      //             children: [
+                      //               Expanded(
+                      //                 child: OutlinedButton(
+                      //                   onPressed: () => Get.back(result: false),
+                      //                   child: const Text("Cancel"),
+                      //                 ),
+                      //               ),
+                      //               const SizedBox(width: 10),
+                      //               Expanded(
+                      //                 child: ElevatedButton(
+                      //                   onPressed: () => Get.back(result: true),
+                      //                   style: ElevatedButton.styleFrom(
+                      //                     backgroundColor: const Color(0xff4F6BED),
+                      //                   ),
+                      //                   child: const Text(
+                      //                     "Yes",
+                      //                     style: TextStyle(color: Colors.white),
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           )
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // );
+
+                      final confirm = await Get.dialog<bool>(
+                        Dialog(
+                          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+
+                              /// 🔥 PREMIUM GRADIENT (MATCH APP)
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+
+                                /// 🔵 ICON WITH GLOW
+                                Container(
+                                  padding: const EdgeInsets.all(14),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: const Color(0xff4F6BED).withOpacity(.1),
+                                  ),
+                                  child: Icon(
+                                    internalKey == "Lock Device"
+                                        ? (v ? Icons.lock : Icons.lock_open)
+                                        : Icons.security,
+                                    color: const Color(0xff4F6BED),
+                                    size: 28,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 14),
+
+                                /// 🔥 TITLE
+                                const Text(
+                                  "Confirmation",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff1E2A5A),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 8),
+
+                                /// 🔹 SUB TEXT
+                                Text(
+                                  internalKey == "Lock Device"
+                                      ? (v
+                                      ? "Are you sure you want to lock this device?"
+                                      : "Are you sure you want to unlock this device?")
+                                      : (v
+                                      ? "Enable active restriction on this device?"
+                                      : "Disable active restriction on this device?"),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey,
+                                    height: 1.4,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 22),
+
+                                /// 🔥 BUTTONS
+                                Row(
+                                  children: [
+
+                                    /// CANCEL
+                                    Expanded(
+                                      child: OutlinedButton(
+                                        onPressed: () => Get.back(result: false),
+                                        style: OutlinedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(14),
+                                          ),
+                                          side: BorderSide(
+                                            color: const Color(0xff4F6BED).withOpacity(.3),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          "Cancel",
+                                          style: TextStyle(color: Colors.black87),
+                                        ),
+                                      ),
+                                    ),
+
+                                    const SizedBox(width: 10),
+
+                                    /// YES BUTTON
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () => Get.back(result: true),
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          backgroundColor: const Color(0xff4F6BED),
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(14),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          internalKey == "Lock Device"
+                                              ? (v ? "Lock" : "Unlock")
+                                              : (v ? "Enable" : "Disable"),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                      /// ❌ CANCEL → DO NOTHING
+                      if (confirm != true) return;
+                    }
+
+                    /// ✅ CONTINUE ORIGINAL FLOW
+                    ctrl.onCommandToggle(internalKey, v);
+                  },
                   isDisabled: isComingSoon,
                 );
               });
             },
           ),
 
-          const SizedBox(height: 18),
+          // const SizedBox(height: 8),
 
           /// 🔹 MAIN COMMAND GRID
 
@@ -553,35 +813,9 @@ class CustomerDetailV2Page extends StatelessWidget {
           //     },
           //   );
           // }),
-          const SizedBox(height: 30),
+          // const SizedBox(height: 10),
 
-          /// 🔥 REMOVE KEY BIG BUTTON (BOTTOM)
-          // Obx(() {
-          //   final loading = ctrl.isCommandLoading("Remove Key");
-          //
-          //   return GestureDetector(
-          //     onTap: loading ? null : () => onSpecialCommandTap("Remove Key"),
-          //     child: Container(
-          //       width: double.infinity,
-          //       padding: const EdgeInsets.symmetric(vertical: 18),
-          //       decoration: BoxDecoration(
-          //         color: Colors.red,
-          //         borderRadius: BorderRadius.circular(14),
-          //       ),
-          //       alignment: Alignment.center,
-          //       child: loading
-          //           ? const CircularProgressIndicator(color: Colors.white)
-          //           : const Text(
-          //         "Remove Device",
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontSize: 16,
-          //           fontWeight: FontWeight.bold,
-          //         ),
-          //       ),
-          //     ),
-          //   );
-          // }),
+
           Obx(() {
             final loading = ctrl.isCommandLoading("Remove Key");
 
@@ -683,14 +917,14 @@ class CustomerDetailV2Page extends StatelessWidget {
                                   onPressed: () {
                                     Get.back();
                                     onSpecialCommandTap("Remove Key");
-                                    },
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  child: Text("Remove"),
+                                  child: Text("Remove",style: TextStyle(color: Colors.white),),
                                 ),
                               ),
                             ],
@@ -703,7 +937,8 @@ class CustomerDetailV2Page extends StatelessWidget {
               },
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 18),
+                // padding: const EdgeInsets.symmetric(vertical: 18),
+                padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(14),
@@ -715,7 +950,7 @@ class CustomerDetailV2Page extends StatelessWidget {
                   "Remove Device",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -723,98 +958,467 @@ class CustomerDetailV2Page extends StatelessWidget {
             );
           }),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 40),
         ],
       ),
 
     );
   }
 
+  void showAudioAlertDialog() {
+    final TextEditingController messageCtrl = TextEditingController();
+    bool isLoading = false;
 
+    Get.dialog(
+      Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFFF7F9FF),
+                    Color(0xFFEAF0FF),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  /// ICON
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xff4F6BED).withOpacity(.1),
+                    ),
+                    child: const Icon(
+                      Icons.volume_up,
+                      color: Color(0xff4F6BED),
+                      size: 28,
+                    ),
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  const Text(
+                    "Play Audio Alert",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+                  //
+                  // const Text(
+                  //   "Enter message to send alert",
+                  //   style: TextStyle(
+                  //     color: Colors.grey,
+                  //     fontSize: 12,
+                  //   ),
+                  // ),
+                  //
+                  // const SizedBox(height: 18),
+                  //
+                  // /// MESSAGE FIELD
+                  // TextField(
+                  //   controller: messageCtrl,
+                  //   maxLines: 3,
+                  //   decoration: InputDecoration(
+                  //     hintText: "Type alert message...",
+                  //     filled: true,
+                  //     fillColor: Colors.white,
+                  //     contentPadding: const EdgeInsets.all(14),
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(14),
+                  //       borderSide: BorderSide(
+                  //         color: Colors.grey.shade300,
+                  //       ),
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(14),
+                  //       borderSide: BorderSide(
+                  //         color: Colors.grey.shade300,
+                  //       ),
+                  //     ),
+                  //     focusedBorder: const OutlineInputBorder(
+                  //       borderRadius: BorderRadius.all(Radius.circular(14)),
+                  //       borderSide: BorderSide(
+                  //         color: Color(0xff4F6BED),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
+                  const SizedBox(height: 22),
+
+                  Row(
+                    children: [
+
+                      /// CANCEL
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: const Text("Cancel"),
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      /// SEND
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+
+                            final msg = "";
+                            //
+                            // if (msg.isEmpty) {
+                            //   Get.snackbar(
+                            //     "Error",
+                            //     "Please enter message",
+                            //   );
+                            //   return;
+                            // }
+
+                            setState(() => isLoading = true);
+
+                            final success =
+                            await ctrl.sendAudioAlert(msg);
+
+                            setState(() => isLoading = false);
+
+                            // if (success) {
+                            //   Get.back();
+                            // }
+                            if (success) {
+
+                              /// keyboard close
+                              FocusManager.instance.primaryFocus?.unfocus();
+
+                              /// dialog close
+                              if (Get.isDialogOpen ?? false) {
+                                Navigator.pop(context);
+                              }
+
+                              await Future.delayed(const Duration(milliseconds: 200));
+
+                              Get.snackbar(
+                                "Success",
+                                "Voice alert sent",
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.green,
+                                colorText: Colors.white,
+                                margin: const EdgeInsets.all(12),
+                                duration: const Duration(seconds: 2),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff4F6BED),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: isLoading
+                              ? const SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                              : const Text(
+                            "Send",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // Widget _socialMediaModernCard({
+  //   required bool value,
+  //   required bool isLoading,
+  //   required ValueChanged<bool>? onChanged,
+  // }) {
+  //   Widget socialIcon(String asset) {
+  //     return Container(
+  //       width: 34,
+  //       height: 34,
+  //       padding: const EdgeInsets.all(7),
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         borderRadius: BorderRadius.circular(10),
+  //         border: Border.all(
+  //           color: const Color(0xffE8ECF8),
+  //         ),
+  //       ),
+  //       child: SvgPicture.asset(
+  //         asset,
+  //         placeholderBuilder: (_) => const SizedBox(),
+  //         errorBuilder: (_, __, ___) => const Icon(
+  //           Icons.apps,
+  //           size: 16,
+  //           color: Color(0xff4F6BED),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //
+  //   return Container(
+  //     padding: const EdgeInsets.all(16),
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.circular(24),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withOpacity(.04),
+  //           blurRadius: 15,
+  //           offset: const Offset(0, 6),
+  //         ),
+  //       ],
+  //       border: Border.all(
+  //         color: const Color(0xffE8ECF8),
+  //       ),
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //
+  //         /// Title
+  //         const Text(
+  //           "Social Media",
+  //           style: TextStyle(
+  //             fontSize: 15,
+  //             fontWeight: FontWeight.w700,
+  //           ),
+  //         ),
+  //
+  //         const SizedBox(height: 14),
+  //
+  //         /// Icons + Toggle Row
+  //         Row(
+  //           children: [
+  //
+  //             socialIcon("assets/icons/commands/youtube_colour.svg"),
+  //
+  //             const SizedBox(width: 8),
+  //
+  //             socialIcon("assets/icons/commands/whatsupp_colour.svg"),
+  //
+  //             const SizedBox(width: 8),
+  //
+  //             socialIcon("assets/icons/commands/wa_business.svg"),
+  //
+  //             const SizedBox(width: 8),
+  //
+  //             socialIcon("assets/icons/commands/insta_colour.svg"),
+  //
+  //             const SizedBox(width: 8),
+  //
+  //             socialIcon("assets/icons/commands/facebook_color.svg"),
+  //
+  //             const SizedBox(width: 8),
+  //
+  //             socialIcon("assets/icons/commands/arattai_colour.svg"),
+  //
+  //             const Spacer(),
+  //
+  //             isLoading
+  //                 ? const SizedBox(
+  //               height: 20,
+  //               width: 20,
+  //               child: CircularProgressIndicator(
+  //                 strokeWidth: 2,
+  //               ),
+  //             )
+  //                 : Transform.scale(
+  //               scale: .85,
+  //               child: Switch(
+  //                 value: value,
+  //                 onChanged: onChanged,
+  //                 activeColor: Colors.white,
+  //                 activeTrackColor: const Color(0xff4F6BED),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
   Widget _socialMediaModernCard({
     required bool value,
     required bool isLoading,
     required ValueChanged<bool>? onChanged,
   }) {
-    Widget icon(String asset) {
+    Widget socialIcon(String asset) {
       return Container(
-        width: 44,
-        height: 44,
+        width: 45,
+        height: 45,
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF222222),
+              Color(0xFF111111),
+            ],
+          ),
+          border: Border.all(
+            color: const Color(0x55D9B65A),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.06),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            )
+              color: const Color(0xFFD9B65A).withOpacity(.12),
+              blurRadius: 12,
+            ),
           ],
         ),
-        padding: const EdgeInsets.all(9),
         child: SvgPicture.asset(
           asset,
-          placeholderBuilder: (_) => const Center(
-            child: SizedBox(
-              height: 14,
-              width: 14,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          ),
-          errorBuilder: (_, __, ___) => const Icon(
-            Icons.apps,
-            size: 18,
-            color: Color(0xff4F6BED),
-          ),
+          placeholderBuilder: (_) => const SizedBox(),
         ),
       );
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
+        borderRadius: BorderRadius.circular(28),
         gradient: const LinearGradient(
-          colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1B1B1B),
+            Color(0xFF0A0A0A),
+          ],
         ),
-        border: Border.all(color: const Color(0xff4F6BED).withOpacity(.2)),
+        border: Border.all(
+          color: const Color(0x66D9B65A),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          )
+            color: const Color(0xFFD9B65A).withOpacity(.25),
+            blurRadius: 24,
+            spreadRadius: 1,
+          ),
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          /// 🔹 HEADER
+          /// HEADER
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Social Media",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: Color(0xff1E2A5A),
+              Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFF4E19C),
+                      Color(0xFFD9B65A),
+                      Color(0xFFB8860B),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x99D9B65A),
+                      blurRadius: 20,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.public,
+                  color: Colors.black,
+                  size: 24,
                 ),
               ),
-              isLoading
-                  ? const SizedBox(
-                height: 18,
-                width: 18,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-                  : Transform.scale(
-                scale: 0.85,
-                child: Switch(
-                  value: value,
-                  onChanged: onChanged,
-                  activeTrackColor: const Color(0xff4F6BED),
+
+              const SizedBox(width: 14),
+
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Social Media",
+                      style: TextStyle(
+                        color: Color(0xFFF4E19C),
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      "Access Management",
+                      style: TextStyle(
+                        color: Colors.white54,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: value
+                      ? const Color(0x22FF4444)
+                      : const Color(0x22D9B65A),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text(
+                  value ? "BLOCKED" : "ACTIVE",
+                  style: TextStyle(
+                    color: value
+                        ? Colors.redAccent
+                        : const Color(0xFFD9B65A),
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -822,98 +1426,92 @@ class CustomerDetailV2Page extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          /// 🔥 CENTER DESIGN
-          Stack(
-            alignment: Alignment.center,
+          /// SOCIAL APPS
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
             children: [
+              socialIcon(
+                  "assets/icons/commands/youtube_colour.svg"),
+              socialIcon(
+                  "assets/icons/commands/whatsupp_colour.svg"),
+              socialIcon(
+                  "assets/icons/commands/wa_business.svg"),
+              socialIcon(
+                  "assets/icons/commands/insta_colour.svg"),
+              socialIcon(
+                  "assets/icons/commands/facebook_color.svg"),
+              socialIcon(
+                  "assets/icons/commands/arattai_colour.svg"),
+            ],
+          ),
 
-              /// glow
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xff4F6BED).withOpacity(.08),
-                ),
+          const SizedBox(height: 22),
+
+          /// TOGGLE PANEL
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF151515),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: const Color(0x33D9B65A),
               ),
-
-              /// ✅ CENTER LOGO (REPLACED LOCK ICON)
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xff4F6BED), width: 1.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xff4F6BED).withOpacity(.15),
-                      blurRadius: 10,
-                    )
-                  ],
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  value
+                      ? Icons.lock_open_rounded
+                      : Icons.lock_rounded,
+                  color: const Color(0xFFD9B65A),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.asset(
-                    "assets/images/lock_pe.png",
-                    fit: BoxFit.cover,
+
+                const SizedBox(width: 10),
+
+                Expanded(
+                  child: Text(
+                    value
+                        ? "Social Media Restricted"
+                        : "Social Media Allowed",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
 
-              /// 🔵 ICONS AROUND
-              SizedBox(
-                width: 200,
-                height: 200,
-                child: Stack(
-                  children: [
-
-                    // Positioned(
-                    //     top: 0,
-                    //     left: 78,
-                    //     child: icon("assets/icons/commands/youtube.svg")),
-                    Positioned(
-                        top: 0,
-                        left: 78,
-                        child: icon("assets/icons/commands/youtube_colour.svg")),
-
-                    // Positioned(
-                    //     top: 40,
-                    //     right: 10,
-                    //     child: icon("assets/icons/commands/whatsapp.svg")),
-                    Positioned(
-                        top: 40,
-                        right: 10,
-                        child: icon("assets/icons/commands/whatsupp_colour.svg")),
-
-                    Positioned(
-                        right: 8,
-                        top: 110,
-                        child: icon("assets/icons/commands/wa_business.svg",)),
-
-
-                    Positioned(
-                        bottom: 0,
-                        left: 78,
-                        child: icon("assets/icons/commands/facebook_color.svg")),
-
-                    Positioned(
-                        left: 8,
-                        top: 110,
-                        child: icon("assets/icons/commands/insta_colour.svg")),
-
-                    Positioned(
-                        top: 40,
-                        left: 10,
-                        child: icon("assets/icons/commands/arattai_colour.svg")),
-                  ],
-                ),
-              ),
-            ],
+                if (isLoading)
+                  const SizedBox(
+                    height: 22,
+                    width: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  )
+                else
+                  Transform.scale(
+                    scale: .9,
+                    child: Switch(
+                      value: value,
+                      onChanged: onChanged,
+                      activeColor: Colors.black,
+                      activeTrackColor: const Color(0xFFD9B65A),
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.grey.shade700,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
+
   Widget _miniCommandCard({
     required String title,
     required String iconPath,
@@ -927,10 +1525,36 @@ class CustomerDetailV2Page extends StatelessWidget {
       opacity: isDisabled ? 0.5 : 1,
       child: Container(
         padding: const EdgeInsets.all(8),
+        // decoration: BoxDecoration(
+        //   borderRadius: BorderRadius.circular(16),
+        //   border: Border.all(color: const Color(0xff4F6BED)),
+        //   color: Colors.white,
+        // ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xff4F6BED)),
-          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+
+          /// SAME AS SPECIAL COMMAND CARD
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFFF7F9FF),
+              Color(0xFFEAF0FF),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+
+          border: Border.all(
+            color: const Color(0xff4F6BED).withOpacity(.12),
+            width: 1,
+          ),
+
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.04),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -979,6 +1603,7 @@ class CustomerDetailV2Page extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _actionCard({
     required String title,
@@ -1071,14 +1696,109 @@ class CustomerDetailV2Page extends StatelessWidget {
       return;
     }
 
+    // if (title == 'Mobile No') {
+    //   showMobileNumberPopup(
+    //     registeredNumber: ctrl.customerPhone,
+    //     currentNumber: ctrl.customerPhone,
+    //   );
+    //   return;
+    // }
+
+    // if (title == 'Mobile No') {
+    //   /// 🔹 SHOW WAIT POPUP FIRST
+    //   showMobileNumberPopup(
+    //     simNumbers: [],
+    //     isLoading: true,
+    //   );
+    //
+    //   final numbers = await ctrl.fetchSimNumbers();
+    //
+    //   /// 🔹 UPDATE UI
+    //   Get.back(); // close wait dialog
+    //
+    //   showMobileNumberPopup(
+    //     simNumbers: numbers,
+    //     isLoading: false,
+    //   );
+    //
+    //   return;
+    // }
     if (title == 'Mobile No') {
+      /// ❌ DEVICE ID MISSING → NO POPUP
+      if (ctrl.actualDeviceId.isEmpty) {
+        Get.snackbar("Error", "Device ID missing");
+        return;
+      }
+      /// 🔹 CLOSE ANY EXISTING DIALOG (SAFETY)
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      /// 🔹 SHOW LOADING
       showMobileNumberPopup(
-        registeredNumber: ctrl.customerPhone,
-        currentNumber: ctrl.customerPhone,
+        simNumbers: [],
+        simHistory: ctrl.simHistory.toList(),
+
+        isLoading: true,
       );
+
+      List<String> numbers = [];
+
+      try {
+        numbers = await ctrl.fetchSimNumbers();
+      } catch (e) {
+        debugPrint("❌ UI ERROR => $e");
+      }
+
+      /// 🔹 CLOSE LOADING SAFELY
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      /// 🔹 SHOW FINAL RESULT
+      showMobileNumberPopup(
+        simNumbers: numbers,
+        simHistory: ctrl.simHistory.toList(),
+
+        isLoading: false,
+      );
+
+      return;
+    }
+    if (title == 'Scheduler Lock') {
+      debugPrint("⏰ Scheduler Lock clicked");
+
+      // /// Future me API call yaha jayega
+      // Get.snackbar(
+      //   "Scheduler Lock",
+      //   "Scheduler lock clicked (API pending)",
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
+      showSchedulerDialog();
+
+
+      return;
+    }
+    // if (title == 'Offline Lock') {
+    //   ctrl.handleOfflineCommand(true);
+    //   return;
+    // }
+    //
+    // if (title == 'Offline Unlock') {
+    //   ctrl.handleOfflineCommand(false);
+    //   return;
+    // }
+    if (title == 'Offline Lock') {
+      ctrl.handleOfflineCommand(true); // validation + logs
+      showOfflineNumberDialog(isLock: true); // UI call
       return;
     }
 
+    if (title == 'Offline Unlock') {
+      ctrl.handleOfflineCommand(false);
+      showOfflineNumberDialog(isLock: false);
+      return;
+    }
+    if (title == 'App Update') {
+      showAppUpdateDialog();
+      return;
+    }
     if (title == 'Remove Key') {
       await ctrl.sendRemoveKeyCommand();
 
@@ -1089,27 +1809,625 @@ class CustomerDetailV2Page extends StatelessWidget {
     }
   }
 
-  void showMobileNumberPopup({
-    required String registeredNumber,
-    required String currentNumber,
-  }) {
+
+  void showSchedulerDialog() {
+    DateTime? selectedDate;
+    TimeOfDay? selectedTime;
+    bool isLoading = false;
+
     Get.dialog(
       Dialog(
         insetPadding: const EdgeInsets.symmetric(horizontal: 18),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  /// 🔵 ICON + TITLE
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xff4F6BED).withOpacity(.1),
+                    ),
+                    child: const Icon(Icons.lock_clock,
+                        color: Color(0xff4F6BED), size: 28),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  const Text(
+                    "Schedule Lock",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  const Text(
+                    "Select date & time to lock device",
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// 📅 DATE
+                  InkWell(
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) {
+                        setState(() => selectedDate = picked);
+                      }
+                    },
+                    child: _schedulerBox(
+                      icon: Icons.calendar_today,
+                      text: selectedDate == null
+                          ? "Select Date"
+                          : DateFormat("dd MMM yyyy").format(selectedDate!),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  /// ⏰ TIME
+                  InkWell(
+                    onTap: () async {
+                      // final picked = await showTimePicker(
+                      //   context: context,
+                      //   initialTime: TimeOfDay.now(),
+                      // );
+
+                      final picked = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                        builder: (context, child) {
+                          return MediaQuery(
+                            data: MediaQuery.of(context).copyWith(
+                              alwaysUse24HourFormat: true,
+                            ),
+                            child: child!,
+                          );
+                        },
+                      );
+
+                      if (picked != null) {
+                        setState(() => selectedTime = picked);
+                      }
+                    },
+                    child: _schedulerBox(
+                      icon: Icons.access_time,
+                      // text: selectedTime == null
+                      //     ? "Select Time"
+                      //     : selectedTime!.format(context),
+                      text: selectedTime == null
+                          ? "Select Time"
+                          : "${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}",
+                    ),
+                  ),
+
+                  const SizedBox(height: 22),
+
+                  /// 🔥 BUTTONS
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: isLoading ? null : () => Get.back(),
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: const Text("Cancel"),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                            if (selectedDate == null ||
+                                selectedTime == null) {
+                              Get.snackbar("Error", "Select date & time");
+                              return;
+                            }
+
+                            setState(() => isLoading = true);
+
+                            final dateTime = DateTime(
+                              selectedDate!.year,
+                              selectedDate!.month,
+                              selectedDate!.day,
+                              selectedTime!.hour,
+                              selectedTime!.minute,
+                            );
+
+                            // final formatted = DateFormat(
+                            //     "yyyy-MM-ddTHH:mm:ss")
+                            //     .format(dateTime);
+
+                            final offset = dateTime.timeZoneOffset;
+                            final sign = offset.isNegative ? '-' : '+';
+
+                            final hours =
+                            offset.inHours.abs().toString().padLeft(2, '0');
+
+                            final minutes =
+                            (offset.inMinutes.abs() % 60)
+                                .toString()
+                                .padLeft(2, '0');
+
+                            final formatted =
+                                "${DateFormat("yyyy-MM-ddTHH:mm:ss").format(dateTime)}"
+                                "$sign$hours:$minutes";
+
+                            debugPrint("📤 schedule_at => $formatted");
+
+                            await ctrl.scheduleLockApi(formatted);
+
+                            setState(() => isLoading = false);
+                            // Get.back();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff4F6BED),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: isLoading
+                              ? const SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                              : const Text(
+                            "Schedule",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _schedulerBox({
+    required IconData icon,
+    required String text,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xff4F6BED).withOpacity(.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.04),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          )
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: const Color(0xff4F6BED)),
+          const SizedBox(width: 10),
+          Text(
+            text,
+            style: const TextStyle(fontSize: 13),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showOfflineNumberDialog({required bool isLock}) {
+    final ctrl = Get.find<CustomerDetailV2Controller>();
+
+    TextEditingController numberCtrl = TextEditingController();
+
+    List<String> simNumbers = [];
+    bool isLoading = true;
+    bool isSending = false;
+    bool isFetched = false;
+
+    Get.dialog(
+      Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: StatefulBuilder(
+          builder: (context, setState) {
+
+            /// ✅ FETCH ONLY ONCE
+            if (isLoading && !isFetched) {
+              isFetched = true;
+
+              ctrl.fetchSimNumbers().then((list) {
+                simNumbers = list;
+                isLoading = false;
+
+                /// 👉 अगर number है → prefill
+                if (simNumbers.isNotEmpty) {
+                  numberCtrl.text = simNumbers.first;
+                }
+
+                setState(() {});
+              });
+            }
+
+            return Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  /// 🔵 ICON
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xff4F6BED).withOpacity(.1),
+                    ),
+                    child: Icon(
+                      isLock ? Icons.lock : Icons.lock_open,
+                      color: const Color(0xff4F6BED),
+                      size: 28,
+                    ),
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  Text(
+                    isLock ? "Offline Lock" : "Offline Unlock",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  /// 🔄 LOADING
+                  if (isLoading)
+                    const CircularProgressIndicator()
+                  else if (simNumbers.isNotEmpty)
+
+                  /// ✅ PREFILLED NUMBER (NO INPUT)
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.grey.shade300),
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.phone, color: Color(0xff4F6BED)),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              numberCtrl.text,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+
+                  /// ❌ NO NUMBER → INPUT FIELD
+                  else
+                    TextField(
+                      controller: numberCtrl,
+                      keyboardType: TextInputType.number,
+                      maxLength: 10,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      decoration: InputDecoration(
+                        hintText: "Enter mobile number",
+                        counterText: "",
+                        prefixIcon: const Icon(Icons.phone),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+
+                  const SizedBox(height: 20),
+
+                  /// 🔥 BUTTON
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: isSending
+                          ? null
+                          : () async {
+                        final number = numberCtrl.text.trim();
+
+                        if (number.isEmpty || number.length < 10) {
+                          Get.snackbar("Error", "Enter valid number");
+                          return;
+                        }
+
+                        /// 🔥 CONFIRMATION DIALOG
+                        final confirm = await Get.dialog<bool>(
+                          Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(24),
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+
+                                  Icon(
+                                    isLock ? Icons.lock : Icons.lock_open,
+                                    color: const Color(0xff4F6BED),
+                                    size: 28,
+                                  ),
+
+                                  const SizedBox(height: 12),
+
+                                  const Text(
+                                    "Confirmation",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 8),
+
+                                  Text(
+                                    isLock
+                                        ? "Send offline lock to $number?"
+                                        : "Send offline unlock to $number?",
+                                    textAlign: TextAlign.center,
+                                  ),
+
+                                  const SizedBox(height: 20),
+
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: OutlinedButton(
+                                          onPressed: () =>
+                                              Get.back(result: false),
+                                          child: const Text("Cancel"),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () =>
+                                              Get.back(result: true),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                            const Color(0xff4F6BED),
+                                          ),
+                                          child: const Text("Yes",
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+
+                        if (confirm != true) return;
+
+                        setState(() => isSending = true);
+
+                        await ctrl.sendOfflineCommandApi(
+                          number: number,
+                          isLock: isLock,
+                        );
+
+                        /// ✅ CLOSE
+                        if (Get.isDialogOpen == true) {
+                          Navigator.of(Get.overlayContext!).pop();
+                        }
+
+                        Get.closeAllSnackbars();
+
+                        Get.rawSnackbar(
+                          message: isLock
+                              ? "Offline Lock sent"
+                              : "Offline Unlock sent",
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.green,
+                        );
+
+                        setState(() => isSending = false);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff4F6BED),
+                        padding:
+                        const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: isSending
+                          ? const CircularProgressIndicator(
+                          color: Colors.white)
+                          : const Text("Send Command",
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void showMobileNumberPopup({
+    required List<String> simNumbers,
+    required List<Map<String, dynamic>> simHistory,
+    bool isLoading = false,
+  }) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _infoRowForSim("Registered\nNumber", registeredNumber),
+
+              /// 🔹 LOADING
+              if (isLoading) ...[
+                const SizedBox(height: 10),
+                const CircularProgressIndicator(),
+                const SizedBox(height: 14),
+                const Text(
+                  "Please wait...\nFetching SIM numbers",
+                  textAlign: TextAlign.center,
+                ),
+              ] else ...[
+
+                /// 🔥 NO NUMBER
+                if (simNumbers.isEmpty)
+                  Column(
+                    children: [
+                      const Icon(Icons.sim_card, size: 40, color: Colors.grey),
+                      const SizedBox(height: 8),
+                      _infoRowForSim("SIM Number", "Not available"),
+                    ],
+                  )
+
+                /// 🔥 MULTIPLE NUMBERS
+                else
+                  ...simNumbers.asMap().entries.map((e) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: _infoRowForSim(
+                        "SIM ${e.key + 1}",
+                        e.value,
+                      ),
+                    );
+                  }).toList(),
+              ],
+
               const SizedBox(height: 12),
-              _infoRowForSim("Current\nNumber", currentNumber.isEmpty ? "-" : currentNumber),
-              const SizedBox(height: 14),
+              if (!isLoading &&
+                  simHistory.isNotEmpty) ...[
+
+                const SizedBox(height: 12),
+
+                InkWell(
+                  onTap: () {
+                    showSimHistoryPopup(simHistory);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF4F6BED),
+                          Color(0xFF3153D8),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x334F6BED),
+                          blurRadius: 12,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.history,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "SIM History",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 12),
+
+              /// 🔹 BUTTON
               InkWell(
-                onTap: () => Get.back(),
+                onTap: () {
+                  if (Get.isDialogOpen ?? false) Get.back();
+                },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   decoration: BoxDecoration(
                     color: const Color(0xFF3153D8),
                     borderRadius: BorderRadius.circular(50),
@@ -1117,11 +2435,7 @@ class CustomerDetailV2Page extends StatelessWidget {
                   alignment: Alignment.center,
                   child: const Text(
                     "Dismiss",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               )
@@ -1129,9 +2443,200 @@ class CustomerDetailV2Page extends StatelessWidget {
           ),
         ),
       ),
+      barrierDismissible: false, // 🔥 IMPORTANT
     );
   }
 
+  void showSimHistoryPopup(
+      List<Map<String, dynamic>> history,
+      ) {
+    Get.dialog(
+      Dialog(
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 24,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Container(
+          constraints: const BoxConstraints(
+            maxHeight: 600,
+          ),
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            children: [
+
+              /// HEADER
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF3153D8)
+                          .withOpacity(.1),
+                      borderRadius:
+                      BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.history,
+                      color: Color(0xFF3153D8),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      "SIM History",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              Expanded(
+                child: ListView.separated(
+                  itemCount: history.length,
+                  separatorBuilder: (_, __) =>
+                  const SizedBox(height: 10),
+                  itemBuilder: (_, index) {
+
+                    final item = history[index];
+
+                    final sim1 =
+                        item["sim1_number"]?.toString() ??
+                            "-";
+
+                    final carrier1 =
+                        item["sim1_carrier"]?.toString() ??
+                            "Unknown";
+
+                    final sim2 =
+                    item["sim2_number"]?.toString();
+
+                    final carrier2 =
+                    item["sim2_carrier"]?.toString();
+
+                    return Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                        BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(
+                              0xFF3153D8)
+                              .withOpacity(.15),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black
+                                .withOpacity(.04),
+                            blurRadius: 8,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: [
+
+                          /// HISTORY TAG
+                          Container(
+                            padding:
+                            const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                  0xFF3153D8)
+                                  .withOpacity(.08),
+                              borderRadius:
+                              BorderRadius.circular(
+                                  30),
+                            ),
+                            child: Text(
+                              "History #${index + 1}",
+                              style: const TextStyle(
+                                color:
+                                Color(0xFF3153D8),
+                                fontWeight:
+                                FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          _historyRow(
+                            "SIM 1",
+                            sim1,
+                          ),
+
+                          _historyRow(
+                            "Carrier",
+                            carrier1,
+                          ),
+
+                          if (sim2 != null &&
+                              sim2.isNotEmpty) ...[
+                            const Divider(),
+
+                            _historyRow(
+                              "SIM 2",
+                              sim2,
+                            ),
+
+                            _historyRow(
+                              "Carrier",
+                              carrier2 ?? "-",
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Get.back(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                    const Color(0xFF3153D8),
+                    padding:
+                    const EdgeInsets.symmetric(
+                      vertical: 14,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(40),
+                    ),
+                  ),
+                  child: const Text(
+                    "Close",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
   Widget _infoRowForSim(String label, String value) {
     return Container(
       width: double.infinity,
@@ -1166,6 +2671,38 @@ class CustomerDetailV2Page extends StatelessWidget {
     );
   }
 
+  Widget _historyRow(
+      String label,
+      String value,
+      ) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 8,
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Future<void> showLocationPopup() async {
     // ✅ Initial location fetch
     await ctrl.getLocationCommand();
@@ -1265,7 +2802,7 @@ class CustomerDetailV2Page extends StatelessWidget {
                       ),
 
 
-                    const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
                       /// 📍 LOCATION ROW
                       Row(
@@ -1431,6 +2968,166 @@ class CustomerDetailV2Page extends StatelessWidget {
     );
   }
 
+  void showAppUpdateDialog() {
+    final ctrl = Get.find<CustomerDetailV2Controller>();
+
+    Get.dialog(
+      Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+
+            /// 🔥 PREMIUM GRADIENT
+            gradient: const LinearGradient(
+              colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              /// 🔵 ICON WITH GLOW
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xff4F6BED).withOpacity(.1),
+                ),
+                child: const Icon(
+                  Icons.system_update_alt,
+                  color: Color(0xff4F6BED),
+                  size: 28,
+                ),
+              ),
+
+              const SizedBox(height: 14),
+
+              /// 🔥 TITLE
+              const Text(
+                "Update App",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xff1E2A5A),
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              /// 🔹 DESC
+              const Text(
+                "Are you sure you want to update the app on this device?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey,
+                  height: 1.4,
+                ),
+              ),
+
+              const SizedBox(height: 22),
+
+              /// 🔥 BUTTONS
+              Row(
+                children: [
+
+                  /// CANCEL
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        side: BorderSide(
+                          color: const Color(0xff4F6BED).withOpacity(.3),
+                        ),
+                      ),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.black87),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 10),
+
+                  /// UPDATE BUTTON
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final deviceId = ctrl.actualDeviceId;
+
+                        if (deviceId.isEmpty) {
+                          Get.back();
+                          Get.snackbar("Error", "Device ID missing");
+                          return;
+                        }
+
+                        try {
+                          final req = DeviceCommandRequest(
+                            deviceId: deviceId,
+                            // commandType: "UPDATE_APP",
+                            commandType: "MDM_APP_UPDATE",
+                          );
+
+                          await ctrl.sendUpdateAppCommand(req);
+
+                          /// ✅ CLOSE DIALOG (SAFE)
+                          if (Get.isDialogOpen == true) {
+                            Navigator.of(Get.overlayContext!).pop();
+                          }
+
+                          /// ✅ CLEAR OLD SNACKBARS
+                          Get.closeAllSnackbars();
+
+                          /// ✅ SUCCESS TOAST
+                          Get.rawSnackbar(
+                            message: "App update command sent",
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green,
+                            margin: const EdgeInsets.all(12),
+                            borderRadius: 12,
+                            duration: const Duration(seconds: 2),
+                          );
+                        } catch (e) {
+                          Get.back();
+                          Get.snackbar("Error", "Failed to send command");
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        backgroundColor: const Color(0xff4F6BED),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: const Text(
+                        "Update",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
   Widget _tabItem(String title, bool active) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
@@ -1678,10 +3375,11 @@ class CustomerDetailV2Page extends StatelessWidget {
             return _emiRow(
               context,
               i,
-              e.date,
+              e.emiNumber,
               e.amount,
               e.status.label,
               color,
+              paidDate: e.paidDate,
             );
           }),
         ],
@@ -1692,7 +3390,7 @@ class CustomerDetailV2Page extends StatelessWidget {
   Widget _tableHeader() {
     return Row(
       children: const [
-        Expanded(child: Text("Date", style: TextStyle(fontWeight: FontWeight.w600))),
+        Expanded(child: Text("No", style: TextStyle(fontWeight: FontWeight.w600))),
         Expanded(child: Text("Amount", style: TextStyle(fontWeight: FontWeight.w600))),
         Expanded(child: Text("Status", style: TextStyle(fontWeight: FontWeight.w600))),
         Expanded(child: Text("Action", style: TextStyle(fontWeight: FontWeight.w600))),
@@ -1703,28 +3401,90 @@ class CustomerDetailV2Page extends StatelessWidget {
   Widget _emiRow(
       BuildContext context,
       int index,
-      String date,
-      String amount,
+      dynamic emiNumber,
+      dynamic amount,
       String status,
-      Color color,
-      ) {
+      Color color, {
+        DateTime? paidDate,
+      }) {
+    final bool isPaid = status.toLowerCase() == "paid";
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Expanded(child: Text(date)),
-          Expanded(child: Text(amount)),
-          Expanded(child: Text(status, style: TextStyle(color: color))),
+
           Expanded(
-            child: ElevatedButton(
-              onPressed: () => ctrl.openChangeStatusSheet(context, index),
+            child: Text("$emiNumber"),
+          ),
+
+          Expanded(
+            child: Text("₹ ${amount ?? 0}"),
+          ),
+
+          Expanded(
+            child: Text(
+              status,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+
+          Expanded(
+            flex: 2,
+            child: isPaid
+                ? Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 8,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    paidDate != null
+                        ? DateFormat("dd MMMM yyyy").format(paidDate)
+                        : "Paid",
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            )
+                : ElevatedButton(
+              onPressed: () {
+                ctrl.openChangeStatusSheet(
+                  context,
+                  index,
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff4F6BED),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
               child: const Text(
                 "Action",
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
               ),
             ),
           ),

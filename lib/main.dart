@@ -63,7 +63,7 @@ class ZLockApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "New MF",
+      title: "UNIQ Lock",
       initialRoute: AppRoutes.SPLASH,
       getPages: AppPages.routes,
       theme: ThemeData(

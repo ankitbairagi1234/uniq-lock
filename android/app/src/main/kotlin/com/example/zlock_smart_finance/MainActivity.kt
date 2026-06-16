@@ -1,4 +1,4 @@
-package com.mf.newapp
+package com.uniq.lock
 
 import io.flutter.embedding.android.FlutterActivity
 

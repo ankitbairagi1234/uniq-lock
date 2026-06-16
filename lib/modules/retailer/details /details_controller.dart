@@ -373,59 +373,59 @@ class DetailsController extends GetxController {
     return dt.toUtc().toIso8601String();
   }
 
-  Future<void> updateEmiFromSheet(int index) async {
-    if (index < 0 || index >= emis.length) {
-      Get.snackbar("Error", "Invalid EMI index", snackPosition: SnackPosition.BOTTOM);
-      return;
-    }
-
-    final row = emis[index];
-    final emiId = row.emiId.trim();
-    if (emiId.isEmpty) {
-      Get.snackbar("Error", "EMI ID missing", snackPosition: SnackPosition.BOTTOM);
-      return;
-    }
-
-    // ✅ if marking PAID then paid date must be selected
-    if (selectedStatus.value == EmiStatus.paid && selectedPayDate.value == null) {
-      Get.snackbar("Error", "Please choose EMI pay date", snackPosition: SnackPosition.BOTTOM);
-      return;
-    }
-
-    if (isUpdatingEmi.value) return;
-    isUpdatingEmi.value = true;
-
-    try {
-      // find original overdueAmount from details list (null safe)
-      final item = details.value?.emi?.list
-          .firstWhereOrNull((e) => e.id == emiId);
-
-      final overdue = addOverdueAmount.value ? (item?.overdueAmount ?? 0) : 0;
-
-      final body = <String, dynamic>{
-        "paymentMode": "CASH", // (future me dropdown se)
-        "status": _apiStatusFromUi(selectedStatus.value),
-        "overdueAmount": overdue,
-        // paidAt only when date selected
-        if (selectedPayDate.value != null) "paidAt": _toApiPaidAt(selectedPayDate.value!),
-      };
-
-      final resp = await _emiService.updateEmi(emiId: emiId, body: body);
-
-      if (resp == null || resp.status != 200) {
-        Get.snackbar("Error", resp?.message ?? "Failed to update EMI",
-            snackPosition: SnackPosition.BOTTOM);
-        return;
-      }
-
-      // ✅ SUCCESS: refresh details (and rebuild EMI list + progress)
-      await fetchKeyDetails();
-
-      Get.snackbar("Success", resp.message, snackPosition: SnackPosition.BOTTOM);
-    } finally {
-      isUpdatingEmi.value = false;
-    }
-  }
+  // Future<void> updateEmiFromSheet(int index) async {
+  //   if (index < 0 || index >= emis.length) {
+  //     Get.snackbar("Error", "Invalid EMI index", snackPosition: SnackPosition.BOTTOM);
+  //     return;
+  //   }
+  //
+  //   final row = emis[index];
+  //   final emiId = row.emiId.trim();
+  //   if (emiId.isEmpty) {
+  //     Get.snackbar("Error", "EMI ID missing", snackPosition: SnackPosition.BOTTOM);
+  //     return;
+  //   }
+  //
+  //   // ✅ if marking PAID then paid date must be selected
+  //   if (selectedStatus.value == EmiStatus.paid && selectedPayDate.value == null) {
+  //     Get.snackbar("Error", "Please choose EMI pay date", snackPosition: SnackPosition.BOTTOM);
+  //     return;
+  //   }
+  //
+  //   if (isUpdatingEmi.value) return;
+  //   isUpdatingEmi.value = true;
+  //
+  //   try {
+  //     // find original overdueAmount from details list (null safe)
+  //     final item = details.value?.emi?.list
+  //         .firstWhereOrNull((e) => e.id == emiId);
+  //
+  //     final overdue = addOverdueAmount.value ? (item?.overdueAmount ?? 0) : 0;
+  //
+  //     final body = <String, dynamic>{
+  //       "paymentMode": "CASH", // (future me dropdown se)
+  //       "status": _apiStatusFromUi(selectedStatus.value),
+  //       "overdueAmount": overdue,
+  //       // paidAt only when date selected
+  //       if (selectedPayDate.value != null) "paidAt": _toApiPaidAt(selectedPayDate.value!),
+  //     };
+  //
+  //     final resp = await _emiService.updateEmi(emiId: emiId, body: body);
+  //
+  //     if (resp == null || resp.status != 200) {
+  //       Get.snackbar("Error", resp?.message ?? "Failed to update EMI",
+  //           snackPosition: SnackPosition.BOTTOM);
+  //       return;
+  //     }
+  //
+  //     // ✅ SUCCESS: refresh details (and rebuild EMI list + progress)
+  //     await fetchKeyDetails();
+  //
+  //     Get.snackbar("Success", resp.message, snackPosition: SnackPosition.BOTTOM);
+  //   } finally {
+  //     isUpdatingEmi.value = false;
+  //   }
+  // }
 
   Future<void> lockNow() async {
     final id = deviceId.value.trim();
@@ -867,7 +867,6 @@ extension _DocType on String {
   bool get isDoc => ext == "doc" || ext == "docx";
   bool get isImage => ["png", "jpg", "jpeg", "webp"].contains(ext);
 }
-
 enum EmiStatus { paid, unpaid }
 
 extension EmiStatusX on EmiStatus {

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mf.newapp"
+    namespace = "com.uniq.lock"
 //    compileSdk = flutter.compileSdkVersion
     compileSdk = 36
 
@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.mf.newapp"
+        applicationId = "com.uniq.lock"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

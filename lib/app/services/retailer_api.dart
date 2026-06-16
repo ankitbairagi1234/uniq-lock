@@ -76,6 +76,7 @@ class RetailerAPI {
 
 
   static String baseUrl = "https://lockpepro.com";
+  // static String baseUrl = "https://emitrackerpro.com";
 
   // static String login = "$baseUrl/api/v1/user/login";
   // ✅ NEW APIs
@@ -102,13 +103,24 @@ class RetailerAPI {
 
   static String changePasswordAdmin = "$baseUrl/api/v1/auth/change-password-admin";
 
-///mic me issue he mere wait let me fix
+  ///mic me issue he mere wait let me fix
   static String keyDetail = "$baseUrl/api/dashboard/key-summary";
 
   static String keyLedger = "$baseUrl/api/keys/ledger";
 
   static String updateFrpEmail =
       "$baseUrl/api/v1/auth/frp-email/update";
+
+
+  // RetailerAPI
+
+  /// GET EMI SCHEDULE
+  static String getCustomerEmi(String customerId) =>
+      "$baseUrl/api/customers/emi/schedule?id=$customerId";
+
+  /// UPDATE EMI
+  static String updateCustomerEmi() =>
+      "$baseUrl/api/customers/emi/updatstatus";
 
   ///old apis
   // static String baseUrl = "https://sunil-z-plus-project.vercel.app";
@@ -135,8 +147,8 @@ class RetailerAPI {
   static String deviceQr(String deviceMongoId) =>
       "$baseUrl/api/v1/retailer/device/$deviceMongoId/qr";
 
-  static String updateEmi(String emiId) =>
-      "$baseUrl/api/v1/retailer/emi/$emiId";
+  // static String updateEmi(String emiId) =>
+  //     "$baseUrl/api/v1/retailer/emi/$emiId";
 
   static String updateKey(String id) => "$baseUrl/api/v1/retailer/update-key/$id";
 

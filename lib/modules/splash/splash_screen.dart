@@ -29,7 +29,7 @@ class SplashScreen extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         // width: MediaQuery.of(context).size.width,

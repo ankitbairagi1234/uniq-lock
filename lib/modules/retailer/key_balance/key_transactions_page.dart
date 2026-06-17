@@ -13,7 +13,7 @@ class KeyTransactionsPage extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF0A0A0A),
 
       body: RefreshIndicator(
         onRefresh: () async {
@@ -25,15 +25,13 @@ class KeyTransactionsPage extends StatelessWidget {
           child: Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
                 colors: [
-                  // AppColors.topBgColour,
-                  Colors.white,
-                  Colors.white,
-                  Colors.white
+                  Color(0xFF1B1B1B),
+                  Color(0xFF0A0A0A),
                 ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
               ),
             ),
             child: Padding(
@@ -49,20 +47,28 @@ class KeyTransactionsPage extends StatelessWidget {
                         onTap: () => Get.back(),
                         child: Container(
                           padding: const EdgeInsets.all(12),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF2F4FA),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF151515),
                             shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0x55D9B65A),
+                            ),
                           ),
-                          child: const Icon(Icons.arrow_back, size: 18),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            size: 18,
+                            color: Color(0xFFD9B65A),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 20),
                       const Text(
                         "Key Transaction",
                         style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20),
+                          color: Color(0xFFF4E19C),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 22,
+                        ),
                       ),
                     ],
                   ),
@@ -169,9 +175,12 @@ class KeyTransactionsPage extends StatelessWidget {
         index: 0,
         icon: Icons.android,
         activeGradient: const LinearGradient(
-          colors: [Color(0xffE6F6EE), Color(0xffBFE8D4)],
+          colors: [
+            Color(0x33D9B65A),
+            Color(0x22D9B65A),
+          ],
         ),
-        activeColor: const Color(0xff2E7D32),
+        activeColor: const Color(0xFFD9B65A),
       ),
       _platformTab(
         title: 'Iphone Key',
@@ -180,9 +189,12 @@ class KeyTransactionsPage extends StatelessWidget {
         index: 1,
         icon: Icons.apple,
         activeGradient: const LinearGradient(
-          colors: [Color(0xffFCE8E8), Color(0xffF5BABA)],
+          colors: [
+            Color(0x33D9B65A),
+            Color(0x22D9B65A),
+          ],
         ),
-        activeColor: const Color(0xffB3261E),
+        activeColor: const Color(0xFFD9B65A),
       ),
     ],
   ));
@@ -396,22 +408,46 @@ class KeyTransactionsPage extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 6),
           padding: const EdgeInsets.all(14),
+          // decoration: BoxDecoration(
+          //   borderRadius: BorderRadius.circular(14),
+          //   border: Border.all(color: const Color(0xffD6DCFF)),
+          // ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xffD6DCFF)),
+            borderRadius: BorderRadius.circular(16),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1B1B1B),
+                Color(0xFF0A0A0A),
+              ],
+            ),
+            border: Border.all(
+              color: const Color(0x55D9B65A),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFD9B65A).withOpacity(.10),
+                blurRadius: 10,
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title,
                   style: const TextStyle(
-                      fontSize: 12, color: Color(0xff3F51B5))),
+                    fontSize: 12,
+                    color: Color(0xFFF4E19C),
+                  ),
+              ),
               const SizedBox(height: 8),
               Text(
                 value.toString(),
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w700,
+                  color: Colors.white,
                 ),
               ),
             ],
@@ -512,19 +548,24 @@ class KeyTransactionsPage extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.lock_clock, size: 60, color: Colors.grey.shade400),
+            Icon(
+              Icons.lock_clock,
+              size: 60,
+              color: const Color(0xFFD9B65A),
+            ),
             const SizedBox(height: 16),
             const Text(
               "Coming Soon",
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFFF4E19C),
               ),
             ),
             const SizedBox(height: 6),
             Text(
               "iPhone key transactions will be available soon",
-              style: TextStyle(color: Colors.grey.shade600),
+              style: TextStyle(color: Colors.white70),
             ),
           ],
         ),
@@ -538,9 +579,23 @@ class KeyTransactionsPage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(16),
+      //   border: Border.all(color: Colors.grey.shade200),
+      // ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(18),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1B1B1B),
+            Color(0xFF0A0A0A),
+          ],
+        ),
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+        ),
       ),
       child: Row(
         children: [
@@ -563,11 +618,15 @@ class KeyTransactionsPage extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(t.name,
                     style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w600)),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                ),
                 const SizedBox(height: 4),
                 Text('${t.date}  •  ${t.time}',
                     style:
-                    const TextStyle(fontSize: 12, color: Colors.grey)),
+                    const TextStyle(fontSize: 12, color: Colors.white54)),
                 const SizedBox(height: 4),
                 // Text('Received By: Z+ Lock',
                 //     style:

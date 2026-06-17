@@ -37,7 +37,7 @@ class NewKeyScreen extends StatelessWidget {
       child: Scaffold(
         resizeToAvoidBottomInset: true, // ✅ IMPORTANT
 
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF0A0A0A),
         body: SingleChildScrollView(
           controller: _scrollController, // ✅
 
@@ -150,7 +150,11 @@ class NewKeyScreen extends StatelessWidget {
       const Spacer(),
       Text(
         title, // ✅ dynamic
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFFF4E19C),
+        ),
       ),
       const Spacer(flex: 2),
     ],
@@ -188,19 +192,20 @@ class NewKeyScreen extends StatelessWidget {
                 ),
               )
                   : const CircleAvatar(
-                backgroundColor: Color(0xffEFF2FF),
+                backgroundColor: Color(0x22D9B65A),
                 child: Icon(Icons.camera_alt_outlined,
-                    color: Color(0xff4F6BED)),
+                    color: Color(0xFFF4E19C)),
               ),
               title: const Text(
                 "Customer + Product Image",
-                style: TextStyle(fontWeight: FontWeight.w600),
+                style: TextStyle(fontWeight: FontWeight.w600,color: Color(0xFFF4E19C)),
               ),
               subtitle: Text(
                 hasImage ? "Image selected" : "Upload photos",
-                style: const TextStyle(color: Color(0xff4F6BED)),
+
+                style: const TextStyle(color: Color(0xFFF4E19C)),
               ),
-              trailing: const Icon(Icons.chevron_right),
+              trailing: const Icon(Icons.chevron_right,color: Color(0xFFD9B65A),),
             ),
           );
         }),
@@ -214,21 +219,46 @@ class NewKeyScreen extends StatelessWidget {
             child: TextField(
               controller: c.imei,
               keyboardType: TextInputType.number,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+              cursorColor: const Color(0xFFD9B65A),
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(15), // ✅ max 15
+                LengthLimitingTextInputFormatter(15),
               ],
               decoration: InputDecoration(
                 hintText: "IMEI Number",
+                hintStyle: const TextStyle(
+                  color: Colors.white54,
+                ),
+                filled: true,
+                fillColor: const Color(0xFF151515),
+
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.qr_code_scanner),
+                  icon: const Icon(
+                    Icons.qr_code_scanner,
+                    color: Color(0xFFD9B65A),
+                  ),
                   onPressed: () {
-                    FocusScope.of(Get.context!).unfocus(); // ✅ keyboard close
-                    c.scanImei(); // ✅ open scanner
+                    FocusScope.of(Get.context!).unfocus();
+                    c.scanImei();
                   },
                 ),
-                border: OutlineInputBorder(
+
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(
+                    color: Color(0x55D9B65A),
+                  ),
+                ),
+
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(
+                    color: Color(0xFFD9B65A),
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -241,21 +271,46 @@ class NewKeyScreen extends StatelessWidget {
             child: TextField(
               controller: c.imei2,
               keyboardType: TextInputType.number,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+              cursorColor: const Color(0xFFD9B65A),
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(15), // ✅ max 15
+                LengthLimitingTextInputFormatter(15),
               ],
               decoration: InputDecoration(
                 hintText: "IMEI Number 2 (Optional)",
+                hintStyle: const TextStyle(
+                  color: Colors.white54,
+                ),
+                filled: true,
+                fillColor: const Color(0xFF151515),
+
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.qr_code_scanner),
+                  icon: const Icon(
+                    Icons.qr_code_scanner,
+                    color: Color(0xFFD9B65A),
+                  ),
                   onPressed: () {
                     FocusScope.of(Get.context!).unfocus();
-                    c.scanImei2(); // 👇 new function
+                    c.scanImei2();
                   },
                 ),
-                border: OutlineInputBorder(
+
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(
+                    color: Color(0x55D9B65A),
+                  ),
+                ),
+
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(
+                    color: Color(0xFFD9B65A),
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -367,7 +422,7 @@ class NewKeyScreen extends StatelessWidget {
                   height: 56,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xffEFF2FF),
+                    color: const Color(0x22D9B65A),
                   ),
                   child: has
                       ? ClipRRect(
@@ -377,7 +432,7 @@ class NewKeyScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   )
-                      : const Icon(Icons.add, color: Color(0xff4F6BED), size: 28),
+                      : const Icon(Icons.add, color: Color(0x22D9B65A), size: 28),
                 ),
                 const SizedBox(width: 10),
 
@@ -393,7 +448,7 @@ class NewKeyScreen extends StatelessWidget {
                       Text(
                         has ? "Selected" : "Upload",
                         style: const TextStyle(
-                          color: Color(0xff4F6BED),
+                          color: Color(0x22D9B65A),
                           fontSize: 12,
                         ),
                       ),
@@ -490,7 +545,11 @@ class NewKeyScreen extends StatelessWidget {
                 const Expanded(
                   child: Text(
                     'Customer Signature*',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFFF4E19C),
+                    ),
                   ),
                 ),
                 if (hasSign)
@@ -499,7 +558,9 @@ class NewKeyScreen extends StatelessWidget {
                     child: const Text(
                       'Reset',
                       style: TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.w600),
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
               ],
@@ -515,36 +576,59 @@ class NewKeyScreen extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xff2A4BA0), Color(0xff1E3C72)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF1B1B1B),
+                      Color(0xFF0A0A0A),
+                    ],
                   ),
                   borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: const Color(0x55D9B65A),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFD9B65A).withOpacity(.10),
+                      blurRadius: 12,
+                    ),
+                  ],
                 ),
                 child: hasSign
                     ? ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: Image.memory(
-                    c.signatureBytes!,
-                    fit: BoxFit.contain,
+                  child: Container(
+                    color: Colors.white,
+                    child: Image.memory(
+                      c.signatureBytes!,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 )
                     : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Icon(Icons.draw,
-                        color: Colors.white, size: 36),
+                    Icon(
+                      Icons.draw,
+                      color: Color(0xFFD9B65A),
+                      size: 36,
+                    ),
                     SizedBox(height: 8),
                     Text(
                       "Tap to Sign",
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+                        color: Color(0xFFF4E19C),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     SizedBox(height: 4),
                     Text(
                       "Digital signature pad will open",
                       style: TextStyle(
-                          color: Colors.white70, fontSize: 12),
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
@@ -555,7 +639,6 @@ class NewKeyScreen extends StatelessWidget {
       );
     });
   }
-
   void _openSignatureDialog(BuildContext context) {
     final tempController = SignatureController(
       penStrokeWidth: 3,
@@ -573,23 +656,38 @@ class NewKeyScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1B1B1B),
+                Color(0xFF0A0A0A),
+              ],
+            ),
+            border: Border.all(
+              color: const Color(0x55D9B65A),
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               /// Title
               const Text(
-                "✍️Add Signature",
+                "✍️ Add Signature",
                 style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFF4E19C),
+                ),
               ),
 
               const SizedBox(height: 6),
 
               const Text(
                 "Sign within the box below",
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(
+                  color: Colors.white70,
+                ),
               ),
 
               const SizedBox(height: 16),
@@ -598,9 +696,11 @@ class NewKeyScreen extends StatelessWidget {
               Container(
                 height: 180,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(
+                    color: const Color(0x55D9B65A),
+                  ),
                 ),
                 child: Signature(
                   controller: tempController,
@@ -610,14 +710,24 @@ class NewKeyScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              /// Buttons Row
+              /// Buttons
               Row(
                 children: [
                   /// Cancel
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Get.back(),
-                      child: const Text("Cancel"),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Color(0x55D9B65A),
+                        ),
+                      ),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
 
@@ -627,7 +737,17 @@ class NewKeyScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => tempController.clear(),
-                      child: const Text("Reset"),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Color(0x55D9B65A),
+                        ),
+                      ),
+                      child: const Text(
+                        "Reset",
+                        style: TextStyle(
+                          color: Color(0xFFD9B65A),
+                        ),
+                      ),
                     ),
                   ),
 
@@ -636,6 +756,10 @@ class NewKeyScreen extends StatelessWidget {
                   /// Save
                   Expanded(
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD9B65A),
+                        foregroundColor: Colors.black,
+                      ),
                       onPressed: () async {
                         if (tempController.isEmpty) {
                           Get.snackbar(
@@ -653,7 +777,12 @@ class NewKeyScreen extends StatelessWidget {
 
                         Get.back();
                       },
-                      child: const Text("Save"),
+                      child: const Text(
+                        "Save",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -672,7 +801,17 @@ class NewKeyScreen extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xffCBD3EE)),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1B1B1B),
+            Color(0xFF0A0A0A),
+          ],
+        ),
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+        ),
       ),
       child: Row(
         children: [
@@ -680,25 +819,35 @@ class NewKeyScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Click to fill more details",
-                    style: TextStyle(
-                        color: Color(0xff243A8F),
-                        fontWeight: FontWeight.w600)),
+                Text(
+                  "Click to fill more details",
+                  style: TextStyle(
+                    color: Color(0xFFF4E19C),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 SizedBox(height: 4),
-                Text("EMI, ECS & E-Mandate....",
-                    style: TextStyle(color: Color(0xff4F6BED))),
+                Text(
+                  "EMI, ECS & E-Mandate....",
+                  style: TextStyle(
+                    color: Color(0xFFD9B65A),
+                  ),
+                ),
               ],
             ),
           ),
-          Obx(() => Icon(
+          Obx(
+                () => Icon(
               c.showMore.value
                   ? Icons.keyboard_arrow_up
-                  : Icons.keyboard_arrow_down))
+                  : Icons.keyboard_arrow_down,
+              color: const Color(0xFFD9B65A),
+            ),
+          ),
         ],
       ),
     ),
   );
-
   /// EXPANDED CONTENT
   Widget _expandedSection(BuildContext context) => Obx(() {
     final hideAll = c.paymentType.value == PaymentType.withoutEmi;
@@ -722,15 +871,35 @@ class NewKeyScreen extends StatelessWidget {
   Widget paymentTypeCard() {
     return Container(
       padding: const EdgeInsets.all(16),
+      // decoration: BoxDecoration(
+      //   color:AppColors.kCardBg,
+      //   borderRadius: BorderRadius.circular(20),
+      //   boxShadow: const [
+      //     BoxShadow(
+      //       color: Color(0x0F000000),
+      //       blurRadius: 12,
+      //       offset: Offset(0, 4),
+      //     )
+      //   ],
+      // ),
       decoration: BoxDecoration(
-        color:AppColors.kCardBg,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1B1B1B),
+            Color(0xFF0A0A0A),
+          ],
+        ),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+        ),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x0F000000),
+            color: const Color(0xFFD9B65A).withOpacity(.10),
             blurRadius: 12,
-            offset: Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -743,7 +912,7 @@ class NewKeyScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
+                color: Color(0xFFF4E19C),
               ),
               children: [
                 TextSpan(
@@ -751,13 +920,12 @@ class NewKeyScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xff64748B),
+                    color: Colors.white54,
                   ),
                 )
               ],
             ),
           ),
-
           const SizedBox(height: 14),
 
           /// RADIO ROW 1
@@ -891,31 +1059,45 @@ class NewKeyScreen extends StatelessWidget {
     );
   }
 
-  Widget _amountField(String hint, TextEditingController controller) {
+  Widget _amountField(
+      String hint,
+      TextEditingController controller,
+      ) {
     return TextField(
       controller: controller,
       keyboardType: TextInputType.number,
-      style: const TextStyle(fontSize: 12),
+      style: const TextStyle(
+        fontSize: 12,
+        color: Colors.white,
+      ),
+      cursorColor: const Color(0xFFD9B65A),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(
           fontSize: 10,
-          color: AppColors.kHint,
+          color: Colors.white54,
         ),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+        filled: true,
+        fillColor: const Color(0xFF151515),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 6,
+          vertical: 10,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.kBorder),
+          borderSide: const BorderSide(
+            color: Color(0x55D9B65A),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.kPrimaryBlue),
+          borderSide: const BorderSide(
+            color: Color(0xFFD9B65A),
+          ),
         ),
       ),
     );
   }
-
   /// EMI
   Widget _emiSection() => _card(
     Column(
@@ -923,7 +1105,10 @@ class NewKeyScreen extends StatelessWidget {
       children: [
         const Text(
           "EMI Payment (optional)",
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Color(0xFFF4E19C),
+          ),
         ),
         const SizedBox(height: 12),
 
@@ -958,19 +1143,45 @@ class NewKeyScreen extends StatelessWidget {
     Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Loan Start Date",
-            style: TextStyle(fontWeight: FontWeight.w600)),
-        const SizedBox(height: 12),
+        const Text(
+          "Loan Start Date",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Color(0xFFF4E19C),
+          ),
+        ),        const SizedBox(height: 12),
         Obx(() => TextField(
           readOnly: true,
           onTap: () => c.pickDate(context),
+
           decoration: InputDecoration(
             hintText: c.loanStartDate.value.isEmpty
                 ? "MM/DD/YYYY"
                 : c.loanStartDate.value,
-            suffixIcon: const Icon(Icons.calendar_today),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16)),
+            hintStyle: const TextStyle(
+              color: Colors.white70,
+            ),
+            filled: true,
+            fillColor: const Color(0xFF151515),
+            suffixIcon: const Icon(
+              Icons.calendar_today,
+              color: Color(0xFFD9B65A),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(
+                color: Color(0x55D9B65A),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(
+                color: Color(0xFFD9B65A),
+              ),
+            ),
+          ),
+          style: const TextStyle(
+            color: Colors.white,
           ),
         ))
       ],
@@ -986,47 +1197,105 @@ class NewKeyScreen extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
-              color: active ? const Color(0xff4F6BED) : Colors.transparent,
+              color: active
+                  ? const Color(0xFFD9B65A)
+                  : const Color(0xFF151515),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xffCBD3EE)),
+              border: Border.all(
+                color: const Color(0x55D9B65A),
+              ),
             ),
             child: Center(
                 child: Text(
                   e.name.capitalize!,
                   style: TextStyle(
-                      color: active ? Colors.white : Colors.black),
-                )),
+                    fontWeight: FontWeight.w600,
+                    color: active
+                        ? Colors.black
+                        : Colors.white,
+                  ),
+                )
+            ),
           ),
         ),
       );
     }).toList(),
   ));
 
-  Widget _miniInput(String hint, TextEditingController c) {
+  Widget _miniInput(
+      String hint,
+      TextEditingController c,
+      ) {
     return TextField(
       controller: c,
       keyboardType: TextInputType.number,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+      cursorColor: const Color(0xFFD9B65A),
       decoration: InputDecoration(
         hintText: hint,
-        border: OutlineInputBorder(
+        hintStyle: const TextStyle(
+          color: Colors.white54,
+        ),
+        filled: true,
+        fillColor: const Color(0xFF151515),
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(
+            color: Color(0x55D9B65A),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(
+            color: Color(0xFFD9B65A),
+          ),
         ),
       ),
     );
   }
 
-  Widget _inputName(String hint, TextEditingController c, {IconData? suffix}) =>
+  Widget _inputName(
+      String hint,
+      TextEditingController c, {
+        IconData? suffix,
+      }) =>
       _scrollOnFocus(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: TextField(
             controller: c,
             keyboardType: TextInputType.name,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            cursorColor: const Color(0xFFD9B65A),
             decoration: InputDecoration(
               hintText: hint,
-              suffixIcon: suffix != null ? Icon(suffix) : null,
-              border: OutlineInputBorder(
+              hintStyle: const TextStyle(
+                color: Colors.white54,
+              ),
+              filled: true,
+              fillColor: const Color(0xFF151515),
+              suffixIcon: suffix != null
+                  ? Icon(
+                suffix,
+                color: const Color(0xFFD9B65A),
+              )
+                  : null,
+              enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(
+                  color: Color(0x55D9B65A),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(
+                  color: Color(0xFFD9B65A),
+                  width: 1.5,
+                ),
               ),
             ),
           ),
@@ -1037,8 +1306,8 @@ class NewKeyScreen extends StatelessWidget {
       String hint,
       TextEditingController c, {
         IconData? suffix,
-        int? maxLength, // ✅ NEW
-        bool digitsOnly = false, // ✅ NEW
+        int? maxLength,
+        bool digitsOnly = false,
       }) =>
       _scrollOnFocus(
         child: Padding(
@@ -1046,6 +1315,10 @@ class NewKeyScreen extends StatelessWidget {
           child: TextField(
             controller: c,
             keyboardType: TextInputType.number,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            cursorColor: const Color(0xFFD9B65A),
             inputFormatters: [
               if (digitsOnly) FilteringTextInputFormatter.digitsOnly,
               if (maxLength != null)
@@ -1053,51 +1326,159 @@ class NewKeyScreen extends StatelessWidget {
             ],
             decoration: InputDecoration(
               hintText: hint,
-              suffixIcon: suffix != null ? Icon(suffix) : null,
-              border: OutlineInputBorder(
+              hintStyle: const TextStyle(
+                color: Colors.white54,
+              ),
+              filled: true,
+              fillColor: const Color(0xFF151515),
+              suffixIcon: suffix != null
+                  ? Icon(
+                suffix,
+                color: const Color(0xFFD9B65A),
+              )
+                  : null,
+              enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(
+                  color: Color(0x55D9B65A),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(
+                  color: Color(0xFFD9B65A),
+                  width: 1.5,
+                ),
               ),
             ),
           ),
         ),
       );
-  Widget _input(String hint, TextEditingController c, {IconData? suffix}) =>
+
+  Widget _input(
+      String hint,
+      TextEditingController c, {
+        IconData? suffix,
+      }) =>
       _scrollOnFocus(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: TextField(
             controller: c,
             keyboardType: TextInputType.number,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            cursorColor: const Color(0xFFD9B65A),
             decoration: InputDecoration(
               hintText: hint,
-              suffixIcon: suffix != null ? Icon(suffix) : null,
-              border: OutlineInputBorder(
+              hintStyle: const TextStyle(
+                color: Colors.white54,
+              ),
+              filled: true,
+              fillColor: const Color(0xFF151515),
+              suffixIcon: suffix != null
+                  ? Icon(
+                suffix,
+                color: const Color(0xFFD9B65A),
+              )
+                  : null,
+              enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(
+                  color: Color(0x55D9B65A),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(
+                  color: Color(0xFFD9B65A),
+                  width: 1.5,
+                ),
               ),
             ),
           ),
         ),
       );
-
+  // Widget _loanProviderDropdown() => Padding(
+  //   padding: const EdgeInsets.only(bottom: 12),
+  //   child: Obx(() {
+  //     return DropdownButtonFormField<String>(
+  //       value: c.selectedLoanProvider.value, // null => hint show
+  //       items: c.loanProviders
+  //           .map((e) => DropdownMenuItem<String>(
+  //         value: e,
+  //         child: Text(
+  //           e,
+  //           overflow: TextOverflow.ellipsis,
+  //         ),
+  //       ))
+  //           .toList(),
+  //       onChanged: c.setLoanProvider,
+  //       isExpanded: true,
+  //       decoration: InputDecoration(
+  //         hintText: "Loan Provider",
+  //         border: OutlineInputBorder(
+  //           borderRadius: BorderRadius.circular(16),
+  //         ),
+  //       ),
+  //     );
+  //   }),
+  // );
 
   Widget _loanProviderDropdown() => Padding(
     padding: const EdgeInsets.only(bottom: 12),
     child: Obx(() {
       return DropdownButtonFormField<String>(
-        value: c.selectedLoanProvider.value, // null => hint show
+        value: c.selectedLoanProvider.value,
         items: c.loanProviders
-            .map((e) => DropdownMenuItem<String>(
-          value: e,
-          child: Text(
-            e,
-            overflow: TextOverflow.ellipsis,
+            .map(
+              (e) => DropdownMenuItem<String>(
+            value: e,
+            child: Text(
+              e,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-        ))
+        )
             .toList(),
         onChanged: c.setLoanProvider,
         isExpanded: true,
+        dropdownColor: const Color(0xFF151515),
+        icon: const Icon(
+          Icons.keyboard_arrow_down_rounded,
+          color: Color(0xFFD9B65A),
+        ),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+        ),
         decoration: InputDecoration(
           hintText: "Loan Provider",
+          hintStyle: const TextStyle(
+            color: Colors.white54,
+          ),
+          filled: true,
+          fillColor: const Color(0xFF151515),
+
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(
+              color: Color(0x55D9B65A),
+            ),
+          ),
+
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(
+              color: Color(0xFFD9B65A),
+              width: 1.5,
+            ),
+          ),
+
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -1105,31 +1486,61 @@ class NewKeyScreen extends StatelessWidget {
       );
     }),
   );
+  // Widget _card(Widget child) => Container(
+  //   padding: const EdgeInsets.all(16),
+  //   decoration: BoxDecoration(
+  //     color: Colors.white,
+  //     borderRadius: BorderRadius.circular(20),
+  //     boxShadow: const [
+  //       BoxShadow(
+  //           color: Color(0x11000000),
+  //           blurRadius: 10,
+  //           offset: Offset(0, 4))
+  //     ],
+  //   ),
+  //   child: child,
+  // );
 
   Widget _card(Widget child) => Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: Colors.white,
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFF1B1B1B),
+          Color(0xFF0A0A0A),
+        ],
+      ),
       borderRadius: BorderRadius.circular(20),
-      boxShadow: const [
+      border: Border.all(
+        color: const Color(0x55D9B65A),
+      ),
+      boxShadow: [
         BoxShadow(
-            color: Color(0x11000000),
-            blurRadius: 10,
-            offset: Offset(0, 4))
+          color: const Color(0xFFD9B65A).withOpacity(.10),
+          blurRadius: 12,
+        ),
       ],
     ),
     child: child,
   );
-
   Widget _circleBtn(IconData i, VoidCallback onTap) => GestureDetector(
     onTap: onTap,
     child: Container(
       padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-        color: Color(0xffF2F4FA),
+      decoration: BoxDecoration(
+        color: const Color(0xFF151515),
         shape: BoxShape.circle,
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+        ),
       ),
-      child: Icon(i, size: 18),
+      child: const Icon(
+        Icons.arrow_back,
+        size: 18,
+        color: Color(0xFFD9B65A),
+      ),
     ),
   );
 }

@@ -33,12 +33,29 @@ class CustomerListingV2Page extends StatelessWidget {
     (title != null && title!.trim().isNotEmpty) ? title!.trim() : "Users";
 
     return Scaffold(
-      backgroundColor: const Color(0xffF6F8FC),
+      // backgroundColor: const Color(0xffF6F8FC),
+      backgroundColor: const Color(0xFF0A0A0A),
+      // appBar: AppBar(
+      //   // backgroundColor: Colors.transparent,
+      //   backgroundColor: const Color(0xFF0A0A0A),
+      //   elevation: 0,
+      //   leading: const BackButton(color: Colors.black),
+      //   title: Text(appBarTitle, style: const TextStyle(color: Colors.black)),
+      //   centerTitle: true,
+      // ),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFF0A0A0A),
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
-        title: Text(appBarTitle, style: const TextStyle(color: Colors.black)),
+        leading: const BackButton(
+          color: Color(0xFFD9B65A),
+        ),
+        title: Text(
+          appBarTitle,
+          style: const TextStyle(
+            color: Color(0xFFF4E19C),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -91,15 +108,50 @@ class CustomerListingV2Page extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: TextField(
         onChanged: (v) => c.search.value = v,
+        // decoration: InputDecoration(
+        //   hintText: 'Search name, mobile, IMEI',
+        //   prefixIcon: const Icon(Icons.search),
+        //   filled: true,
+        //   fillColor: Colors.white,
+        //   border: OutlineInputBorder(
+        //     borderRadius: BorderRadius.circular(30),
+        //     borderSide: BorderSide.none,
+        //   ),
+        // ),
         decoration: InputDecoration(
-          hintText: 'Search name, mobile, IMEI',
-          prefixIcon: const Icon(Icons.search),
+          hintText: 'Search name, Key ID, mobile',
+          hintStyle: const TextStyle(
+            color: Colors.white54,
+          ),
+          prefixIcon: const Icon(
+            Icons.search,
+            color: Color(0xFFD9B65A),
+          ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: const Color(0xFF151515),
+
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide.none,
           ),
+
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: const BorderSide(
+              color: Color(0x55D9B65A),
+            ),
+          ),
+
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: const BorderSide(
+              color: Color(0xFFD9B65A),
+              width: 1.2,
+            ),
+          ),
+        ),
+        style: const TextStyle(
+          color: Colors.white,
         ),
       ),
     );
@@ -108,11 +160,34 @@ class CustomerListingV2Page extends StatelessWidget {
   Widget _userCard(UserModel u, BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(16),
+      //   boxShadow: const [
+      //     BoxShadow(color: Colors.black12, blurRadius: 6),
+      //   ],
+      // ),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 6),
+        borderRadius: BorderRadius.circular(24),
+
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1B1B1B),
+            Color(0xFF0A0A0A),
+          ],
+        ),
+
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+        ),
+
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFD9B65A).withOpacity(.15),
+            blurRadius: 18,
+          ),
         ],
       ),
       child: Column(
@@ -145,7 +220,15 @@ class CustomerListingV2Page extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Key ID: ${u.keyId}', style: const TextStyle(fontWeight: FontWeight.w600)),
+          // Text('Key ID: ${u.keyId}', style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(
+            'Key ID: ${u.keyId}',
+            style: const TextStyle(
+              color: Color(0xFFF4E19C),
+              fontWeight: FontWeight.w700,
+              fontSize: 17,
+            ),
+          ),
         ],
       ),
     );
@@ -159,7 +242,7 @@ class CustomerListingV2Page extends StatelessWidget {
       child: Container(
         width: 60,
         height: 66,
-        color: const Color(0xffEEF1FF),
+        color: const Color(0xFF151515),
         child: imageUrl == null
             ? const Icon(Icons.image_not_supported, size: 26, color: Colors.grey)
             : Image.network(
@@ -186,18 +269,53 @@ class CustomerListingV2Page extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Name: ${u.name}'),
-        Text('Mobile: ${u.mobile}'),
-        Text('IMEI: ${u.imei}'),
-        Text('Loan by: ${u.loanBy}', style: const TextStyle(fontWeight: FontWeight.w600)),
+        // Text('Name: ${u.name}'),
+        // Text('Mobile: ${u.mobile}'),
+        // Text('IMEI: ${u.imei}'),
+        // Text('Loan by: ${u.loanBy}', style: const TextStyle(fontWeight: FontWeight.w600)),
+        Text(
+          'Name: ${u.name}',
+          style: const TextStyle(color: Colors.white),
+        ),
+
+        Text(
+          'Mobile: ${u.mobile}',
+          style: const TextStyle(color: Colors.white),
+        ),
+
+        Text(
+          'IMEI: ${u.imei}',
+          style: const TextStyle(color: Colors.white),
+        ),
+
+        Text(
+          'Loan by: ${u.loanBy}',
+          style: const TextStyle(
+            color: Color(0xFFF4E19C),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: 6),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          // decoration: BoxDecoration(
+          //   color: const Color(0xffEEF2FF),
+          //   borderRadius: BorderRadius.circular(20),
+          // ),
           decoration: BoxDecoration(
-            color: const Color(0xffEEF2FF),
+            color: const Color(0x22D9B65A),
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: const Color(0x55D9B65A),
+            ),
           ),
-          child: Text('EMI Status: ${u.emi}', style: const TextStyle(color: Colors.blue)),
+          child: Text('EMI Status: ${u.emi}',
+              // style: const TextStyle(color: Colors.blue)
+            style: const TextStyle(
+              color: Color(0xFFD9B65A),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         )
       ],
     );
@@ -223,23 +341,35 @@ class CustomerListingV2Page extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 120),
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      // decoration: BoxDecoration(
+      //   color: color.withOpacity(0.12),
+      //   borderRadius: BorderRadius.circular(20),
+      //   border: Border.all(
+      //     color: color.withOpacity(0.4),
+      //     width: 0.8,
+      //   ),
+      // ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: const Color(0xFF151515),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: color.withOpacity(0.4),
-          width: 0.8,
+          color: const Color(0x55D9B65A),
         ),
       ),
       child: Text(
         text,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: color,
+        // style: TextStyle(
+        //   color: color,
+        //   fontSize: 12,
+        //   fontWeight: FontWeight.w600,
+        //   height: 1.2,
+        // ),
+        style: const TextStyle(
+          color: Color(0xFFD9B65A),
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          height: 1.2,
         ),
       ),
     );
@@ -275,11 +405,25 @@ class CustomerListingV2Page extends StatelessWidget {
                     }),
                   );
               },
+              // style: ElevatedButton.styleFrom(
+              //   backgroundColor: const Color(0xff4F6BED),
+              //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              // ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff4F6BED),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                backgroundColor: const Color(0xFFD9B65A),
+                foregroundColor: Colors.black,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
               ),
-              child: const Text('View Details', style: TextStyle(color: Colors.white)),
+              child: const Text('View Details',
+                  // style: TextStyle(color: Colors.white)
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 8),
@@ -293,7 +437,7 @@ class CustomerListingV2Page extends StatelessWidget {
                 onTap: () => _showMoreMenuFromKeyV2(ctx, key, u),
                 child: const Padding(
                   padding: EdgeInsets.all(6),
-                  child: Icon(Icons.more_vert, size: 22),
+                  child: Icon(Icons.more_vert, size: 22,color: Color(0xFFD9B65A),),
                 ),
               );
             },

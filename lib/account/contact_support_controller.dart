@@ -51,9 +51,8 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactSupportController extends GetxController {
-  final supportEmail = "Ceo@lockontechventure.com";
-  final supportPhone = "+918810422690";
-  final supportPhone2 = "+918810422689";
+  final supportEmail = "Sabkuchmall.in@gmail.com";
+  final supportPhone = "8923168292";
 
   /// ---------------- EMAIL ----------------
   void openEmail() async {

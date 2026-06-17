@@ -17,24 +17,54 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF0FF), // light gradient color imitation
+      // backgroundColor: const Color(0xFFEAF0FF), // light gradient color imitation
+      backgroundColor: const Color(0xFF0A0A0A),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      //   leading: GestureDetector(
+      //     onTap: () => Get.back(),
+      //     child: Container(
+      //       margin: const EdgeInsets.all(10),
+      //       decoration: BoxDecoration(
+      //         color: Colors.white,
+      //         shape: BoxShape.circle,
+      //       ),
+      //       child: const Icon(Icons.arrow_back, color: Colors.black),
+      //     ),
+      //   ),
+      //   title: const Text(
+      //     'Manage Account',
+      //     style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      //   ),
+      // ),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFF0A0A0A),
         elevation: 0,
+        centerTitle: false,
         leading: GestureDetector(
           onTap: () => Get.back(),
           child: Container(
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFF151515),
               shape: BoxShape.circle,
+              border: Border.all(
+                color: const Color(0x55D9B65A),
+              ),
             ),
-            child: const Icon(Icons.arrow_back, color: Colors.black),
+            child: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFFD9B65A),
+            ),
           ),
         ),
         title: const Text(
           'Manage Account',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: Color(0xFFF4E19C),
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       body: Obx(
@@ -47,48 +77,62 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 48,
-                      backgroundColor: Colors.grey.shade200,
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: const Color(0xFFD9B65A),
+                          width: 2,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 48,
 
-                      child: ClipOval(
-                        child: controller.profileImagePath.value != null &&
-                            controller.profileImagePath.value!.isNotEmpty
-                            ? Image.file(
-                          File(controller.profileImagePath.value!),
-                          width: 96,
-                          height: 96,
-                          fit: BoxFit.cover,
-                        )
-                            : (controller.userImageUrl.value.isNotEmpty
-                            ? Image.network(
-                          controller.userImageUrl.value,
-                          width: 96,
-                          height: 96,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => SvgPicture.asset(
+                          backgroundColor: const Color(0xFF151515),
+
+                        child: ClipOval(
+                          child: controller.profileImagePath.value != null &&
+                              controller.profileImagePath.value!.isNotEmpty
+                              ? Image.file(
+                            File(controller.profileImagePath.value!),
+                            width: 96,
+                            height: 96,
+                            fit: BoxFit.cover,
+                          )
+                              : (controller.userImageUrl.value.isNotEmpty
+                              ? Image.network(
+                            controller.userImageUrl.value,
+                            width: 96,
+                            height: 96,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => SvgPicture.asset(
+                              'assets/accounts/name.svg',
+                              width: 86,
+                              height: 86,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                              : SvgPicture.asset(
                             'assets/accounts/name.svg',
                             width: 86,
                             height: 86,
                             fit: BoxFit.cover,
-                          ),
-                        )
-                            : SvgPicture.asset(
-                          'assets/accounts/name.svg',
-                          width: 86,
-                          height: 86,
-                          fit: BoxFit.cover,
-                        )),
-                      ),
+                          )),
+                        ),
 
+                      ),
                     ),
+
                     const SizedBox(height: 8),
                     GestureDetector(
                       onTap: () => _showImagePickOptions(context),
                       child: const Text(
                         'Edit Photo',
-                        style: TextStyle(
-                            color: Colors.black54, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            color: Color(0xFFD9B65A),
+                            fontWeight: FontWeight.w600,
+                          )
                       ),
                     ),
                   ],
@@ -157,9 +201,10 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
                 padding: EdgeInsets.symmetric(horizontal: 14,vertical: 14),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.grey.shade200),
-
-                    color: Colors.white
+                  border: Border.all(
+                    color: const Color(0x55D9B65A),
+                  ),
+                    color: const Color(0xFF151515),
                 ),
                   child: _buildSignatureBlock(context)),
 
@@ -208,48 +253,148 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Obx(() {     // ← HERE
+      // floatingActionButton: Obx(() {     // ← HERE
+      //   return Column(
+      //     mainAxisSize: MainAxisSize.min,
+      //     children: [
+      //       Container(
+      //         width: MediaQuery.of(context).size.width,
+      //         decoration: const BoxDecoration(
+      //           color: Color(0xFFDFE1E7),
+      //           borderRadius: BorderRadius.only(
+      //             topLeft: Radius.circular(32),
+      //             topRight: Radius.circular(32),
+      //           ),
+      //         ),
+      //         child: Padding(
+      //           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 13),
+      //           child: ElevatedButton(
+      //             onPressed: ctrl.isLoading.value
+      //                 ? null
+      //                 : () => ctrl.updateProfile(),
+      //             style: ElevatedButton.styleFrom(
+      //               backgroundColor: const Color(0xFF3B5AF6),
+      //               padding: const EdgeInsets.symmetric(vertical: 18),
+      //               shape: RoundedRectangleBorder(
+      //                 borderRadius: BorderRadius.circular(30),
+      //               ),
+      //               elevation: 6,
+      //             ),
+      //             child: ctrl.isLoading.value
+      //                 ? const SizedBox(
+      //               height: 20,
+      //               width: 20,
+      //               child: CircularProgressIndicator(
+      //                 valueColor: AlwaysStoppedAnimation(Colors.white),
+      //                 strokeWidth: 2,
+      //               ),
+      //             )
+      //                 : const Text(
+      //               'Save Changes',
+      //               style: TextStyle(
+      //                 color: Colors.white,
+      //                 fontSize: 16,
+      //                 fontWeight: FontWeight.w600,
+      //               ),
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //     ],
+      //   );
+      // }),
+      floatingActionButton: Obx(() {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
-                color: Color(0xFFDFE1E7),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF1B1B1B),
+                    Color(0xFF0A0A0A),
+                  ],
+                ),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(32),
                   topRight: Radius.circular(32),
                 ),
+                border: Border(
+                  top: BorderSide(
+                    color: Color(0x55D9B65A),
+                  ),
+                ),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 13),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                 child: ElevatedButton(
                   onPressed: ctrl.isLoading.value
                       ? null
                       : () => ctrl.updateProfile(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF3B5AF6),
-                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    disabledBackgroundColor: Colors.transparent,
+                    padding: EdgeInsets.zero,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    elevation: 6,
                   ),
-                  child: ctrl.isLoading.value
-                      ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Colors.white),
-                      strokeWidth: 2,
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFF4E19C),
+                          Color(0xFFD9B65A),
+                          Color(0xFFB8860B),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x66D9B65A),
+                          blurRadius: 18,
+                          spreadRadius: 1,
+                        ),
+                      ],
                     ),
-                  )
-                      : const Text(
-                    'Save Changes',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                    child: Container(
+                      height: 58,
+                      alignment: Alignment.center,
+                      child: ctrl.isLoading.value
+                          ? const SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                          strokeWidth: 2.5,
+                        ),
+                      )
+                          : const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.save_rounded,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Save Changes',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -384,7 +529,11 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
               const Expanded(
                 child: Text(
                   'Customer Signature*',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFF4E19C),
+                  ),
                 ),
               ),
 
@@ -395,8 +544,11 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
                 },
                 child: Text(
                   isEditing ? 'Editing...' : 'Edit',
-                  style: const TextStyle(
-                      color: Colors.blue, fontWeight: FontWeight.w600),
+
+                    style: TextStyle(
+                      color: Color(0xFFD9B65A),
+                      fontWeight: FontWeight.w600,
+                    )
                 ),
               ),
 
@@ -409,7 +561,7 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
                 },
                 child: const Text(
                   'Reset',
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -417,36 +569,118 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
 
           const SizedBox(height: 10),
 
+          // Container(
+          //   height: height,
+          //   padding: const EdgeInsets.all(12),
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     borderRadius: BorderRadius.circular(14),
+          //     border: Border.all(color: Colors.grey.shade200),
+          //   ),
+          //
+          //   /// 🔥 MAIN LOGIC (FIXED)
+          //   child: () {
+          //
+          //     /// ✅ EDIT MODE → draw
+          //     if (isEditing) {
+          //       return Signature(
+          //         controller: ctrl.signatureController,
+          //         backgroundColor: Colors.white,
+          //       );
+          //     }
+          //
+          //     /// ✅ VIEW MODE → show image (LOCAL + NETWORK FIX)
+          //     if (signatureUrl.isNotEmpty) {
+          //
+          //       /// 🔥 LOCAL FILE (instant update)
+          //       if (signatureUrl.startsWith('/')) {
+          //         return GestureDetector(
+          //           onTap: () => ctrl.startSignatureEdit(),
+          //           child: Image.file(
+          //             File(signatureUrl),
+          //             fit: BoxFit.contain,
+          //           ),
+          //         );
+          //       }
+          //
+          //       /// 🌐 NETWORK IMAGE
+          //       return GestureDetector(
+          //         onTap: () => ctrl.startSignatureEdit(),
+          //         child: Image.network(
+          //           signatureUrl,
+          //           fit: BoxFit.contain,
+          //           errorBuilder: (_, __, ___) {
+          //             return const Center(child: Text("Failed to load signature"));
+          //           },
+          //         ),
+          //       );
+          //     }
+          //
+          //     /// fallback → draw
+          //     return Signature(
+          //       controller: ctrl.signatureController,
+          //       backgroundColor: Colors.white,
+          //     );
+          //   }(),
+          // ),
           Container(
             height: height,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1B1B1B),
+                  Color(0xFF0A0A0A),
+                ],
+              ),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(
+                color: const Color(0x55D9B65A),
+                width: 1.2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFD9B65A).withOpacity(.10),
+                  blurRadius: 12,
+                ),
+              ],
             ),
 
-            /// 🔥 MAIN LOGIC (FIXED)
+            /// 🔥 MAIN LOGIC (UNCHANGED)
             child: () {
 
               /// ✅ EDIT MODE → draw
               if (isEditing) {
-                return Signature(
-                  controller: ctrl.signatureController,
-                  backgroundColor: Colors.white,
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Signature(
+                    controller: ctrl.signatureController,
+                    backgroundColor: Colors.white,
+                  ),
                 );
               }
 
-              /// ✅ VIEW MODE → show image (LOCAL + NETWORK FIX)
+              /// ✅ VIEW MODE → show image
               if (signatureUrl.isNotEmpty) {
 
-                /// 🔥 LOCAL FILE (instant update)
+                /// 🔥 LOCAL FILE
                 if (signatureUrl.startsWith('/')) {
                   return GestureDetector(
                     onTap: () => ctrl.startSignatureEdit(),
-                    child: Image.file(
-                      File(signatureUrl),
-                      fit: BoxFit.contain,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Image.file(
+                        File(signatureUrl),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   );
                 }
@@ -454,20 +688,39 @@ class ManageAccountScreen extends GetView<ManageAccountController> {
                 /// 🌐 NETWORK IMAGE
                 return GestureDetector(
                   onTap: () => ctrl.startSignatureEdit(),
-                  child: Image.network(
-                    signatureUrl,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) {
-                      return const Center(child: Text("Failed to load signature"));
-                    },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Image.network(
+                      signatureUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) {
+                        return const Center(
+                          child: Text(
+                            "Failed to load signature",
+                            style: TextStyle(
+                              color: Colors.white70,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 );
               }
 
               /// fallback → draw
-              return Signature(
-                controller: ctrl.signatureController,
-                backgroundColor: Colors.white,
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Signature(
+                  controller: ctrl.signatureController,
+                  backgroundColor: Colors.white,
+                ),
               );
             }(),
           ),

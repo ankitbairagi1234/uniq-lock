@@ -28,108 +28,212 @@ class RetailAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F7FF),
+      // backgroundColor: const Color(0xFFF4F7FF),
+      backgroundColor: const Color(0xFF0A0A0A),
       body: Column(
         children: [
           /// TOP HEADER
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(20, 60, 20, 8),
-            decoration: const BoxDecoration(gradient: AppColors.bgTopGradient),
+            decoration: const BoxDecoration(
+                // gradient: AppColors.bgTopGradient
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF1B1B1B),
+                  Color(0xFF0A0A0A),
+                ],
+              ),
+            ),
 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 /// Back Button + Title
+                // Row(
+                //   children:  [
+                //     InkWell(
+                //       onTap: () {
+                //         Get.back();
+                //       },
+                //         child: Icon(Icons.arrow_back, size: 25)),
+                //     SizedBox(width: 12),
+                //     Text(
+                //       "Account",
+                //       style: TextStyle(
+                //         fontSize: 22,
+                //         fontWeight: FontWeight.w600,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                /// HEADER
                 Row(
-                  children:  [
+                  children: [
                     InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                        child: Icon(Icons.arrow_back, size: 25)),
-                    SizedBox(width: 12),
-                    Text(
+                      onTap: () => Get.back(),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF151515),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: const Color(0x55D9B65A),
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          size: 22,
+                          color: Color(0xFFD9B65A),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 14),
+
+                    const Text(
                       "Account",
                       style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFFF4E19C),
                       ),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 25),
 
                 /// PROFILE SECTION
                 GestureDetector(
                   onTap: controller.onProfileClicked,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      /// Profile image (dynamic + null safe)
-                      Obx(() {
-                        final image = controller.userImage.value;
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF1B1B1B),
+                          Color(0xFF0A0A0A),
+                        ],
+                      ),
+                      border: Border.all(
+                        color: const Color(0x55D9B65A),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFD9B65A).withOpacity(.15),
+                          blurRadius: 18,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
 
-                        return CircleAvatar(
-                          radius: 35,
-                          backgroundColor: Colors.grey.shade200,
-                          child: ClipOval(
-                            child: (image.isNotEmpty && image.startsWith("http"))
-                                ? Image.network(
-                              image,
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) {
-                                return SvgPicture.asset(
-                                  "assets/accounts/account.svg",
-                                  width: 40,
-                                  height: 40,
-                                );
-                              },
-                            )
-                                : SvgPicture.asset(
-                              "assets/accounts/account.svg",
-                              width: 40,
-                              height: 40,
+                        /// PROFILE IMAGE
+                        Obx(() {
+                          final image = controller.userImage.value;
+
+                          return Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0xFFD9B65A),
+                                width: 2,
+                              ),
                             ),
-                          ),
-                        );
-                      }),
-
-                      const SizedBox(width: 16),
-
-                      /// Name + Email (already correct)
-                      Expanded(
-                        child: Obx(
-                              () => Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Hi, ${controller.userName.value}!",
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1B1D28),
+                            child: CircleAvatar(
+                              radius: 35,
+                              backgroundColor: const Color(0xFF151515),
+                              child: ClipOval(
+                                child: (image.isNotEmpty && image.startsWith("http"))
+                                    ? Image.network(
+                                  image,
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) {
+                                    return SvgPicture.asset(
+                                      "assets/accounts/account.svg",
+                                      width: 36,
+                                      height: 36,
+                                      colorFilter: const ColorFilter.mode(
+                                        Color(0xFFD9B65A),
+                                        BlendMode.srcIn,
+                                      ),
+                                    );
+                                  },
+                                )
+                                    : SvgPicture.asset(
+                                  "assets/accounts/account.svg",
+                                  width: 36,
+                                  height: 36,
+                                  colorFilter: const ColorFilter.mode(
+                                    Color(0xFFD9B65A),
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                controller.email.value,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black54,
+                            ),
+                          );
+                        }),
+
+                        const SizedBox(width: 16),
+
+                        /// USER INFO
+                        Expanded(
+                          child: Obx(
+                                () => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Hi, ${controller.userName.value}!",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFFF4E19C),
+                                  ),
                                 ),
-                              )
-                            ],
+
+                                const SizedBox(height: 6),
+
+                                Text(
+                                  controller.email.value,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                      const Icon(Icons.arrow_forward_ios, size: 20),
-                    ],
+                        Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0x22D9B65A),
+                            border: Border.all(
+                              color: const Color(0x55D9B65A),
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Color(0xFFD9B65A),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+                const SizedBox(height: 25),
 
                 /// MAIN SETTINGS
                 const SizedBox(height: 15),
@@ -138,6 +242,7 @@ class RetailAccountPage extends StatelessWidget {
                   "Main Settings",
                   style: TextStyle(
                     fontSize: 18,
+                    color: Color(0xFFF4E19C),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -158,19 +263,19 @@ class RetailAccountPage extends StatelessWidget {
                     title: "Manage Accounts",
                     onTap: () => controller.onMenuTap("/manageAccount"),
                   ),
-                  SettingsTile(
-                    icon: "assets/accounts/update.svg", // jo bhi icon ho
-                    title: "App Update",
-                    onTap: () {
-                      final dash = Get.find<RetailerDashboardController>();
-                      controller.checkForUpdateManual(dash.appUpdateData);
-                    },
-                  ),
-                  SettingsTile(
-                    icon: "assets/accounts/auth.svg",
-                    title: "Two-Factor Authentication",
-                    onTap: () => controller.onMenuTap("/two_factor_auth"),
-                  ),
+                  // SettingsTile(
+                  //   icon: "assets/accounts/update.svg", // jo bhi icon ho
+                  //   title: "App Update",
+                  //   onTap: () {
+                  //     final dash = Get.find<RetailerDashboardController>();
+                  //     controller.checkForUpdateManual(dash.appUpdateData);
+                  //   },
+                  // ),
+                  // SettingsTile(
+                  //   icon: "assets/accounts/auth.svg",
+                  //   title: "Two-Factor Authentication",
+                  //   onTap: () => controller.onMenuTap("/two_factor_auth"),
+                  // ),
                   SettingsTile(
                     icon: "assets/accounts/password.svg",
                     title: "Change Password",
@@ -200,19 +305,19 @@ class RetailAccountPage extends StatelessWidget {
                   //     );
                   //   },
                   // ),
-                  SettingsTile(
-                    icon: "assets/accounts/wallet.svg",
-                    title: "Wallet",
-                    // onTap: () => controller.onMenuTap("/wishlist"),
-                    onTap: () {
-                      Get.to(WalletTransactionPage());
-                      // Get.snackbar(
-                      //   "Wallet",
-                      //   "Coming Soon",
-                      //   snackPosition: SnackPosition.BOTTOM,
-                      // );
-                    },
-                  ),
+                  // SettingsTile(
+                  //   icon: "assets/accounts/wallet.svg",
+                  //   title: "Wallet",
+                  //   // onTap: () => controller.onMenuTap("/wishlist"),
+                  //   onTap: () {
+                  //     Get.to(WalletTransactionPage());
+                  //     // Get.snackbar(
+                  //     //   "Wallet",
+                  //     //   "Coming Soon",
+                  //     //   snackPosition: SnackPosition.BOTTOM,
+                  //     // );
+                  //   },
+                  // ),
 
                   const SizedBox(height: 10),
 
@@ -221,6 +326,7 @@ class RetailAccountPage extends StatelessWidget {
                     "Support & Feedback",
                     style: TextStyle(
                       fontSize: 18,
+                      color: Color(0xFFF4E19C),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -244,7 +350,7 @@ class RetailAccountPage extends StatelessWidget {
                   ),
                   SettingsTile(
                     icon: "assets/accounts/add.svg",
-                    title: "Advertisement Video",
+                    title: "Installation Video",
                     // onTap: () => controller.onMenuTap("/ads"),
                     onTap: () {
                       Get.to(AddVideoBannerScreen());
@@ -287,7 +393,8 @@ class DistributorAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F7FF),
+      // backgroundColor: const Color(0xFFF4F7FF),
+      backgroundColor: const Color(0xFF0A0A0A),
       body: Column(
         children: [
           /// TOP HEADER
@@ -301,140 +408,163 @@ class DistributorAccountPage extends StatelessWidget {
               children: [
                 /// Back Button + Title
                 Row(
-                  children:  [
+                  children: [
                     InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                        child: Icon(Icons.arrow_back, size: 25)),
-                    SizedBox(width: 12),
-                    Text(
+                      onTap: () => Get.back(),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF151515),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: const Color(0x55D9B65A),
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          size: 22,
+                          color: Color(0xFFD9B65A),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    const Text(
                       "Account",
                       style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFFF4E19C),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 25),
 
-                // /// PROFILE SECTION
-                // GestureDetector(
-                //   onTap: controller.onProfileClicked,
-                //   child: Row(
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     children: [
-                //       /// Profile image
-                //       CircleAvatar(
-                //         radius: 35,
-                //         backgroundColor: Colors.grey.shade200, // optional
-                //         child: SvgPicture.asset("assets/accounts/account.svg",
-                //           width: 40,
-                //           height: 40,
-                //         ),
-                //       ),
-                //       SizedBox(width: 16),
-                //
-                //       /// Name + Email
-                //       Expanded(
-                //         child: Obx(
-                //               () => Column(
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: [
-                //               Text(
-                //                 "Hi, ${controller.userName.value}!",
-                //                 style: const TextStyle(
-                //                   fontSize: 22,
-                //                   fontWeight: FontWeight.w700,
-                //                   color: Color(0xFF1B1D28),
-                //                 ),
-                //               ),
-                //               const SizedBox(height: 4),
-                //               Text(
-                //                 controller.email.value,
-                //                 style: const TextStyle(
-                //                   fontSize: 14,
-                //                   color: Colors.black54,
-                //                 ),
-                //               )
-                //             ],
-                //           ),
-                //         ),
-                //       ),
-                //
-                //       const Icon(Icons.arrow_forward_ios, size: 20),
-                //     ],
-                //   ),
-                // ),
                 /// PROFILE SECTION
                 GestureDetector(
                   onTap: controller.onProfileClicked,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      /// Profile image (dynamic + null safe)
-                      Obx(() {
-                        final image = controller.userImage.value;
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF1B1B1B),
+                          Color(0xFF0A0A0A),
+                        ],
+                      ),
+                      border: Border.all(
+                        color: const Color(0x55D9B65A),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFD9B65A).withOpacity(.15),
+                          blurRadius: 18,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
 
-                        return CircleAvatar(
-                          radius: 35,
-                          backgroundColor: Colors.grey.shade200,
-                          child: ClipOval(
-                            child: (image.isNotEmpty && image.startsWith("http"))
-                                ? Image.network(
-                              image,
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) {
-                                return SvgPicture.asset(
-                                  "assets/accounts/account.svg",
-                                  width: 40,
-                                  height: 40,
-                                );
-                              },
-                            )
-                                : SvgPicture.asset(
-                              "assets/accounts/account.svg",
-                              width: 40,
-                              height: 40,
+                        /// PROFILE IMAGE
+                        Obx(() {
+                          final image = controller.userImage.value;
+
+                          return Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0xFFD9B65A),
+                                width: 2,
+                              ),
                             ),
-                          ),
-                        );
-                      }),
-
-                      const SizedBox(width: 16),
-
-                      /// Name + Email (already correct)
-                      Expanded(
-                        child: Obx(
-                              () => Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Hi, ${controller.userName.value}!",
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1B1D28),
+                            child: CircleAvatar(
+                              radius: 35,
+                              backgroundColor: const Color(0xFF151515),
+                              child: ClipOval(
+                                child: (image.isNotEmpty && image.startsWith("http"))
+                                    ? Image.network(
+                                  image,
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) {
+                                    return SvgPicture.asset(
+                                      "assets/accounts/account.svg",
+                                      width: 36,
+                                      height: 36,
+                                      colorFilter: const ColorFilter.mode(
+                                        Color(0xFFD9B65A),
+                                        BlendMode.srcIn,
+                                      ),
+                                    );
+                                  },
+                                )
+                                    : SvgPicture.asset(
+                                  "assets/accounts/account.svg",
+                                  width: 36,
+                                  height: 36,
+                                  colorFilter: const ColorFilter.mode(
+                                    Color(0xFFD9B65A),
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                controller.email.value,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black54,
+                            ),
+                          );
+                        }),
+
+                        const SizedBox(width: 16),
+
+                        /// USER INFO
+                        Expanded(
+                          child: Obx(
+                                () => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Hi, ${controller.userName.value}!",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFFF4E19C),
+                                  ),
                                 ),
-                              )
-                            ],
+                                const SizedBox(height: 6),
+                                Text(
+                                  controller.email.value,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                      const Icon(Icons.arrow_forward_ios, size: 20),
-                    ],
+                        Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0x22D9B65A),
+                            border: Border.all(
+                              color: const Color(0x55D9B65A),
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Color(0xFFD9B65A),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
@@ -446,6 +576,7 @@ class DistributorAccountPage extends StatelessWidget {
                   "Main Settings",
                   style: TextStyle(
                     fontSize: 18,
+                    color: Color(0xFFF4E19C),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -466,15 +597,15 @@ class DistributorAccountPage extends StatelessWidget {
                     title: "Manage Accounts",
                     onTap: () => controller.onMenuTap("/manageAccount"),
                   ),
-                  SettingsTile(
-                    icon: "assets/accounts/update.svg",
-                    title: "App Update",
-                    onTap: () {
-                      final dash = Get.find<DistributorDashController>();
-
-                      controller.checkForUpdateManual(dash.appUpdateData);
-                    },
-                  ),
+                  // SettingsTile(
+                  //   icon: "assets/accounts/update.svg",
+                  //   title: "App Update",
+                  //   onTap: () {
+                  //     final dash = Get.find<DistributorDashController>();
+                  //
+                  //     controller.checkForUpdateManual(dash.appUpdateData);
+                  //   },
+                  // ),
                   SettingsTile(
                     icon: "assets/accounts/auth.svg",
                     title: "Two-Factor Authentication",
@@ -512,6 +643,7 @@ class DistributorAccountPage extends StatelessWidget {
                     "Support & Feedback",
                     style: TextStyle(
                       fontSize: 18,
+                      color: Color(0xFFF4E19C),
                       fontWeight: FontWeight.w700,
                     ),
                   ),

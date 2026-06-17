@@ -13,12 +13,20 @@ class ContactSupportScreen extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF0A0A0A),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
           decoration: const BoxDecoration(
-            gradient: AppColors.bgTopGradient,
+            // gradient: AppColors.bgTopGradient,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1B1B1B),
+                Color(0xFF0A0A0A),
+              ],
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 50),
@@ -31,10 +39,17 @@ class ContactSupportScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF2F4FA),
+                      color: const Color(0xFF151515),
                       shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0x55D9B65A),
+                      ),
                     ),
-                    child: const Icon(Icons.arrow_back, size: 18),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      size: 18,
+                      color: Color(0xFFD9B65A),
+                    ),
                   ),
                 ),
 
@@ -45,17 +60,18 @@ class ContactSupportScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w700,
+                    color: Color(0xFFF4E19C),
                   ),
                 ),
 
                 const SizedBox(height: 8),
 
                 const Text(
-                  "Can’t find what you’re looking for? Reach out to\nour support team",
+                  "Can't find what you're looking for? Reach out to our support team",
                   style: TextStyle(
                     fontSize: 15,
                     height: 1.4,
-                    color: Colors.black54,
+                    color: Colors.white70,
                   ),
                 ),
 
@@ -87,14 +103,7 @@ class ContactSupportScreen extends StatelessWidget {
 
                 const SizedBox(height: 20),
 
-                _supportTile(
-                  icon: Icons.phone_outlined,
-                  title: "Phone",
-                  subtitle: "Call us at ${c.supportPhone2}",
-                  onTap: () => c.openPhone(c.supportPhone2),
-                ),
 
-                const SizedBox(height: 20),
 
                 // WHATSAPP
                 // _supportTile(
@@ -110,14 +119,7 @@ class ContactSupportScreen extends StatelessWidget {
                   onTap: () => c.openWhatsApp(c.supportPhone),
                 ),
 
-                const SizedBox(height: 20),
 
-                _supportTile(
-                  icon: Icons.message,
-                  title: "WhatsApp",
-                  subtitle: "Message on ${c.supportPhone2}",
-                  onTap: () => c.openWhatsApp(c.supportPhone2),
-                ),
               ],
             ),
           ),
@@ -135,34 +137,75 @@ class ContactSupportScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
         decoration: BoxDecoration(
-          color: const Color(0xFFF7F8FA),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF1B1B1B),
+              Color(0xFF0A0A0A),
+            ],
+          ),
           borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: const Color(0x55D9B65A),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFD9B65A).withOpacity(.10),
+              blurRadius: 12,
+            ),
+          ],
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0x22D9B65A),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 22, color: Colors.black),
+              child: Icon(
+                icon,
+                size: 22,
+                color: const Color(0xFFD9B65A),
+              ),
             ),
+
             const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: Colors.black54, fontSize: 14),
-                ),
-              ],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFF4E19C),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Color(0xFFD9B65A),
+              size: 16,
             ),
           ],
         ),

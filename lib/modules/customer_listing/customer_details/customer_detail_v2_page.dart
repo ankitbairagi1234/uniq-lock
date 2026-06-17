@@ -18,30 +18,60 @@ class CustomerDetailV2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
+      backgroundColor: const Color(0xFF0A0A0A),
+      // appBar: AppBar(
+      //
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      //   leading: GestureDetector(
+      //     onTap: () => Get.back(),
+      //     child: Container(
+      //       margin: const EdgeInsets.all(10),
+      //       decoration: BoxDecoration(
+      //         color: Colors.white,
+      //         shape: BoxShape.circle,
+      //         boxShadow: [
+      //           BoxShadow(
+      //             color: Colors.grey.shade300,
+      //             blurRadius: 6,
+      //             offset: const Offset(0, 3),
+      //           )
+      //         ],
+      //       ),
+      //       child: const Icon(Icons.arrow_back, color: Colors.black),
+      //     ),
+      //   ),
+      //   title: const Text("Details"),
+      //   centerTitle: true,
+      // ),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFF0A0A0A),
         elevation: 0,
+        centerTitle: true,
         leading: GestureDetector(
           onTap: () => Get.back(),
           child: Container(
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFF1B1B1B),
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade300,
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                )
-              ],
+              border: Border.all(
+                color: const Color(0x55D9B65A),
+              ),
             ),
-            child: const Icon(Icons.arrow_back, color: Colors.black),
+            child: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFFD9B65A),
+            ),
           ),
         ),
-        title: const Text("Details"),
-        centerTitle: true,
+        title: const Text(
+          "Customer Details",
+          style: TextStyle(
+            color: Color(0xFFF4E19C),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -61,36 +91,36 @@ class CustomerDetailV2Page extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Obx(() {
-        if (ctrl.selectedTab.value != 0) return const SizedBox.shrink();
-
-        return Container(
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
-          decoration: const BoxDecoration(
-            color: Color(0xffF6F7FB),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(28),
-              topRight: Radius.circular(28),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, -2),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Expanded(child: _unlockButton()),
-              const SizedBox(width: 14),
-              Expanded(child: _lockButton()),
-            ],
-          ),
-        );
-      }),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: Obx(() {
+      //   if (ctrl.selectedTab.value != 0) return const SizedBox.shrink();
+      //
+      //   return Container(
+      //     width: MediaQuery.of(context).size.width,
+      //     padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+      //     decoration: const BoxDecoration(
+      //       color: Color(0xffF6F7FB),
+      //       borderRadius: BorderRadius.only(
+      //         topLeft: Radius.circular(28),
+      //         topRight: Radius.circular(28),
+      //       ),
+      //       boxShadow: [
+      //         BoxShadow(
+      //           color: Colors.black12,
+      //           blurRadius: 10,
+      //           offset: Offset(0, -2),
+      //         ),
+      //       ],
+      //     ),
+      //     child: Row(
+      //       children: [
+      //         Expanded(child: _unlockButton()),
+      //         const SizedBox(width: 14),
+      //         Expanded(child: _lockButton()),
+      //       ],
+      //     ),
+      //   );
+      // }),
     );
   }
 
@@ -106,12 +136,19 @@ class CustomerDetailV2Page extends StatelessWidget {
           child: ChoiceChip(
             label: Text(e.value),
             selected: ctrl.selectedTab.value == e.key,
-            selectedColor: const Color(0xff4F6BED),
+            // selectedColor: const Color(0xff4F6BED),
+            selectedColor: const Color(0xFFD9B65A),
             onSelected: (_) => ctrl.selectedTab.value = e.key,
+            // labelStyle: TextStyle(
+            //   color: ctrl.selectedTab.value == e.key
+            //       ? Colors.white
+            //       : Colors.black,
+            // ),
             labelStyle: TextStyle(
               color: ctrl.selectedTab.value == e.key
-                  ? Colors.white
-                  : Colors.black,
+                  ? Colors.black
+                  : const Color(0xFFD9B65A),
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -141,8 +178,8 @@ class CustomerDetailV2Page extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _profileSection(),
-            const SizedBox(height: 16),
-            _deviceStatus(),
+            // const SizedBox(height: 16),
+            // _deviceStatus(),
             const SizedBox(height: 16),
             _numberSection(),
             const SizedBox(height: 16),
@@ -319,71 +356,97 @@ class CustomerDetailV2Page extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Number",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 12),
-          _numberTile(Icons.sim_card, "SIM 1", ctrl.customerPhone),
-          _divider(),
-          _numberTile(Icons.qr_code, "IMEI 1", ctrl.imei1),
-          _divider(),
-          _numberTile(Icons.qr_code, "IMEI 2", ctrl.imei2),
-          _divider(),
-          _numberTile(Icons.phone_android, "Brand/Model", ctrl.brandModel),
-        ],
-      ),
-    );
-  }
-
-  Widget _inputField({
-    IconData? icon,
-    String? svgPath,
-    required String text,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Row(
-        children: [
-          if (icon != null) Icon(icon, color: Colors.grey, size: 20),
-          if (svgPath != null)
-            SvgPicture.asset(svgPath, width: 20, height: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(fontSize: 14),
+          const Text(
+            "Device Information",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFFF4E19C),
             ),
+          ),
+          const SizedBox(height: 16),
+
+          _numberTile(
+            Icons.sim_card_rounded,
+            "SIM 1",
+            ctrl.customerPhone,
+          ),
+
+          _divider(),
+
+          _numberTile(
+            Icons.qr_code_rounded,
+            "IMEI 1",
+            ctrl.imei1,
+          ),
+
+          _divider(),
+
+          _numberTile(
+            Icons.qr_code_rounded,
+            "IMEI 2",
+            ctrl.imei2,
+          ),
+
+          _divider(),
+
+          _numberTile(
+            Icons.phone_android_rounded,
+            "Brand / Model",
+            ctrl.brandModel,
           ),
         ],
       ),
     );
   }
 
-  Widget _numberTile(IconData icon, String title, String value) {
+  Widget _numberTile(
+      IconData icon,
+      String title,
+      String value,
+      ) {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          height: 46,
+          width: 46,
           decoration: BoxDecoration(
-            color: const Color(0xffEEF2FF),
-            borderRadius: BorderRadius.circular(12),
+            color: const Color(0x22D9B65A),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: const Color(0x55D9B65A),
+            ),
           ),
-          child: Icon(icon, color: const Color(0xff4F6BED)),
+          child: Icon(
+            icon,
+            color: const Color(0xFFD9B65A),
+            size: 22,
+          ),
         ),
-        const SizedBox(width: 12),
+
+        const SizedBox(width: 14),
+
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontSize: 12)),
               Text(
-                value,
+                title,
                 style: const TextStyle(
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  color: Colors.white60,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+
+              const SizedBox(height: 4),
+
+              Text(
+                value.isEmpty ? "-" : value,
+                style: const TextStyle(
                   fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
             ],
@@ -392,27 +455,124 @@ class CustomerDetailV2Page extends StatelessWidget {
       ],
     );
   }
+  Widget _inputField({
+    IconData? icon,
+    String? svgPath,
+    required String text,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(30),
+      //   border: Border.all(color: Colors.grey.shade300),
+      // ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF151515),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: const Color(0x44D9B65A),
+        ),
+      ),
+      child: Row(
+        children: [
+          if (icon != null) Icon(icon,color: const Color(0xFFD9B65A), size: 20),
+          if (svgPath != null)
+            SvgPicture.asset(svgPath,color: const Color(0xFFD9B65A), width: 20, height: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget _numberTile(IconData icon, String title, String value) {
+  //   return Row(
+  //     children: [
+  //       Container(
+  //         padding: const EdgeInsets.all(8),
+  //         decoration: BoxDecoration(
+  //           color: const Color(0xffEEF2FF),
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         child: Icon(icon, color: const Color(0xff4F6BED)),
+  //       ),
+  //       const SizedBox(width: 12),
+  //       Expanded(
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(title, style: const TextStyle(fontSize: 12)),
+  //             Text(
+  //               value,
+  //               style: const TextStyle(
+  //                 fontWeight: FontWeight.w600,
+  //                 fontSize: 14,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _divider() => const Padding(
-    padding: EdgeInsets.symmetric(vertical: 12),
-    child: Divider(),
+    padding: EdgeInsets.symmetric(vertical: 14),
+    child: Divider(
+      color: Color(0x33D9B65A),
+      height: 1,
+    ),
   );
 
+  // BoxDecoration _cardDecoration() => BoxDecoration(
+  //   color: Colors.white,
+  //   borderRadius: BorderRadius.circular(20),
+  //   boxShadow: [
+  //     BoxShadow(
+  //       color: Colors.black.withOpacity(.05),
+  //       blurRadius: 10,
+  //       offset: const Offset(0, 4),
+  //     )
+  //   ],
+  // );
+
   BoxDecoration _cardDecoration() => BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(20),
+    borderRadius: BorderRadius.circular(22),
+    gradient: const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color(0xFF1B1B1B),
+        Color(0xFF0A0A0A),
+      ],
+    ),
+    border: Border.all(
+      color: const Color(0x55D9B65A),
+    ),
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(.05),
-        blurRadius: 10,
-        offset: const Offset(0, 4),
-      )
+        color: const Color(0xFFD9B65A).withOpacity(.08),
+        blurRadius: 15,
+      ),
     ],
   );
 
 
-
   Widget _commandsTab() {
+    final gridCommands = ctrl.orderedCommands.where((e) {
+      return e != "Lock Device" &&
+          e != "Location" &&
+          e != "Mobile No" &&
+          e != "Audio";
+    }).toList();
     return SingleChildScrollView(
       // padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
 
@@ -434,339 +594,322 @@ class CustomerDetailV2Page extends StatelessWidget {
             );
           }),
 
+          const SizedBox(height: 12),
+
+          _buildLockUnlockPanel(),
+
+          const SizedBox(height: 12),
+
+          _buildQuickActions(),
           const SizedBox(height: 8),
 
-          /// 🔴 SPECIAL COMMANDS (NOW HERE)
           // GridView.builder(
+          //   padding: EdgeInsets.only(top: 5,bottom: 5),
           //   shrinkWrap: true,
           //   physics: const NeverScrollableScrollPhysics(),
-          //   itemCount: ctrl.specialCommands.length,
+          //   // itemCount: ctrl.orderedCommands.length,
+          //   itemCount: gridCommands.length,
+          //   // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          //   //   crossAxisCount: 3,
+          //   //   childAspectRatio: 0.77,
+          //   //   crossAxisSpacing: 12,
+          //   //   mainAxisSpacing: 12,
+          //   // ),
+          //
+          //   // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          //   //   crossAxisCount: 3,
+          //   //   childAspectRatio: 0.92,
+          //   //   crossAxisSpacing: 10,
+          //   //   mainAxisSpacing: 10,
+          //   // ),
           //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           //     crossAxisCount: 3,
-          //     childAspectRatio: 1.1,
-          //     crossAxisSpacing: 12,
-          //     mainAxisSpacing: 12,
+          //     childAspectRatio: 1.3,
+          //     crossAxisSpacing: 8,
+          //     mainAxisSpacing: 8,
           //   ),
+          //
+          //   // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          //   //   crossAxisCount: 3,
+          //   //   childAspectRatio: 1.08,
+          //   //   crossAxisSpacing: 8,
+          //   //   mainAxisSpacing: 8,
+          //   // ),
+          //
           //   itemBuilder: (_, i) {
-          //     final key = ctrl.specialCommands[i];
+          //     // final title = ctrl.orderedCommands[i];
+          //     final title = gridCommands[i];
+          //     /// 👉 SPECIAL COMMANDS (Location, Mobile No)
+          //     // if (ctrl.specialCommands.contains(title)) {
+          //     //   return _actionCard(
+          //     //     title: title,
+          //     //     iconPath: ctrl.iconFor(title),
+          //     //     onTap: () => onSpecialCommandTap(title),
+          //     //   );
+          //     // }
           //
-          //     /// ❌ Remove "Remove Key" from grid
-          //     if (key == "Remove Key") return const SizedBox();
           //
-          //     return _actionCard(
-          //       title: key,
-          //       iconPath: ctrl.iconFor(key),
-          //       onTap: () => onSpecialCommandTap(key),
-          //     );
+          //     if (ctrl.specialCommands.contains(title)) {
+          //       return _actionCard(
+          //         title: title,
+          //         iconPath: ctrl.iconFor(title),
+          //         onTap: () {
+          //           if (title == "Audio") {
+          //             showAudioAlertDialog();
+          //             return;
+          //           }
+          //
+          //           onSpecialCommandTap(title);
+          //         },
+          //       );
+          //     }
+          //     /// 👉 NORMAL COMMANDS
+          //     final internalKey =
+          //         ctrl.displayToInternalCommand[title] ?? title;
+          //
+          //     return Obx(() {
+          //       final command = ctrl.commands[internalKey];
+          //       final isComingSoon =
+          //       ctrl.comingSoonCommands.contains(title);
+          //
+          //       return _miniCommandCard(
+          //         title: title,
+          //         iconPath: ctrl.iconFor(internalKey),
+          //         value: command?.value ?? false,
+          //         loading: ctrl.isCommandLoading(internalKey),
+          //         // onChanged: isComingSoon
+          //         //     ? (_) {
+          //         //   Get.snackbar(
+          //         //       "Coming Soon", "$title will be available soon");
+          //         // }
+          //         //     : (v) => ctrl.onCommandToggle(internalKey, v),
+          //         onChanged: isComingSoon
+          //             ? (_) {}
+          //             : (v) async {
+          //
+          //           /// ✅ AUDIO POPUP
+          //           if (internalKey == "Audio") {
+          //             showAudioAlertDialog();
+          //             return;
+          //           }
+          //
+          //
+          //           /// ✅ CONFIRMATION ONLY FOR THESE 2
+          //           if (internalKey == "Lock Device" ||
+          //               internalKey == "ACTIVE_RESTRICTION") {
+          //
+          //             // final confirm = await Get.dialog<bool>(
+          //             //   Dialog(
+          //             //     shape: RoundedRectangleBorder(
+          //             //       borderRadius: BorderRadius.circular(20),
+          //             //     ),
+          //             //     child: Padding(
+          //             //       padding: const EdgeInsets.all(20),
+          //             //       child: Column(
+          //             //         mainAxisSize: MainAxisSize.min,
+          //             //         children: [
+          //             //
+          //             //           Icon(
+          //             //             Icons.warning_amber_rounded,
+          //             //             size: 36,
+          //             //             color: Colors.orange,
+          //             //           ),
+          //             //
+          //             //           const SizedBox(height: 12),
+          //             //
+          //             //           const Text(
+          //             //             "Confirmation",
+          //             //             style: TextStyle(
+          //             //               fontSize: 18,
+          //             //               fontWeight: FontWeight.bold,
+          //             //             ),
+          //             //           ),
+          //             //
+          //             //           const SizedBox(height: 10),
+          //             //
+          //             //           Text(
+          //             //             internalKey == "Lock Device"
+          //             //                 ? (v
+          //             //                 ? "Are you sure you want to lock this device?"
+          //             //                 : "Are you sure you want to unlock this device?")
+          //             //                 : (v
+          //             //                 ? "Are you sure you want to enable active restriction?"
+          //             //                 : "Are you sure you want to disable active restriction?"),
+          //             //             textAlign: TextAlign.center,
+          //             //             style: const TextStyle(color: Colors.grey),
+          //             //           ),
+          //             //
+          //             //           const SizedBox(height: 20),
+          //             //
+          //             //           Row(
+          //             //             children: [
+          //             //               Expanded(
+          //             //                 child: OutlinedButton(
+          //             //                   onPressed: () => Get.back(result: false),
+          //             //                   child: const Text("Cancel"),
+          //             //                 ),
+          //             //               ),
+          //             //               const SizedBox(width: 10),
+          //             //               Expanded(
+          //             //                 child: ElevatedButton(
+          //             //                   onPressed: () => Get.back(result: true),
+          //             //                   style: ElevatedButton.styleFrom(
+          //             //                     backgroundColor: const Color(0xff4F6BED),
+          //             //                   ),
+          //             //                   child: const Text(
+          //             //                     "Yes",
+          //             //                     style: TextStyle(color: Colors.white),
+          //             //                   ),
+          //             //                 ),
+          //             //               ),
+          //             //             ],
+          //             //           )
+          //             //         ],
+          //             //       ),
+          //             //     ),
+          //             //   ),
+          //             // );
+          //
+          //             final confirm = await Get.dialog<bool>(
+          //               Dialog(
+          //                 insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+          //                 shape: RoundedRectangleBorder(
+          //                   borderRadius: BorderRadius.circular(24),
+          //                 ),
+          //                 child: Container(
+          //                   padding: const EdgeInsets.all(20),
+          //                   decoration: BoxDecoration(
+          //                     borderRadius: BorderRadius.circular(24),
+          //
+          //                     /// 🔥 PREMIUM GRADIENT (MATCH APP)
+          //                     gradient: const LinearGradient(
+          //                       colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
+          //                       begin: Alignment.topLeft,
+          //                       end: Alignment.bottomRight,
+          //                     ),
+          //                   ),
+          //                   child: Column(
+          //                     mainAxisSize: MainAxisSize.min,
+          //                     children: [
+          //
+          //                       /// 🔵 ICON WITH GLOW
+          //                       Container(
+          //                         padding: const EdgeInsets.all(14),
+          //                         decoration: BoxDecoration(
+          //                           shape: BoxShape.circle,
+          //                           color: const Color(0xff4F6BED).withOpacity(.1),
+          //                         ),
+          //                         child: Icon(
+          //                           internalKey == "Lock Device"
+          //                               ? (v ? Icons.lock : Icons.lock_open)
+          //                               : Icons.security,
+          //                           color: const Color(0xff4F6BED),
+          //                           size: 28,
+          //                         ),
+          //                       ),
+          //
+          //                       const SizedBox(height: 14),
+          //
+          //                       /// 🔥 TITLE
+          //                       const Text(
+          //                         "Confirmation",
+          //                         style: TextStyle(
+          //                           fontSize: 18,
+          //                           fontWeight: FontWeight.w700,
+          //                           color: Color(0xff1E2A5A),
+          //                         ),
+          //                       ),
+          //
+          //                       const SizedBox(height: 8),
+          //
+          //                       /// 🔹 SUB TEXT
+          //                       Text(
+          //                         internalKey == "Lock Device"
+          //                             ? (v
+          //                             ? "Are you sure you want to lock this device?"
+          //                             : "Are you sure you want to unlock this device?")
+          //                             : (v
+          //                             ? "Enable active restriction on this device?"
+          //                             : "Disable active restriction on this device?"),
+          //                         textAlign: TextAlign.center,
+          //                         style: const TextStyle(
+          //                           fontSize: 13,
+          //                           color: Colors.grey,
+          //                           height: 1.4,
+          //                         ),
+          //                       ),
+          //
+          //                       const SizedBox(height: 22),
+          //
+          //                       /// 🔥 BUTTONS
+          //                       Row(
+          //                         children: [
+          //
+          //                           /// CANCEL
+          //                           Expanded(
+          //                             child: OutlinedButton(
+          //                               onPressed: () => Get.back(result: false),
+          //                               style: OutlinedButton.styleFrom(
+          //                                 padding: const EdgeInsets.symmetric(vertical: 14),
+          //                                 shape: RoundedRectangleBorder(
+          //                                   borderRadius: BorderRadius.circular(14),
+          //                                 ),
+          //                                 side: BorderSide(
+          //                                   color: const Color(0xff4F6BED).withOpacity(.3),
+          //                                 ),
+          //                               ),
+          //                               child: const Text(
+          //                                 "Cancel",
+          //                                 style: TextStyle(color: Colors.black87),
+          //                               ),
+          //                             ),
+          //                           ),
+          //
+          //                           const SizedBox(width: 10),
+          //
+          //                           /// YES BUTTON
+          //                           Expanded(
+          //                             child: ElevatedButton(
+          //                               onPressed: () => Get.back(result: true),
+          //                               style: ElevatedButton.styleFrom(
+          //                                 padding: const EdgeInsets.symmetric(vertical: 14),
+          //                                 backgroundColor: const Color(0xff4F6BED),
+          //                                 elevation: 0,
+          //                                 shape: RoundedRectangleBorder(
+          //                                   borderRadius: BorderRadius.circular(14),
+          //                                 ),
+          //                               ),
+          //                               child: Text(
+          //                                 internalKey == "Lock Device"
+          //                                     ? (v ? "Lock" : "Unlock")
+          //                                     : (v ? "Enable" : "Disable"),
+          //                                 style: const TextStyle(
+          //                                   color: Colors.white,
+          //                                   fontWeight: FontWeight.w600,
+          //                                 ),
+          //                               ),
+          //                             ),
+          //                           ),
+          //                         ],
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ),
+          //               ),
+          //             );
+          //             /// ❌ CANCEL → DO NOTHING
+          //             if (confirm != true) return;
+          //           }
+          //
+          //           /// ✅ CONTINUE ORIGINAL FLOW
+          //           ctrl.onCommandToggle(internalKey, v);
+          //         },
+          //         isDisabled: isComingSoon,
+          //       );
+          //     });
           //   },
           // ),
 
-          GridView.builder(
-            padding: EdgeInsets.only(top: 5,bottom: 5),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: ctrl.orderedCommands.length,
-            // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //   crossAxisCount: 3,
-            //   childAspectRatio: 0.77,
-            //   crossAxisSpacing: 12,
-            //   mainAxisSpacing: 12,
-            // ),
-
-            // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //   crossAxisCount: 3,
-            //   childAspectRatio: 0.92,
-            //   crossAxisSpacing: 10,
-            //   mainAxisSpacing: 10,
-            // ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1.02,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-            ),
-
-            // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //   crossAxisCount: 3,
-            //   childAspectRatio: 1.08,
-            //   crossAxisSpacing: 8,
-            //   mainAxisSpacing: 8,
-            // ),
-
-            itemBuilder: (_, i) {
-              final title = ctrl.orderedCommands[i];
-
-              /// 👉 SPECIAL COMMANDS (Location, Mobile No)
-              // if (ctrl.specialCommands.contains(title)) {
-              //   return _actionCard(
-              //     title: title,
-              //     iconPath: ctrl.iconFor(title),
-              //     onTap: () => onSpecialCommandTap(title),
-              //   );
-              // }
-
-              if (ctrl.specialCommands.contains(title)) {
-                return _actionCard(
-                  title: title,
-                  iconPath: ctrl.iconFor(title),
-                  onTap: () {
-                    if (title == "Audio") {
-                      showAudioAlertDialog();
-                      return;
-                    }
-
-                    onSpecialCommandTap(title);
-                  },
-                );
-              }
-              /// 👉 NORMAL COMMANDS
-              final internalKey =
-                  ctrl.displayToInternalCommand[title] ?? title;
-
-              return Obx(() {
-                final command = ctrl.commands[internalKey];
-                final isComingSoon =
-                ctrl.comingSoonCommands.contains(title);
-
-                return _miniCommandCard(
-                  title: title,
-                  iconPath: ctrl.iconFor(internalKey),
-                  value: command?.value ?? false,
-                  loading: ctrl.isCommandLoading(internalKey),
-                  // onChanged: isComingSoon
-                  //     ? (_) {
-                  //   Get.snackbar(
-                  //       "Coming Soon", "$title will be available soon");
-                  // }
-                  //     : (v) => ctrl.onCommandToggle(internalKey, v),
-                  onChanged: isComingSoon
-                      ? (_) {}
-                      : (v) async {
-
-                    /// ✅ AUDIO POPUP
-                    if (internalKey == "Audio") {
-                      showAudioAlertDialog();
-                      return;
-                    }
-
-
-                    /// ✅ CONFIRMATION ONLY FOR THESE 2
-                    if (internalKey == "Lock Device" ||
-                        internalKey == "ACTIVE_RESTRICTION") {
-
-                      // final confirm = await Get.dialog<bool>(
-                      //   Dialog(
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(20),
-                      //     ),
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.all(20),
-                      //       child: Column(
-                      //         mainAxisSize: MainAxisSize.min,
-                      //         children: [
-                      //
-                      //           Icon(
-                      //             Icons.warning_amber_rounded,
-                      //             size: 36,
-                      //             color: Colors.orange,
-                      //           ),
-                      //
-                      //           const SizedBox(height: 12),
-                      //
-                      //           const Text(
-                      //             "Confirmation",
-                      //             style: TextStyle(
-                      //               fontSize: 18,
-                      //               fontWeight: FontWeight.bold,
-                      //             ),
-                      //           ),
-                      //
-                      //           const SizedBox(height: 10),
-                      //
-                      //           Text(
-                      //             internalKey == "Lock Device"
-                      //                 ? (v
-                      //                 ? "Are you sure you want to lock this device?"
-                      //                 : "Are you sure you want to unlock this device?")
-                      //                 : (v
-                      //                 ? "Are you sure you want to enable active restriction?"
-                      //                 : "Are you sure you want to disable active restriction?"),
-                      //             textAlign: TextAlign.center,
-                      //             style: const TextStyle(color: Colors.grey),
-                      //           ),
-                      //
-                      //           const SizedBox(height: 20),
-                      //
-                      //           Row(
-                      //             children: [
-                      //               Expanded(
-                      //                 child: OutlinedButton(
-                      //                   onPressed: () => Get.back(result: false),
-                      //                   child: const Text("Cancel"),
-                      //                 ),
-                      //               ),
-                      //               const SizedBox(width: 10),
-                      //               Expanded(
-                      //                 child: ElevatedButton(
-                      //                   onPressed: () => Get.back(result: true),
-                      //                   style: ElevatedButton.styleFrom(
-                      //                     backgroundColor: const Color(0xff4F6BED),
-                      //                   ),
-                      //                   child: const Text(
-                      //                     "Yes",
-                      //                     style: TextStyle(color: Colors.white),
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           )
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   ),
-                      // );
-
-                      final confirm = await Get.dialog<bool>(
-                        Dialog(
-                          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-
-                              /// 🔥 PREMIUM GRADIENT (MATCH APP)
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-
-                                /// 🔵 ICON WITH GLOW
-                                Container(
-                                  padding: const EdgeInsets.all(14),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: const Color(0xff4F6BED).withOpacity(.1),
-                                  ),
-                                  child: Icon(
-                                    internalKey == "Lock Device"
-                                        ? (v ? Icons.lock : Icons.lock_open)
-                                        : Icons.security,
-                                    color: const Color(0xff4F6BED),
-                                    size: 28,
-                                  ),
-                                ),
-
-                                const SizedBox(height: 14),
-
-                                /// 🔥 TITLE
-                                const Text(
-                                  "Confirmation",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xff1E2A5A),
-                                  ),
-                                ),
-
-                                const SizedBox(height: 8),
-
-                                /// 🔹 SUB TEXT
-                                Text(
-                                  internalKey == "Lock Device"
-                                      ? (v
-                                      ? "Are you sure you want to lock this device?"
-                                      : "Are you sure you want to unlock this device?")
-                                      : (v
-                                      ? "Enable active restriction on this device?"
-                                      : "Disable active restriction on this device?"),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey,
-                                    height: 1.4,
-                                  ),
-                                ),
-
-                                const SizedBox(height: 22),
-
-                                /// 🔥 BUTTONS
-                                Row(
-                                  children: [
-
-                                    /// CANCEL
-                                    Expanded(
-                                      child: OutlinedButton(
-                                        onPressed: () => Get.back(result: false),
-                                        style: OutlinedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(14),
-                                          ),
-                                          side: BorderSide(
-                                            color: const Color(0xff4F6BED).withOpacity(.3),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          "Cancel",
-                                          style: TextStyle(color: Colors.black87),
-                                        ),
-                                      ),
-                                    ),
-
-                                    const SizedBox(width: 10),
-
-                                    /// YES BUTTON
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () => Get.back(result: true),
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
-                                          backgroundColor: const Color(0xff4F6BED),
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(14),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          internalKey == "Lock Device"
-                                              ? (v ? "Lock" : "Unlock")
-                                              : (v ? "Enable" : "Disable"),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                      /// ❌ CANCEL → DO NOTHING
-                      if (confirm != true) return;
-                    }
-
-                    /// ✅ CONTINUE ORIGINAL FLOW
-                    ctrl.onCommandToggle(internalKey, v);
-                  },
-                  isDisabled: isComingSoon,
-                );
-              });
-            },
-          ),
-
-          // const SizedBox(height: 8),
 
           /// 🔹 MAIN COMMAND GRID
 
@@ -936,25 +1079,46 @@ class CustomerDetailV2Page extends StatelessWidget {
                 );
               },
               child: Container(
-                width: double.infinity,
-                // padding: const EdgeInsets.symmetric(vertical: 18),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                height: 58,
                 decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                alignment: Alignment.center,
-                child: loading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                  "Remove Device",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                  borderRadius: BorderRadius.circular(18),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFFF5A52),
+                      Color(0xFFFF3B30),
+                    ],
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.redAccent,
+                      blurRadius: 18,
+                      spreadRadius: -6,
+                    ),
+                  ],
                 ),
-              ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.delete_forever,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 10),
+                    loading
+                        ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                        : const Text(
+                      "Remove Device",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              )
             );
           }),
 
@@ -965,30 +1129,344 @@ class CustomerDetailV2Page extends StatelessWidget {
     );
   }
 
+  Widget _buildLockUnlockPanel() {
+    return Obx(() {
+      final command = ctrl.commands["Lock Device"];
+      final isLocked = command?.value ?? false;
+
+      return Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF1B1B1B),
+              Color(0xFF0A0A0A),
+            ],
+          ),
+          border: Border.all(
+            color: const Color(0x66D9B65A),
+          ),
+        ),
+        child: Column(
+          children: [
+            const Row(
+              children: [
+                Icon(
+                  Icons.security,
+                  color: Color(0xFFD9B65A),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "Device Control",
+                  style: TextStyle(
+                    color: Color(0xFFF4E19C),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 18),
+
+            Row(
+              children: [
+                Expanded(
+                  child: _controlButton(
+                    title: "Lock Device",
+                    icon: Icons.lock,
+                    selected: isLocked,
+                    onTap: () async {
+                      final confirm = await _showCommandConfirmation(
+                        title: "Lock Device",
+                        message: "Are you sure you want to lock this device?",
+                        actionText: "Lock",
+                        icon: Icons.lock,
+                      );
+
+                      if (confirm == true) {
+                        ctrl.onCommandToggle(
+                          "Lock Device",
+                          true,
+                        );
+                      }
+                    },
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                Expanded(
+                  child: _controlButton(
+                    title: "Unlock Device",
+                    icon: Icons.lock_open,
+                    selected: !isLocked,
+                    // onTap: () {
+                    //   ctrl.onCommandToggle(
+                    //     "Lock Device",
+                    //     false,
+                    //   );
+                    // },
+                    onTap: () async {
+                      final confirm = await _showCommandConfirmation(
+                        title: "Unlock Device",
+                        message: "Are you sure you want to unlock this device?",
+                        actionText: "Unlock",
+                        icon: Icons.lock_open,
+                      );
+
+                      if (confirm == true) {
+                        ctrl.onCommandToggle(
+                          "Lock Device",
+                          false,
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
+  Widget _controlButton({
+    required String title,
+    required IconData icon,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          color: selected
+              ? const Color(0xFFD9B65A)
+              : const Color(0xFF151515),
+          border: Border.all(
+            color: const Color(0x55D9B65A),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: selected
+                  ? Colors.black
+                  : const Color(0xFFD9B65A),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: selected
+                    ? Colors.black
+                    : Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _buildQuickActions() {
+    return GridView.count(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      childAspectRatio: 2.1,
+      // crossAxisCount: 3,
+      // childAspectRatio: 0.95,
+
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      children: [
+
+        _quickCard(
+          "Location",
+          Icons.location_on,
+              () => onSpecialCommandTap("Location"),
+        ),
+
+        _quickCard(
+          "Mobile No",
+          Icons.phone_android,
+              () => onSpecialCommandTap("Mobile No"),
+        ),
+
+        _quickCard(
+          "Audio",
+          Icons.volume_up,
+          showAudioAlertDialog,
+        ),
+
+        _quickCard(
+          "Active Restriction",
+          Icons.security,
+              () async {
+            final currentValue =
+                ctrl.commands["ACTIVE_RESTRICTION"]?.value ?? false;
+
+            final confirm = await _showCommandConfirmation(
+              title: "Active Restriction",
+              message: currentValue
+                  ? "Disable active restriction?"
+                  : "Enable active restriction?",
+              actionText: currentValue ? "Disable" : "Enable",
+              icon: Icons.security,
+            );
+
+            if (confirm == true) {
+              ctrl.onCommandToggle(
+                "ACTIVE_RESTRICTION",
+                !currentValue,
+              );
+            }
+          },
+        ),
+
+        _quickCard(
+          "Offline Lock",
+          Icons.lock_outline,
+              () => onSpecialCommandTap("Offline Lock"),
+        ),
+
+        _quickCard(
+          "Offline Unlock",
+          Icons.lock_open,
+              () => onSpecialCommandTap("Offline Unlock"),
+        ),
+      ],
+    );
+  }
+  Widget _quickCard(
+      String title,
+      IconData icon,
+      VoidCallback onTap,
+      ) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(22),
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1B1B1B),
+                Color(0xFF0A0A0A),
+              ],
+            ),
+            border: Border.all(
+              color: const Color(0x55D9B65A),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFD9B65A).withOpacity(.08),
+                blurRadius: 12,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 12,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 32,
+                  width: 32,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFFF4E19C),
+                        Color(0xFFD9B65A),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0x55D9B65A),
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    icon,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
   void showAudioAlertDialog() {
     final TextEditingController messageCtrl = TextEditingController();
     bool isLoading = false;
 
     Get.dialog(
       Dialog(
+        backgroundColor: Colors.transparent,
         insetPadding: const EdgeInsets.symmetric(horizontal: 20),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(28),
         ),
         child: StatefulBuilder(
           builder: (context, setState) {
             return Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(22),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(28),
                 gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFFF7F9FF),
-                    Color(0xFFEAF0FF),
-                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1B1B1B),
+                    Color(0xFF0A0A0A),
+                  ],
                 ),
+                border: Border.all(
+                  color: const Color(0x66D9B65A),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0x55D9B65A),
+                    blurRadius: 20,
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -996,71 +1474,52 @@ class CustomerDetailV2Page extends StatelessWidget {
 
                   /// ICON
                   Container(
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xff4F6BED).withOpacity(.1),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFFF4E19C),
+                          Color(0xFFD9B65A),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x55D9B65A),
+                          blurRadius: 15,
+                        ),
+                      ],
                     ),
                     child: const Icon(
-                      Icons.volume_up,
-                      color: Color(0xff4F6BED),
-                      size: 28,
+                      Icons.volume_up_rounded,
+                      color: Colors.black,
+                      size: 30,
                     ),
                   ),
 
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 16),
 
                   const Text(
                     "Play Audio Alert",
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFF4E19C),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
 
                   const SizedBox(height: 8),
-                  //
-                  // const Text(
-                  //   "Enter message to send alert",
-                  //   style: TextStyle(
-                  //     color: Colors.grey,
-                  //     fontSize: 12,
-                  //   ),
-                  // ),
-                  //
-                  // const SizedBox(height: 18),
-                  //
-                  // /// MESSAGE FIELD
-                  // TextField(
-                  //   controller: messageCtrl,
-                  //   maxLines: 3,
-                  //   decoration: InputDecoration(
-                  //     hintText: "Type alert message...",
-                  //     filled: true,
-                  //     fillColor: Colors.white,
-                  //     contentPadding: const EdgeInsets.all(14),
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(14),
-                  //       borderSide: BorderSide(
-                  //         color: Colors.grey.shade300,
-                  //       ),
-                  //     ),
-                  //     enabledBorder: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(14),
-                  //       borderSide: BorderSide(
-                  //         color: Colors.grey.shade300,
-                  //       ),
-                  //     ),
-                  //     focusedBorder: const OutlineInputBorder(
-                  //       borderRadius: BorderRadius.all(Radius.circular(14)),
-                  //       borderSide: BorderSide(
-                  //         color: Color(0xff4F6BED),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
 
-                  const SizedBox(height: 22),
+                  const Text(
+                    "Send a voice alert to the selected device",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white60,
+                      fontSize: 13,
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
 
                   Row(
                     children: [
@@ -1072,16 +1531,28 @@ class CustomerDetailV2Page extends StatelessWidget {
                               ? null
                               : () => Navigator.pop(context),
                           style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            side: const BorderSide(
+                              color: Color(0xFFD9B65A),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 14,
+                            ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius:
+                              BorderRadius.circular(16),
                             ),
                           ),
-                          child: const Text("Cancel"),
+                          child: const Text(
+                            "Cancel",
+                            style: TextStyle(
+                              color: Color(0xFFD9B65A),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                       ),
 
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 12),
 
                       /// SEND
                       Expanded(
@@ -1089,70 +1560,75 @@ class CustomerDetailV2Page extends StatelessWidget {
                           onPressed: isLoading
                               ? null
                               : () async {
-
                             final msg = "";
-                            //
-                            // if (msg.isEmpty) {
-                            //   Get.snackbar(
-                            //     "Error",
-                            //     "Please enter message",
-                            //   );
-                            //   return;
-                            // }
 
-                            setState(() => isLoading = true);
+                            setState(
+                                  () => isLoading = true,
+                            );
 
                             final success =
                             await ctrl.sendAudioAlert(msg);
 
-                            setState(() => isLoading = false);
+                            setState(
+                                  () => isLoading = false,
+                            );
 
-                            // if (success) {
-                            //   Get.back();
-                            // }
                             if (success) {
+                              FocusManager.instance.primaryFocus
+                                  ?.unfocus();
 
-                              /// keyboard close
-                              FocusManager.instance.primaryFocus?.unfocus();
-
-                              /// dialog close
                               if (Get.isDialogOpen ?? false) {
                                 Navigator.pop(context);
                               }
 
-                              await Future.delayed(const Duration(milliseconds: 200));
+                              await Future.delayed(
+                                const Duration(
+                                  milliseconds: 200,
+                                ),
+                              );
 
                               Get.snackbar(
                                 "Success",
                                 "Voice alert sent",
-                                snackPosition: SnackPosition.BOTTOM,
-                                backgroundColor: Colors.green,
+                                snackPosition:
+                                SnackPosition.BOTTOM,
+                                backgroundColor:
+                                Colors.green,
                                 colorText: Colors.white,
-                                margin: const EdgeInsets.all(12),
-                                duration: const Duration(seconds: 2),
+                                margin:
+                                const EdgeInsets.all(12),
+                                duration:
+                                const Duration(seconds: 2),
                               );
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff4F6BED),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            backgroundColor:
+                            const Color(0xFFD9B65A),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 14,
+                            ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius:
+                              BorderRadius.circular(16),
                             ),
                           ),
                           child: isLoading
                               ? const SizedBox(
                             height: 18,
                             width: 18,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
+                            child:
+                            CircularProgressIndicator(
+                              color: Colors.black,
                               strokeWidth: 2,
                             ),
                           )
                               : const Text(
-                            "Send",
+                            "Send Alert",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
+                              fontWeight:
+                              FontWeight.w700,
                             ),
                           ),
                         ),
@@ -1167,118 +1643,6 @@ class CustomerDetailV2Page extends StatelessWidget {
       ),
     );
   }
-
-  // Widget _socialMediaModernCard({
-  //   required bool value,
-  //   required bool isLoading,
-  //   required ValueChanged<bool>? onChanged,
-  // }) {
-  //   Widget socialIcon(String asset) {
-  //     return Container(
-  //       width: 34,
-  //       height: 34,
-  //       padding: const EdgeInsets.all(7),
-  //       decoration: BoxDecoration(
-  //         color: Colors.white,
-  //         borderRadius: BorderRadius.circular(10),
-  //         border: Border.all(
-  //           color: const Color(0xffE8ECF8),
-  //         ),
-  //       ),
-  //       child: SvgPicture.asset(
-  //         asset,
-  //         placeholderBuilder: (_) => const SizedBox(),
-  //         errorBuilder: (_, __, ___) => const Icon(
-  //           Icons.apps,
-  //           size: 16,
-  //           color: Color(0xff4F6BED),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //
-  //   return Container(
-  //     padding: const EdgeInsets.all(16),
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(24),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withOpacity(.04),
-  //           blurRadius: 15,
-  //           offset: const Offset(0, 6),
-  //         ),
-  //       ],
-  //       border: Border.all(
-  //         color: const Color(0xffE8ECF8),
-  //       ),
-  //     ),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //
-  //         /// Title
-  //         const Text(
-  //           "Social Media",
-  //           style: TextStyle(
-  //             fontSize: 15,
-  //             fontWeight: FontWeight.w700,
-  //           ),
-  //         ),
-  //
-  //         const SizedBox(height: 14),
-  //
-  //         /// Icons + Toggle Row
-  //         Row(
-  //           children: [
-  //
-  //             socialIcon("assets/icons/commands/youtube_colour.svg"),
-  //
-  //             const SizedBox(width: 8),
-  //
-  //             socialIcon("assets/icons/commands/whatsupp_colour.svg"),
-  //
-  //             const SizedBox(width: 8),
-  //
-  //             socialIcon("assets/icons/commands/wa_business.svg"),
-  //
-  //             const SizedBox(width: 8),
-  //
-  //             socialIcon("assets/icons/commands/insta_colour.svg"),
-  //
-  //             const SizedBox(width: 8),
-  //
-  //             socialIcon("assets/icons/commands/facebook_color.svg"),
-  //
-  //             const SizedBox(width: 8),
-  //
-  //             socialIcon("assets/icons/commands/arattai_colour.svg"),
-  //
-  //             const Spacer(),
-  //
-  //             isLoading
-  //                 ? const SizedBox(
-  //               height: 20,
-  //               width: 20,
-  //               child: CircularProgressIndicator(
-  //                 strokeWidth: 2,
-  //               ),
-  //             )
-  //                 : Transform.scale(
-  //               scale: .85,
-  //               child: Switch(
-  //                 value: value,
-  //                 onChanged: onChanged,
-  //                 activeColor: Colors.white,
-  //                 activeTrackColor: const Color(0xff4F6BED),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
   Widget _socialMediaModernCard({
     required bool value,
     required bool isLoading,
@@ -1690,6 +2054,95 @@ class CustomerDetailV2Page extends StatelessWidget {
     );
   }
 
+  Future<bool?> _showCommandConfirmation({
+    required String title,
+    required String message,
+    required String actionText,
+    required IconData icon,
+  }) {
+    return Get.dialog<bool>(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFFD9B65A).withOpacity(.15),
+                ),
+                child: Icon(
+                  icon,
+                  color: const Color(0xFFD9B65A),
+                  size: 30,
+                ),
+              ),
+
+              const SizedBox(height: 14),
+
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+
+              const SizedBox(height: 22),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(result: false),
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+
+                  const SizedBox(width: 10),
+
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Get.back(result: true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD9B65A),
+                      ),
+                      child: Text(
+                        actionText,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
   Future<void> onSpecialCommandTap(String title) async {
     if (title == 'Location') {
       showLocationPopup();
@@ -2095,7 +2548,15 @@ class CustomerDetailV2Page extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFF7F9FF), Color(0xFFEAF0FF)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1B1B1B),
+                    Color(0xFF0A0A0A),
+                  ],
+                ),
+                border: Border.all(
+                  color: Color(0x66D9B65A),
                 ),
               ),
               child: Column(
@@ -2107,11 +2568,16 @@ class CustomerDetailV2Page extends StatelessWidget {
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xff4F6BED).withOpacity(.1),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFFF4E19C),
+                          Color(0xFFD9B65A),
+                        ],
+                      ),
                     ),
                     child: Icon(
-                      isLock ? Icons.lock : Icons.lock_open,
-                      color: const Color(0xff4F6BED),
+                      isLock ? Icons.lock_rounded : Icons.lock_open_rounded,
+                      color: Colors.black,
                       size: 28,
                     ),
                   ),
@@ -2121,8 +2587,9 @@ class CustomerDetailV2Page extends StatelessWidget {
                   Text(
                     isLock ? "Offline Lock" : "Offline Unlock",
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFF4E19C),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
 
@@ -2138,17 +2605,26 @@ class CustomerDetailV2Page extends StatelessWidget {
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.grey.shade300),
-                        color: Colors.white,
-                      ),
+                        border: Border.all(
+                          color: const Color(0x55D9B65A),
+                        ),
+                        color: const Color(0xFF151515),                      ),
                       child: Row(
                         children: [
-                          const Icon(Icons.phone, color: Color(0xff4F6BED)),
-                          const SizedBox(width: 10),
+                          Icon(
+                            Icons.phone_android_rounded,
+                            color: Color(0xFFD9B65A),
+                          ),
+                         const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               numberCtrl.text,
-                              style: const TextStyle(
+                              // style: const TextStyle(
+                              //   fontSize: 14,
+                              //   fontWeight: FontWeight.w600,
+                              // ),
+                              style: TextStyle(
+                                color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -2167,13 +2643,47 @@ class CustomerDetailV2Page extends StatelessWidget {
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                       ],
+                      // decoration: InputDecoration(
+                      //   hintText: "Enter mobile number",
+                      //   counterText: "",
+                      //   prefixIcon: const Icon(Icons.phone),
+                      //   border: OutlineInputBorder(
+                      //     borderRadius: BorderRadius.circular(14),
+                      //   ),
+                      // ),
                       decoration: InputDecoration(
                         hintText: "Enter mobile number",
+                        hintStyle: const TextStyle(
+                          color: Colors.white54,
+                        ),
                         counterText: "",
-                        prefixIcon: const Icon(Icons.phone),
+                        filled: true,
+                        fillColor: const Color(0xFF151515),
+                        prefixIcon: const Icon(
+                          Icons.phone_android,
+                          color: Color(0xFFD9B65A),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
+                          borderSide: const BorderSide(
+                            color: Color(0x55D9B65A),
+                          ),
                         ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: const BorderSide(
+                            color: Color(0x55D9B65A),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFD9B65A),
+                          ),
+                        ),
+                      ),
+                      style: const TextStyle(
+                        color: Colors.white,
                       ),
                     ),
 
@@ -2294,19 +2804,28 @@ class CustomerDetailV2Page extends StatelessWidget {
 
                         setState(() => isSending = false);
                       },
+                      // style: ElevatedButton.styleFrom(
+                      //   backgroundColor: const Color(0xff4F6BED),
+                      //   padding:
+                      //   const EdgeInsets.symmetric(vertical: 14),
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(14),
+                      //   ),
+                      // ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff4F6BED),
-                        padding:
-                        const EdgeInsets.symmetric(vertical: 14),
+                        backgroundColor: const Color(0xFFD9B65A),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                        ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                       ),
                       child: isSending
                           ? const CircularProgressIndicator(
                           color: Colors.white)
                           : const Text("Send Command",
-                          style: TextStyle(color: Colors.white)),
+                          style: TextStyle(color: Colors.black)),
                     ),
                   ),
                 ],
@@ -2323,127 +2842,296 @@ class CustomerDetailV2Page extends StatelessWidget {
     required List<Map<String, dynamic>> simHistory,
     bool isLoading = false,
   }) {
+    // Get.dialog(
+    //   Dialog(
+    //     shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.circular(18),
+    //     ),
+    //     child: Padding(
+    //       padding: const EdgeInsets.all(16),
+    //       child: Column(
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: [
+    //
+    //           /// 🔹 LOADING
+    //           if (isLoading) ...[
+    //             const SizedBox(height: 10),
+    //             const CircularProgressIndicator(),
+    //             const SizedBox(height: 14),
+    //             const Text(
+    //               "Please wait...\nFetching SIM numbers",
+    //               textAlign: TextAlign.center,
+    //             ),
+    //           ] else ...[
+    //
+    //             /// 🔥 NO NUMBER
+    //             if (simNumbers.isEmpty)
+    //               Column(
+    //                 children: [
+    //                   const Icon(Icons.sim_card, size: 40, color: Colors.grey),
+    //                   const SizedBox(height: 8),
+    //                   _infoRowForSim("SIM Number", "Not available"),
+    //                 ],
+    //               )
+    //
+    //             /// 🔥 MULTIPLE NUMBERS
+    //             else
+    //               ...simNumbers.asMap().entries.map((e) {
+    //                 return Padding(
+    //                   padding: const EdgeInsets.only(bottom: 8),
+    //                   child: _infoRowForSim(
+    //                     "SIM ${e.key + 1}",
+    //                     e.value,
+    //                   ),
+    //                 );
+    //               }).toList(),
+    //           ],
+    //
+    //           const SizedBox(height: 12),
+    //           if (!isLoading &&
+    //               simHistory.isNotEmpty) ...[
+    //
+    //             const SizedBox(height: 12),
+    //
+    //             InkWell(
+    //               onTap: () {
+    //                 showSimHistoryPopup(simHistory);
+    //               },
+    //               child: Container(
+    //                 width: double.infinity,
+    //                 padding: const EdgeInsets.symmetric(vertical: 14),
+    //                 decoration: BoxDecoration(
+    //                   gradient: const LinearGradient(
+    //                     colors: [
+    //                       Color(0xFF4F6BED),
+    //                       Color(0xFF3153D8),
+    //                     ],
+    //                   ),
+    //                   borderRadius: BorderRadius.circular(50),
+    //                   boxShadow: [
+    //                     BoxShadow(
+    //                       color: Color(0x334F6BED),
+    //                       blurRadius: 12,
+    //                       offset: Offset(0, 5),
+    //                     ),
+    //                   ],
+    //                 ),
+    //                 child: const Row(
+    //                   mainAxisAlignment: MainAxisAlignment.center,
+    //                   children: [
+    //                     Icon(
+    //                       Icons.history,
+    //                       color: Colors.white,
+    //                       size: 18,
+    //                     ),
+    //                     SizedBox(width: 8),
+    //                     Text(
+    //                       "SIM History",
+    //                       style: TextStyle(
+    //                         color: Colors.white,
+    //                         fontWeight: FontWeight.w600,
+    //                         fontSize: 15,
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //           const SizedBox(height: 12),
+    //
+    //           /// 🔹 BUTTON
+    //           InkWell(
+    //             onTap: () {
+    //               if (Get.isDialogOpen ?? false) Get.back();
+    //             },
+    //             child: Container(
+    //               padding: const EdgeInsets.symmetric(vertical: 16),
+    //               decoration: BoxDecoration(
+    //                 color: const Color(0xFF3153D8),
+    //                 borderRadius: BorderRadius.circular(50),
+    //               ),
+    //               alignment: Alignment.center,
+    //               child: const Text(
+    //                 "Dismiss",
+    //                 style: TextStyle(color: Colors.white),
+    //               ),
+    //             ),
+    //           )
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    //   barrierDismissible: false, // 🔥 IMPORTANT
+    // );
     Get.dialog(
       Dialog(
+        backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(28),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+        child: Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(28),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1B1B1B),
+                Color(0xFF0A0A0A),
+              ],
+            ),
+            border: Border.all(
+              color: const Color(0x66D9B65A),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0x55D9B65A),
+                blurRadius: 20,
+              ),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
 
-              /// 🔹 LOADING
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.sim_card_rounded,
+                    color: Color(0xFFD9B65A),
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    "SIM Information",
+                    style: TextStyle(
+                      color: Color(0xFFF4E19C),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 18),
+
+              /// LOADING
               if (isLoading) ...[
-                const SizedBox(height: 10),
-                const CircularProgressIndicator(),
+                const CircularProgressIndicator(
+                  color: Color(0xFFD9B65A),
+                ),
                 const SizedBox(height: 14),
                 const Text(
                   "Please wait...\nFetching SIM numbers",
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ] else ...[
 
-                /// 🔥 NO NUMBER
                 if (simNumbers.isEmpty)
                   Column(
                     children: [
-                      const Icon(Icons.sim_card, size: 40, color: Colors.grey),
-                      const SizedBox(height: 8),
-                      _infoRowForSim("SIM Number", "Not available"),
+                      const Icon(
+                        Icons.sim_card,
+                        size: 42,
+                        color: Color(0xFFD9B65A),
+                      ),
+                      const SizedBox(height: 10),
+                      _infoRowForSim(
+                        "SIM Number",
+                        "Not available",
+                      ),
                     ],
                   )
-
-                /// 🔥 MULTIPLE NUMBERS
                 else
-                  ...simNumbers.asMap().entries.map((e) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                  ...simNumbers.asMap().entries.map(
+                        (e) => Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: _infoRowForSim(
                         "SIM ${e.key + 1}",
                         e.value,
                       ),
-                    );
-                  }).toList(),
+                    ),
+                  ),
               ],
 
-              const SizedBox(height: 12),
-              if (!isLoading &&
-                  simHistory.isNotEmpty) ...[
+              const SizedBox(height: 14),
 
-                const SizedBox(height: 12),
-
+              if (!isLoading && simHistory.isNotEmpty) ...[
                 InkWell(
                   onTap: () {
                     showSimHistoryPopup(simHistory);
                   },
+                  borderRadius: BorderRadius.circular(50),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [
-                          Color(0xFF4F6BED),
-                          Color(0xFF3153D8),
+                          Color(0xFFF4E19C),
+                          Color(0xFFD9B65A),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0x334F6BED),
-                          blurRadius: 12,
-                          offset: Offset(0, 5),
-                        ),
-                      ],
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
                           Icons.history,
-                          color: Colors.white,
-                          size: 18,
+                          color: Colors.black,
                         ),
                         SizedBox(width: 8),
                         Text(
                           "SIM History",
                           style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ],
-              const SizedBox(height: 12),
 
-              /// 🔹 BUTTON
+                const SizedBox(height: 12),
+              ],
+
               InkWell(
                 onTap: () {
                   if (Get.isDialogOpen ?? false) Get.back();
                 },
+                borderRadius: BorderRadius.circular(50),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF3153D8),
                     borderRadius: BorderRadius.circular(50),
+                    border: Border.all(
+                      color: const Color(0xFFD9B65A),
+                    ),
                   ),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "Dismiss",
-                    style: TextStyle(color: Colors.white),
+                  child: const Center(
+                    child: Text(
+                      "Dismiss",
+                      style: TextStyle(
+                        color: Color(0xFFD9B65A),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
-      barrierDismissible: false, // 🔥 IMPORTANT
+      barrierDismissible: false,
     );
   }
 
@@ -2452,18 +3140,39 @@ class CustomerDetailV2Page extends StatelessWidget {
       ) {
     Get.dialog(
       Dialog(
+        backgroundColor: Colors.transparent,
         insetPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 24,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(28),
         ),
         child: Container(
           constraints: const BoxConstraints(
             maxHeight: 600,
           ),
           padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(28),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1B1B1B),
+                Color(0xFF0A0A0A),
+              ],
+            ),
+            border: Border.all(
+              color: const Color(0x66D9B65A),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0x55D9B65A),
+                blurRadius: 20,
+              ),
+            ],
+          ),
           child: Column(
             children: [
 
@@ -2473,21 +3182,22 @@ class CustomerDetailV2Page extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF3153D8)
-                          .withOpacity(.1),
-                      borderRadius:
-                      BorderRadius.circular(12),
+                      color: const Color(0x22D9B65A),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.history,
-                      color: Color(0xFF3153D8),
+                      color: Color(0xFFD9B65A),
                     ),
                   ),
+
                   const SizedBox(width: 10),
+
                   const Expanded(
                     child: Text(
                       "SIM History",
                       style: TextStyle(
+                        color: Color(0xFFF4E19C),
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
@@ -2496,20 +3206,18 @@ class CustomerDetailV2Page extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
               Expanded(
                 child: ListView.separated(
                   itemCount: history.length,
                   separatorBuilder: (_, __) =>
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   itemBuilder: (_, index) {
-
                     final item = history[index];
 
                     final sim1 =
-                        item["sim1_number"]?.toString() ??
-                            "-";
+                        item["sim1_number"]?.toString() ?? "-";
 
                     final carrier1 =
                         item["sim1_carrier"]?.toString() ??
@@ -2524,20 +3232,16 @@ class CustomerDetailV2Page extends StatelessWidget {
                     return Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                        BorderRadius.circular(16),
+                        color: const Color(0xFF151515),
+                        borderRadius: BorderRadius.circular(18),
                         border: Border.all(
-                          color: const Color(
-                              0xFF3153D8)
-                              .withOpacity(.15),
+                          color: const Color(0x44D9B65A),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black
-                                .withOpacity(.04),
+                            color: const Color(0x22D9B65A),
                             blurRadius: 8,
-                          )
+                          ),
                         ],
                       ),
                       child: Column(
@@ -2549,13 +3253,12 @@ class CustomerDetailV2Page extends StatelessWidget {
                           Container(
                             padding:
                             const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
+                              horizontal: 12,
+                              vertical: 5,
                             ),
                             decoration: BoxDecoration(
                               color: const Color(
-                                  0xFF3153D8)
-                                  .withOpacity(.08),
+                                  0x22D9B65A),
                               borderRadius:
                               BorderRadius.circular(
                                   30),
@@ -2564,15 +3267,15 @@ class CustomerDetailV2Page extends StatelessWidget {
                               "History #${index + 1}",
                               style: const TextStyle(
                                 color:
-                                Color(0xFF3153D8),
+                                Color(0xFFD9B65A),
                                 fontWeight:
-                                FontWeight.w600,
+                                FontWeight.w700,
                                 fontSize: 12,
                               ),
                             ),
                           ),
 
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 14),
 
                           _historyRow(
                             "SIM 1",
@@ -2586,7 +3289,10 @@ class CustomerDetailV2Page extends StatelessWidget {
 
                           if (sim2 != null &&
                               sim2.isNotEmpty) ...[
-                            const Divider(),
+                            Divider(
+                              color: Colors.white
+                                  .withOpacity(.08),
+                            ),
 
                             _historyRow(
                               "SIM 2",
@@ -2605,7 +3311,7 @@ class CustomerDetailV2Page extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
 
               SizedBox(
                 width: double.infinity,
@@ -2613,7 +3319,7 @@ class CustomerDetailV2Page extends StatelessWidget {
                   onPressed: () => Get.back(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
-                    const Color(0xFF3153D8),
+                    const Color(0xFFD9B65A),
                     padding:
                     const EdgeInsets.symmetric(
                       vertical: 14,
@@ -2626,7 +3332,8 @@ class CustomerDetailV2Page extends StatelessWidget {
                   child: const Text(
                     "Close",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -2640,30 +3347,45 @@ class CustomerDetailV2Page extends StatelessWidget {
   Widget _infoRowForSim(String label, String value) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 14,
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xff2E3A8C), width: 1.2),
-        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        color: const Color(0xFF151515),
+        border: Border.all(
+          color: const Color(0x44D9B65A),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0x22D9B65A),
+            blurRadius: 8,
+          ),
+        ],
       ),
       child: Row(
         children: [
           Expanded(
             child: Text(
-              "$label  :",
+              "$label :",
               style: const TextStyle(
-                fontSize: 16,
-                color: Color(0xff6B7280),
-                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: Color(0xFFF4E19C),
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 20,
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -2677,25 +3399,40 @@ class CustomerDetailV2Page extends StatelessWidget {
       ) {
     return Padding(
       padding: const EdgeInsets.only(
-        bottom: 8,
+        bottom: 10,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 80,
+          Container(
+            width: 85,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 4,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0x22D9B65A),
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: Text(
               label,
               style: const TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
+                color: Color(0xFFF4E19C),
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
               ),
             ),
           ),
+
+          const SizedBox(width: 10),
+
           Expanded(
             child: Text(
               value,
               style: const TextStyle(
-                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
               ),
             ),
           ),
@@ -2716,123 +3453,375 @@ class CustomerDetailV2Page extends StatelessWidget {
         backgroundColor: Colors.transparent,
         insetPadding: const EdgeInsets.symmetric(horizontal: 14),
         child: Obx(() {
+          // return Container(
+          //   padding: const EdgeInsets.all(16),
+          //   decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.circular(28),
+          //     gradient: const LinearGradient(
+          //       colors: [
+          //         Color(0xFFEAF0FF),
+          //         Color(0xFFFFFFFF),
+          //       ],
+          //       begin: Alignment.topLeft,
+          //       end: Alignment.bottomRight,
+          //     ),
+          //   ),
+          //   child: Column(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: [
+          //
+          //       /// 🔹 HEADER
+          //       Row(
+          //         children: [
+          //           InkWell(
+          //               onTap: () {
+          //                 ctrl.stopAutoLocationRefresh();
+          //                 Get.back();
+          //               },
+          //               child: const Icon(Icons.close)),
+          //           const Spacer(),
+          //           const Text(
+          //             "LockPe Pro",
+          //             style: TextStyle(
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.bold,
+          //             ),
+          //           ),
+          //           const Spacer(),
+          //         ],
+          //       ),
+          //
+          //       const SizedBox(height: 12),
+          //
+          //       /// 🔹 TABS
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //         children: [
+          //           _tabItem("Details", false),
+          //           _tabItem("Commands", true),
+          //           _tabItem("EMI", false),
+          //         ],
+          //       ),
+          //
+          //       const SizedBox(height: 18),
+          //
+          //       /// 🔹 LOCATION CARD
+          //       Container(
+          //         padding: const EdgeInsets.all(14),
+          //         decoration: BoxDecoration(
+          //           borderRadius: BorderRadius.circular(18),
+          //           color: Colors.white,
+          //           boxShadow: [
+          //             BoxShadow(
+          //               blurRadius: 10,
+          //               color: Colors.black.withOpacity(0.05),
+          //             )
+          //           ],
+          //         ),
+          //         child: Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //
+          //             const Text(
+          //               "Recent Locations",
+          //               style: TextStyle(
+          //                 fontWeight: FontWeight.bold,
+          //                 fontSize: 15,
+          //               ),
+          //             ),
+          //
+          //             const SizedBox(height: 8),
+          //
+          //             /// 🕒 TIME
+          //             Text(
+          //               ctrl.lastUpdatedText.value,
+          //               style: const TextStyle(color: Colors.grey),
+          //             ),
+          //
+          //
+          //             const SizedBox(height: 8),
+          //
+          //             /// 📍 LOCATION ROW
+          //             Row(
+          //               children:  [
+          //                 Icon(Icons.location_on, color: Colors.blue),
+          //                 SizedBox(width: 6),
+          //                 // Text(
+          //                 //   "Location",
+          //                 //   style: TextStyle(fontWeight: FontWeight.bold),
+          //                 // ),
+          //                 /// 📍 ADDRESS
+          //                 Text(
+          //                   ctrl.deviceAddress.value,
+          //                   style: const TextStyle(fontSize: 13),
+          //                 ),
+          //
+          //               ],
+          //             ),
+          //
+          //             const SizedBox(height: 8),
+          //
+          //             // /// 📍 ADDRESS
+          //             // Text(
+          //             //   ctrl.deviceAddress.value,
+          //             //   style: const TextStyle(fontSize: 13),
+          //             // ),
+          //
+          //             const SizedBox(height: 8),
+          //
+          //             /// 🟢 STATUS ROW
+          //             Row(
+          //               children: [
+          //                 Container(
+          //                   width: 8,
+          //                   height: 8,
+          //                   decoration: const BoxDecoration(
+          //                     color: Colors.green,
+          //                     shape: BoxShape.circle,
+          //                   ),
+          //                 ),
+          //                 const SizedBox(width: 6),
+          //                 const Text("Live Tracking ON"),
+          //
+          //                 const Spacer(),
+          //
+          //                 // Text(
+          //                 //   ctrl.lastUpdatedText.value,
+          //                 //   style: const TextStyle(
+          //                 //     fontSize: 11,
+          //                 //     color: Colors.grey,
+          //                 //   ),
+          //                 // ),
+          //               ],
+          //             ),
+          //
+          //             const SizedBox(height: 12),
+          //
+          //             /// 🔄 LOADER
+          //             if (ctrl.isLocationLoading.value)
+          //               const Center(
+          //                 child: Padding(
+          //                   padding: EdgeInsets.all(10),
+          //                   child: CircularProgressIndicator(),
+          //                 ),
+          //               ),
+          //
+          //             const SizedBox(height: 10),
+          //
+          //             /// 📍 VIEW MAP BUTTON
+          //             SizedBox(
+          //               width: double.infinity,
+          //               child: ElevatedButton.icon(
+          //                 icon: const Icon(Icons.location_on),
+          //                 label: const Text("View on Map"),
+          //                 style: ElevatedButton.styleFrom(
+          //                   shape: RoundedRectangleBorder(
+          //                     borderRadius: BorderRadius.circular(30),
+          //                   ),
+          //                 ),
+          //                 onPressed: () {
+          //                   openMap(
+          //                     ctrl.latitude.value,
+          //                     ctrl.longitude.value,
+          //                   );
+          //                 },
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //
+          //       const SizedBox(height: 14),
+          //
+          //       /// 🔹 LIVE TRACK TOGGLE
+          //       Container(
+          //         padding: const EdgeInsets.symmetric(horizontal: 12),
+          //         decoration: BoxDecoration(
+          //           borderRadius: BorderRadius.circular(16),
+          //           color: Colors.white,
+          //         ),
+          //         child: const SwitchListTile(
+          //           value: true,
+          //           onChanged: null,
+          //           title: Text("Live Tracking ON"),
+          //           secondary: Icon(Icons.circle, color: Colors.green),
+          //         ),
+          //       ),
+          //
+          //       const SizedBox(height: 16),
+          //
+          //       /// 🔹 BUTTONS
+          //       Column(
+          //         children: [
+          //
+          //           /// 🔄 REFRESH
+          //           GestureDetector(
+          //             onTap: () => ctrl.fetchDeviceLocation(),
+          //             child: Container(
+          //               width: double.infinity,
+          //               padding: const EdgeInsets.symmetric(vertical: 14),
+          //               decoration: BoxDecoration(
+          //                 gradient: const LinearGradient(
+          //                   colors: [Color(0xFF2563EB), Color(0xFF3B82F6)],
+          //                 ),
+          //                 borderRadius: BorderRadius.circular(30),
+          //               ),
+          //               child: const Center(
+          //                 child: Text(
+          //                   "Refresh Location",
+          //                   style: TextStyle(color: Colors.white),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //
+          //           const SizedBox(height: 10),
+          //
+          //           /// ❌ CANCEL
+          //           GestureDetector(
+          //             onTap: () {
+          //               ctrl.stopAutoLocationRefresh();
+          //               Get.back();
+          //             },
+          //             child: Container(
+          //               width: double.infinity,
+          //               padding: const EdgeInsets.symmetric(vertical: 14),
+          //               decoration: BoxDecoration(
+          //                 border: Border.all(color: Colors.blue),
+          //                 borderRadius: BorderRadius.circular(30),
+          //               ),
+          //               child: const Center(
+          //                 child: Text("Cancel"),
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // );
           return Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(28),
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xFFEAF0FF),
-                  Color(0xFFFFFFFF),
-                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1B1B1B),
+                  Color(0xFF0A0A0A),
+                ],
               ),
+              border: Border.all(
+                color: const Color(0x66D9B65A),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0x55D9B65A),
+                  blurRadius: 20,
+                ),
+              ],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
 
-                /// 🔹 HEADER
+                /// HEADER
                 Row(
                   children: [
                     InkWell(
-                        onTap: () {
-                          ctrl.stopAutoLocationRefresh();
-                          Get.back();
-                        },
-                        child: const Icon(Icons.close)),
+                      onTap: () {
+                        ctrl.stopAutoLocationRefresh();
+                        Get.back();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: const Color(0x22D9B65A),
+                          border: Border.all(
+                            color: const Color(0x55D9B65A),
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Color(0xFFD9B65A),
+                        ),
+                      ),
+                    ),
                     const Spacer(),
                     const Text(
-                      "LockPe Pro",
+                      "UNIQ LOCK",
                       style: TextStyle(
+                        color: Color(0xFFF4E19C),
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1,
                       ),
                     ),
                     const Spacer(),
                   ],
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
-                /// 🔹 TABS
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _tabItem("Details", false),
-                    _tabItem("Commands", true),
-                    _tabItem("EMI", false),
-                  ],
-                ),
-
-                const SizedBox(height: 18),
-
-                /// 🔹 LOCATION CARD
+                /// LOCATION CARD
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 10,
-                        color: Colors.black.withOpacity(0.05),
-                      )
-                    ],
+                    color: const Color(0xFF151515),
+                    border: Border.all(
+                      color: const Color(0x44D9B65A),
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
                       const Text(
-                        "Recent Locations",
+                        "Recent Location",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFF4E19C),
+                          fontWeight: FontWeight.w700,
                           fontSize: 15,
                         ),
                       ),
 
                       const SizedBox(height: 8),
 
-                      /// 🕒 TIME
                       Text(
                         ctrl.lastUpdatedText.value,
-                        style: const TextStyle(color: Colors.grey),
+                        style: const TextStyle(
+                          color: Colors.white54,
+                        ),
                       ),
 
+                      const SizedBox(height: 12),
 
-                      const SizedBox(height: 8),
-
-                      /// 📍 LOCATION ROW
                       Row(
-                        children:  [
-                          Icon(Icons.location_on, color: Colors.blue),
-                          SizedBox(width: 6),
-                          // Text(
-                          //   "Location",
-                          //   style: TextStyle(fontWeight: FontWeight.bold),
-                          // ),
-                          /// 📍 ADDRESS
-                          Text(
-                            ctrl.deviceAddress.value,
-                            style: const TextStyle(fontSize: 13),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.location_on,
+                            color: Color(0xFFD9B65A),
                           ),
+                          const SizedBox(width: 8),
 
+                          Expanded(
+                            child: Text(
+                              ctrl.deviceAddress.value,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 14),
 
-                      // /// 📍 ADDRESS
-                      // Text(
-                      //   ctrl.deviceAddress.value,
-                      //   style: const TextStyle(fontSize: 13),
-                      // ),
-
-                      const SizedBox(height: 8),
-
-                      /// 🟢 STATUS ROW
                       Row(
                         children: [
                           Container(
@@ -2844,40 +3833,43 @@ class CustomerDetailV2Page extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 6),
-                          const Text("Live Tracking ON"),
-
-                          const Spacer(),
-
-                          // Text(
-                          //   ctrl.lastUpdatedText.value,
-                          //   style: const TextStyle(
-                          //     fontSize: 11,
-                          //     color: Colors.grey,
-                          //   ),
-                          // ),
+                          const Text(
+                            "Live Tracking ON",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
 
-                      const SizedBox(height: 12),
-
-                      /// 🔄 LOADER
                       if (ctrl.isLocationLoading.value)
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: CircularProgressIndicator(),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xFFD9B65A),
+                            ),
                           ),
                         ),
 
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 16),
 
-                      /// 📍 VIEW MAP BUTTON
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                          icon: const Icon(Icons.location_on),
-                          label: const Text("View on Map"),
+                          icon: const Icon(
+                            Icons.map,
+                            color: Colors.black,
+                          ),
+                          label: const Text(
+                            "View on Map",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                           style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFD9B65A),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
@@ -2896,69 +3888,91 @@ class CustomerDetailV2Page extends StatelessWidget {
 
                 const SizedBox(height: 14),
 
-                /// 🔹 LIVE TRACK TOGGLE
+                /// LIVE TRACKING STATUS
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
+                    color: const Color(0xFF151515),
                     borderRadius: BorderRadius.circular(16),
-                    color: Colors.white,
+                    border: Border.all(
+                      color: const Color(0x44D9B65A),
+                    ),
                   ),
                   child: const SwitchListTile(
                     value: true,
                     onChanged: null,
-                    title: Text("Live Tracking ON"),
-                    secondary: Icon(Icons.circle, color: Colors.green),
+                    title: Text(
+                      "Live Tracking ON",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    secondary: Icon(
+                      Icons.circle,
+                      color: Colors.green,
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 16),
 
-                /// 🔹 BUTTONS
-                Column(
-                  children: [
-
-                    /// 🔄 REFRESH
-                    GestureDetector(
-                      onTap: () => ctrl.fetchDeviceLocation(),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF2563EB), Color(0xFF3B82F6)],
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Refresh Location",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                /// REFRESH
+                GestureDetector(
+                  onTap: () => ctrl.fetchDeviceLocation(),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFFF4E19C),
+                          Color(0xFFD9B65A),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Refresh Location",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
+                  ),
+                ),
 
-                    const SizedBox(height: 10),
+                const SizedBox(height: 10),
 
-                    /// ❌ CANCEL
-                    GestureDetector(
-                      onTap: () {
-                        ctrl.stopAutoLocationRefresh();
-                        Get.back();
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: const Center(
-                          child: Text("Cancel"),
+                /// CLOSE
+                GestureDetector(
+                  onTap: () {
+                    ctrl.stopAutoLocationRefresh();
+                    Get.back();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color(0xFFD9B65A),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Close",
+                        style: TextStyle(
+                          color: Color(0xFFD9B65A),
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -3159,62 +4173,131 @@ class CustomerDetailV2Page extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _importantInfoCard(),
-          const SizedBox(height: 16),
-          _loanProgress(),
-          const SizedBox(height: 16),
-          _emiSettings(),
-          const SizedBox(height: 16),
+          // _importantInfoCard(),
+          // const SizedBox(height: 16),
+
+          // _loanProgress(),
+          // const SizedBox(height: 16),
+          // _emiSettings(),
+          // const SizedBox(height: 16),
           _emiTable(context),
+          SizedBox(height: 30,),
         ],
       ),
     );
   }
+
+  // Widget _importantInfoCard() {
+  //   return Container(
+  //     padding: const EdgeInsets.all(16),
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.circular(18),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withOpacity(.04),
+  //           blurRadius: 10,
+  //         )
+  //       ],
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           children: const [
+  //             Text(
+  //               "Important Info.",
+  //               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(height: 12),
+  //         Row(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             _infoColumnLeft(),
+  //             const SizedBox(width: 12),
+  //             Container(width: 1, height: 150, color: Colors.grey.shade300),
+  //             const SizedBox(width: 12),
+  //             _infoColumnRight(),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _importantInfoCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1B1B1B),
+            Color(0xFF0A0A0A),
+          ],
+        ),
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.04),
-            blurRadius: 10,
-          )
+            color: const Color(0xFFD9B65A).withOpacity(.08),
+            blurRadius: 12,
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
+              Icon(
+                Icons.account_balance_wallet_rounded,
+                color: Color(0xFFD9B65A),
+                size: 18,
+              ),
+              SizedBox(width: 8),
               Text(
-                "Important Info.",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                "Loan Information",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFFF4E19C),
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+          const SizedBox(height: 14),
+
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
             children: [
-              _infoColumnLeft(),
-              const SizedBox(width: 12),
-              Container(width: 1, height: 150, color: Colors.grey.shade300),
-              const SizedBox(width: 12),
-              _infoColumnRight(),
+              _InfoRowV2("Loan ID", ctrl.loanId),
+              _InfoRowV2("Product Price", fmtMoney(ctrl.productPrice)),
+              _InfoRowV2("Loan Amount", fmtMoney(ctrl.loanAmount)),
+              _InfoRowV2("Down Payment", fmtMoney(ctrl.downPayment)),
+              _InfoRowV2("EMI Amount", fmtMoney(ctrl.emiAmount)),
+              _InfoRowV2("Tenure", fmtTenureMonths(ctrl.tenure)),
+              _InfoRowV2("Processing Fee", fmtMoney(ctrl.processingFee)),
+              _InfoRowV2("Loan By", ctrl.loanBy),
+              _InfoRowV2("Down Payment Date", fmtDate(ctrl.downPaymentDate)),
+              _InfoRowV2("First EMI Date", fmtDate(ctrl.firstEmiDate)),
             ],
           ),
         ],
       ),
     );
   }
-
   Widget _infoColumnLeft() {
     return Expanded(
       child: Column(
@@ -3355,49 +4438,105 @@ class CustomerDetailV2Page extends StatelessWidget {
     ));
   }
 
+
   Widget _emiTable(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Obx(() => Column(
-        children: [
-          _tableHeader(),
-          const Divider(),
-          ...List.generate(ctrl.emis.length, (i) {
-            final e = ctrl.emis[i];
-            final color = e.status == CustomerDetailV2EmiStatus.paid
-                ? Colors.green
-                : Colors.red;
-
-            return _emiRow(
-              context,
-              i,
-              e.emiNumber,
-              e.amount,
-              e.status.label,
-              color,
-              paidDate: e.paidDate,
-            );
-          }),
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1B1B1B),
+            Color(0xFF0A0A0A),
+          ],
+        ),
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFD9B65A).withOpacity(.08),
+            blurRadius: 12,
+          ),
         ],
-      )),
+      ),
+      child: Obx(
+            () => Column(
+          children: [
+            _tableHeader(),
+            const SizedBox(height: 8),
+            const Divider(
+              color: Color(0x33D9B65A),
+            ),
+            ...List.generate(ctrl.emis.length, (i) {
+              final e = ctrl.emis[i];
+
+              final color =
+              e.status == CustomerDetailV2EmiStatus.paid
+                  ? Colors.green
+                  : Colors.redAccent;
+
+              return _emiRow(
+                context,
+                i,
+                e.emiNumber,
+                e.amount,
+                e.status.label,
+                color,
+                paidDate: e.paidDate,
+              );
+            }),
+          ],
+        ),
+      ),
     );
   }
-
   Widget _tableHeader() {
-    return Row(
-      children: const [
-        Expanded(child: Text("No", style: TextStyle(fontWeight: FontWeight.w600))),
-        Expanded(child: Text("Amount", style: TextStyle(fontWeight: FontWeight.w600))),
-        Expanded(child: Text("Status", style: TextStyle(fontWeight: FontWeight.w600))),
-        Expanded(child: Text("Action", style: TextStyle(fontWeight: FontWeight.w600))),
+    return const Row(
+      children: [
+        Expanded(
+          child: Text(
+            "EMI",
+            style: TextStyle(
+              color: Color(0xFFF4E19C),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            "Amount",
+            style: TextStyle(
+              color: Color(0xFFF4E19C),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            "Status",
+            style: TextStyle(
+              color: Color(0xFFF4E19C),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Text(
+            "Action",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFFF4E19C),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
       ],
     );
   }
-
   Widget _emiRow(
       BuildContext context,
       int index,
@@ -3409,25 +4548,61 @@ class CustomerDetailV2Page extends StatelessWidget {
       }) {
     final bool isPaid = status.toLowerCase() == "paid";
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 12,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF151515),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: const Color(0x22D9B65A),
+        ),
+      ),
       child: Row(
         children: [
-
           Expanded(
-            child: Text("$emiNumber"),
-          ),
-
-          Expanded(
-            child: Text("₹ ${amount ?? 0}"),
+            child: Text(
+              "$emiNumber",
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
 
           Expanded(
             child: Text(
-              status,
-              style: TextStyle(
-                color: color,
+              "₹ ${amount ?? 0}",
+              style: const TextStyle(
+                color: Colors.white,
                 fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 4,
+              ),
+              decoration: BoxDecoration(
+                color: isPaid
+                    ? Colors.green.withOpacity(.12)
+                    : Colors.red.withOpacity(.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                status,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
@@ -3441,7 +4616,7 @@ class CustomerDetailV2Page extends StatelessWidget {
                 vertical: 8,
               ),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(.1),
+                color: Colors.green.withOpacity(.10),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -3450,40 +4625,50 @@ class CustomerDetailV2Page extends StatelessWidget {
                   const Icon(
                     Icons.check_circle,
                     color: Colors.green,
-                    size: 16,
+                    size: 15,
                   ),
                   const SizedBox(width: 5),
-                  Text(
-                    paidDate != null
-                        ? DateFormat("dd MMMM yyyy").format(paidDate)
-                        : "Paid",
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      paidDate != null
+                          ? DateFormat("dd MMM yyyy")
+                          .format(paidDate)
+                          : "Paid",
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.green,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
               ),
             )
-                : ElevatedButton(
-              onPressed: () {
-                ctrl.openChangeStatusSheet(
-                  context,
-                  index,
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff4F6BED),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                : SizedBox(
+              height: 36,
+              child: ElevatedButton(
+                onPressed: () {
+                  ctrl.openChangeStatusSheet(
+                    context,
+                    index,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: const Color(0xFFD9B65A),
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                    BorderRadius.circular(20),
+                  ),
                 ),
-              ),
-              child: const Text(
-                "Action",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
+                child: const Text(
+                  "Update",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ),
@@ -3517,16 +4702,13 @@ class CustomerDetailV2Page extends StatelessWidget {
       {
         "title": "Agreement",
         "url": "local",
-        "icon": Icons.picture_as_pdf, // ✅ PDF icon
-        "isDownload": true, // ✅ NEW FLAG
+        "icon": Icons.picture_as_pdf,
+        "isDownload": true,
       },
     ];
 
-    // final availableDocs =
-    // docs.where((d) => (d["url"] as String).trim().isNotEmpty).toList();
-
     final availableDocs = docs.where((d) {
-      if (d["isAgreement"] == true) return true; // ✅ always show
+      if (d["isDownload"] == true) return true;
       return (d["url"] as String).trim().isNotEmpty;
     }).toList();
 
@@ -3534,13 +4716,22 @@ class CustomerDetailV2Page extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(22),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1B1B1B),
+            Color(0xFF0A0A0A),
+          ],
+        ),
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: const Color(0xFFD9B65A).withOpacity(.08),
+            blurRadius: 14,
           ),
         ],
       ),
@@ -3549,23 +4740,32 @@ class CustomerDetailV2Page extends StatelessWidget {
         children: [
           const Text(
             "Documents",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFFF4E19C),
+            ),
           ),
 
           const SizedBox(height: 16),
 
           if (availableDocs.isEmpty)
-            const Text("No documents available")
+            const Text(
+              "No documents available",
+              style: TextStyle(
+                color: Colors.white70,
+              ),
+            )
           else
             Wrap(
-              spacing: 8,
+              spacing: 10,
               runSpacing: 10,
               children: availableDocs.map((doc) {
                 return _documentCard(
                   title: doc["title"] as String,
                   url: doc["url"] as String,
                   icon: doc["icon"] as IconData,
-                  isAgreement: doc["isAgreement"] == true, // ✅ important
+                  isAgreement: doc["isDownload"] == true,
                 );
               }).toList(),
             ),
@@ -3573,7 +4773,6 @@ class CustomerDetailV2Page extends StatelessWidget {
       ),
     );
   }
-
   Widget _documentCard({
     required String title,
     required String url,
@@ -3582,45 +4781,79 @@ class CustomerDetailV2Page extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
-        if (url =="local") {
-          ctrl.generateAgreementFromCustomerDetail(); // 🔥 MAIN CALL
+        if (url == "local") {
+          ctrl.generateAgreementFromCustomerDetail();
         } else {
           ctrl.viewDoc(url);
         }
       },
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        width: 110,
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+        width: 115,
+        padding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 10,
+        ),
         decoration: BoxDecoration(
-          color: const Color(0xffF3F6FF),
-          borderRadius: BorderRadius.circular(14),
+          color: const Color(0xFF151515),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0x44D9B65A),
+          ),
         ),
         child: Column(
           children: [
-            Icon(icon, size: 28, color: const Color(0xff4F6BED)),
-            const SizedBox(height: 8),
+            Container(
+              height: 46,
+              width: 46,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0x22D9B65A),
+                border: Border.all(
+                  color: const Color(0x55D9B65A),
+                ),
+              ),
+              child: Icon(
+                icon,
+                size: 24,
+                color: const Color(0xFFD9B65A),
+              ),
+            ),
+
+            const SizedBox(height: 10),
 
             Text(
               title,
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontSize: 12,
-                color: Color(0xff4F6BED),
+                color: Color(0xFFF4E19C),
                 fontWeight: FontWeight.w600,
               ),
             ),
 
             const SizedBox(height: 6),
 
-            Text(
-              isAgreement ? "Download" : "View", // ✅ dynamic
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                color: Color(0xff4F6BED),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 4,
               ),
-            )
+              decoration: BoxDecoration(
+                color: const Color(0x22D9B65A),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                isAgreement ? "DOWNLOAD" : "VIEW",
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFFD9B65A),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -3684,19 +4917,55 @@ class CustomerDetailV2Page extends StatelessWidget {
 }
 
 class _InfoRowV2 extends StatelessWidget {
-  final String label, value;
-  const _InfoRowV2(this.label, this.value);
+  final String label;
+  final String value;
+
+  const _InfoRowV2(
+      this.label,
+      this.value,
+      );
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+    return Container(
+      width: (MediaQuery.of(context).size.width - 70) / 2,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF151515),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: const Color(0x33D9B65A),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
-          const SizedBox(height: 2),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 11,
+              color: Colors.white60,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+
+          const SizedBox(height: 4),
+
+          Text(
+            value.isEmpty ? "-" : value,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFFF4E19C),
+            ),
+          ),
         ],
       ),
     );

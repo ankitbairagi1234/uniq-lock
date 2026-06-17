@@ -328,13 +328,88 @@ class AddVideoBannerScreen extends StatelessWidget {
     }
   }
 
-  /// 🔥 Beautiful Card UI
+  // /// 🔥 Beautiful Card UI
+  // Widget buildCard({
+  //   required String title,
+  //   required String subtitle,
+  //   required String url,
+  //   required IconData icon,
+  //   required Color color,
+  // }) {
+  //   return GestureDetector(
+  //     onTap: () => openYoutube(url),
+  //     child: Container(
+  //       margin: const EdgeInsets.only(bottom: 20),
+  //       padding: const EdgeInsets.all(18),
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(18),
+  //         gradient: LinearGradient(
+  //           colors: [
+  //             color.withOpacity(0.9),
+  //             color.withOpacity(0.7),
+  //           ],
+  //         ),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: color.withOpacity(0.3),
+  //             blurRadius: 10,
+  //             offset: const Offset(0, 6),
+  //           )
+  //         ],
+  //       ),
+  //       child: Row(
+  //         children: [
+  //           /// Icon
+  //           Container(
+  //             padding: const EdgeInsets.all(14),
+  //             decoration: BoxDecoration(
+  //               color: Colors.white.withOpacity(0.2),
+  //               shape: BoxShape.circle,
+  //             ),
+  //             child: Icon(icon, color: Colors.white, size: 26),
+  //           ),
+  //
+  //           const SizedBox(width: 16),
+  //
+  //           /// Text
+  //           Expanded(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   title,
+  //                   style: const TextStyle(
+  //                     fontSize: 17,
+  //                     fontWeight: FontWeight.bold,
+  //                     color: Colors.white,
+  //                   ),
+  //                 ),
+  //                 const SizedBox(height: 6),
+  //                 Text(
+  //                   subtitle,
+  //                   style: const TextStyle(
+  //                     fontSize: 13,
+  //                     color: Colors.white70,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //
+  //           /// Arrow
+  //           const Icon(Icons.arrow_forward_ios,
+  //               color: Colors.white, size: 18),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
   Widget buildCard({
     required String title,
     required String subtitle,
     required String url,
     required IconData icon,
-    required Color color,
   }) {
     return GestureDetector(
       onTap: () => openYoutube(url),
@@ -342,36 +417,42 @@ class AddVideoBannerScreen extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 20),
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
-              color.withOpacity(0.9),
-              color.withOpacity(0.7),
+              Color(0xFF1B1B1B),
+              Color(0xFF0A0A0A),
             ],
+          ),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+            color: const Color(0x55D9B65A),
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 6),
-            )
+              color: const Color(0xFFD9B65A).withOpacity(.12),
+              blurRadius: 15,
+            ),
           ],
         ),
         child: Row(
           children: [
-            /// Icon
             Container(
               padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+              decoration: const BoxDecoration(
+                color: Color(0x22D9B65A),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: Colors.white, size: 26),
+              child: Icon(
+                icon,
+                color: const Color(0xFFD9B65A),
+                size: 26,
+              ),
             ),
 
             const SizedBox(width: 16),
 
-            /// Text
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,7 +462,7 @@ class AddVideoBannerScreen extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Color(0xFFF4E19C),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -396,19 +477,20 @@ class AddVideoBannerScreen extends StatelessWidget {
               ),
             ),
 
-            /// Arrow
-            const Icon(Icons.arrow_forward_ios,
-                color: Colors.white, size: 18),
+            const Icon(
+              Icons.play_circle_fill_rounded,
+              color: Color(0xFFD9B65A),
+              size: 28,
+            ),
           ],
         ),
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: const Color(0xFF0A0A0A),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -418,7 +500,21 @@ class AddVideoBannerScreen extends StatelessWidget {
               /// Back
               GestureDetector(
                 onTap: () => Get.back(),
-                child: const Icon(Icons.arrow_back),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF151515),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color(0x55D9B65A),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0xFFD9B65A),
+                    size: 18,
+                  ),
+                ),
               ),
 
               const SizedBox(height: 20),
@@ -429,6 +525,7 @@ class AddVideoBannerScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
+                  color: Color(0xFFF4E19C),
                 ),
               ),
 
@@ -436,7 +533,9 @@ class AddVideoBannerScreen extends StatelessWidget {
 
               const Text(
                 "Learn installation with step-by-step videos",
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(
+                  color: Colors.white70,
+                ),
               ),
 
               const SizedBox(height: 30),
@@ -447,7 +546,6 @@ class AddVideoBannerScreen extends StatelessWidget {
                 subtitle: "Step-by-step guide for new key setup",
                 url: "https://youtu.be/-0eEB3Pkcf0",
                 icon: Icons.vpn_key,
-                color: Colors.blue,
               ),
 
               /// 🔥 RUNNING KEY VIDEO
@@ -456,7 +554,6 @@ class AddVideoBannerScreen extends StatelessWidget {
                 subtitle: "Guide for already running key",
                 url: "https://youtu.be/KQryAyr7rkw",
                 icon: Icons.settings,
-                color: Colors.deepPurple,
               ),
             ],
           ),

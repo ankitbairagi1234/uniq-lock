@@ -127,8 +127,10 @@ class CommonBottomButton extends StatelessWidget {
     super.key,
     required this.title,
     required this.onTap,
-    this.buttonColor = const Color(0xFF3153D8),
-    this.backgroundColor = const Color(0xFFDFE1E7),
+    // this.buttonColor = const Color(0xFF3153D8),
+    // this.backgroundColor = const Color(0xFFDFE1E7),
+    this.buttonColor = const Color(0xFFD9B65A),
+    this.backgroundColor = const Color(0xFF0A0A0A),
     this.showAgreement = false,
     this.agreeRx,
     this.isButtonDisabled = false,
@@ -149,11 +151,30 @@ class CommonBottomButton extends StatelessWidget {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: const BorderRadius.only(
+          // decoration: BoxDecoration(
+          //   color: backgroundColor,
+          //   borderRadius: const BorderRadius.only(
+          //     topLeft: Radius.circular(32),
+          //     topRight: Radius.circular(32),
+          //   ),
+          // ),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF1B1B1B),
+                Color(0xFF0A0A0A),
+              ],
+            ),
+            borderRadius: BorderRadius.only(
               topLeft: Radius.circular(32),
               topRight: Radius.circular(32),
+            ),
+            border: Border(
+              top: BorderSide(
+                color: Color(0x55D9B65A),
+              ),
             ),
           ),
           child: Padding(
@@ -170,9 +191,11 @@ class CommonBottomButton extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                       margin: const EdgeInsets.only(bottom: 14),
                       decoration: BoxDecoration(
-                        color: const Color(0xffF6F8FF),
+                        color: const Color(0xFF151515),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xffCBD3EE)),
+                        border: Border.all(
+                          color: const Color(0x55D9B65A),
+                        ),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +203,8 @@ class CommonBottomButton extends StatelessWidget {
                           Checkbox(
                             value: agreeRx!.value,
                             onChanged: (v) => agreeRx!.value = v ?? false,
-                            activeColor: const Color(0xff4F6BED),
+                            activeColor: const Color(0xFFD9B65A),
+                            checkColor: Colors.black,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             visualDensity: VisualDensity.compact,
                           ),
@@ -188,9 +212,9 @@ class CommonBottomButton extends StatelessWidget {
                           const Expanded(
                             child: Text(
                               "I agree to the Terms & Conditions and confirm the customer details are correct.",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 13,
-                                color: Color(0xff1E2A5A),
+                                color: Colors.white,
                                 height: 1.3,
                               ),
                             ),
@@ -217,19 +241,38 @@ class CommonBottomButton extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 12),
                           padding:
                           const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                          // decoration: BoxDecoration(
+                          //   borderRadius: BorderRadius.circular(18),
+                          //   gradient: const LinearGradient(
+                          //     colors: [Color(0xff4F6BED), Color(0xff6F7CFF)],
+                          //   ),
+                          // ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(18),
                             gradient: const LinearGradient(
-                              colors: [Color(0xff4F6BED), Color(0xff6F7CFF)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFFF4E19C),
+                                Color(0xFFD9B65A),
+                                Color(0xFFB8860B),
+                              ],
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x66D9B65A),
+                                blurRadius: 15,
+                              ),
+                            ],
                           ),
+
                           child: Row(
                             children: [
                               Container(
                                 width: 44,
                                 height: 44,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.18),
+                                  color: Colors.black.withOpacity(0.8),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 child: Icon(
@@ -247,10 +290,11 @@ class CommonBottomButton extends StatelessWidget {
                                     const Text(
                                       "Download Agreement",
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: Colors.black,
                                         fontSize: 15,
                                         fontWeight: FontWeight.w700,
                                       ),
+
                                     ),
                                     const SizedBox(height: 3),
                                     Text(
@@ -259,7 +303,7 @@ class CommonBottomButton extends StatelessWidget {
                                           // : "Auto-filled from entered details • Tap to save & open",
                                           : "Tap to save & open",
                                       style: TextStyle(
-                                        color: Colors.white.withOpacity(0.85),
+                                        color: Colors.black87,
                                         fontSize: 12.5,
                                         height: 1.2,
                                       ),
@@ -272,13 +316,13 @@ class CommonBottomButton extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.18),
+                                  color: Colors.black.withOpacity(.08),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 child: Text(
                                   downloading ? "..." : "GET",
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -310,7 +354,7 @@ class CommonBottomButton extends StatelessWidget {
                         child: Text(
                           title,
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
@@ -341,9 +385,11 @@ class CommonBottomButtonUpdate extends StatelessWidget {
     super.key,
     required this.title,
     required this.onTap,
-    this.buttonColor = const Color(0xFF3153D8),
-    this.backgroundColor = const Color(0xFFDFE1E7),
+    // this.buttonColor = const Color(0xFF3153D8),
+    // this.backgroundColor = const Color(0xFFDFE1E7),
 
+    this.buttonColor = const Color(0xFFD9B65A),
+    this.backgroundColor = const Color(0xFF0A0A0A),
     this.showAgreement = false,
     this.agreeRx,
   });
@@ -449,9 +495,8 @@ class CommonLogoutBottomButton extends StatelessWidget {
     super.key,
     required this.title,
     required this.onTap,
-    this.buttonColor = const Color(0xFF3153D8),
-    this.backgroundColor = const Color(0xFFDFE1E7),
-
+    this.buttonColor = const Color(0xFFD9B65A),
+    this.backgroundColor = const Color(0xFF0A0A0A),
     this.showAgreement = false,
     this.agreeRx,
   });
@@ -465,9 +510,23 @@ class CommonLogoutBottomButton extends StatelessWidget {
           onTap: onTap,
           child: Container(
             width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: const BorderRadius.only(
+            // decoration: BoxDecoration(
+            //   color: backgroundColor,
+            //   borderRadius: const BorderRadius.only(
+            //     topLeft: Radius.circular(32),
+            //     topRight: Radius.circular(32),
+            //   ),
+            // ),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF1B1B1B),
+                  Color(0xFF0A0A0A),
+                ],
+              ),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(32),
                 topRight: Radius.circular(32),
               ),
@@ -518,20 +577,62 @@ class CommonLogoutBottomButton extends StatelessWidget {
                         ),
                       ),
                     )),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(vertical: 18),
+                  //   decoration: BoxDecoration(
+                  //     color: buttonColor,
+                  //     borderRadius: BorderRadius.circular(50),
+                  //   ),
+                  //   alignment: Alignment.center,
+                  //   child: Text(
+                  //     title,
+                  //     style: const TextStyle(
+                  //       color: Colors.white,
+                  //       fontSize: 18,
+                  //       fontWeight: FontWeight.w600,
+                  //     ),
+                  //   ),
+                  // ),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     decoration: BoxDecoration(
-                      color: buttonColor,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFF4E19C),
+                          Color(0xFFD9B65A),
+                          Color(0xFFB8860B),
+                        ],
+                      ),
                       borderRadius: BorderRadius.circular(50),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFD9B65A).withOpacity(.35),
+                          blurRadius: 18,
+                          spreadRadius: 1,
+                        ),
+                      ],
                     ),
                     alignment: Alignment.center,
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.logout_rounded,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "Logout",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

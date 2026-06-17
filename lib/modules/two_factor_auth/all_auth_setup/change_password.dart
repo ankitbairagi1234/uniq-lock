@@ -19,7 +19,18 @@ class ChangePasswordDialog {
             width: Get.width * 0.9,
             padding: const EdgeInsets.only(bottom: 22),
             decoration: BoxDecoration(
-              color: Colors.white,
+              // color: Colors.white,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1B1B1B),
+                  Color(0xFF0A0A0A),
+                ],
+              ),
+              border: Border.all(
+                color: const Color(0x55D9B65A),
+              ),
               borderRadius: BorderRadius.circular(32),
               boxShadow: [
                 BoxShadow(
@@ -45,12 +56,16 @@ class ChangePasswordDialog {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Color(0xFFF4E19C),
                         ),
                       ),
                       GestureDetector(
                         onTap: () => Get.back(),
-                        child: const Icon(Icons.close, size: 26),
+                        child: const Icon(
+                          Icons.close,
+                          size: 26,
+                          color: Color(0xFFD9B65A),
+                        ),
                       ),
                     ],
                   ),
@@ -59,7 +74,7 @@ class ChangePasswordDialog {
                 // Divider
                 Container(
                   height: 1,
-                  color: Colors.grey.shade300,
+                  color: const Color(0x33D9B65A),
                 ),
 
                 const SizedBox(height: 20),
@@ -95,7 +110,16 @@ class ChangePasswordDialog {
                       width: Get.width * 0.75,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF3B5AF6),
+                        // color: const Color(0xFF3B5AF6),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFF4E19C),
+                            Color(0xFFD9B65A),
+                            Color(0xFFB8860B),
+                          ],
+                        ),
                         borderRadius: BorderRadius.circular(40),
                       ),
                       child: Center(
@@ -104,7 +128,7 @@ class ChangePasswordDialog {
                           height: 22,
                           width: 22,
                           child: CircularProgressIndicator(
-                            color: Colors.white,
+                            color: Colors.black,
                             strokeWidth: 2,
                           ),
                         )
@@ -112,7 +136,7 @@ class ChangePasswordDialog {
                           "Save",
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -138,28 +162,57 @@ class ChangePasswordDialog {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 22),
       padding: const EdgeInsets.symmetric(horizontal: 18),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(40),
+      //   border: Border.all(
+      //     color: const Color(0xFFE2E2E2),
+      //     width: 1.3,
+      //   ),
+      // ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF151515),
         borderRadius: BorderRadius.circular(40),
         border: Border.all(
-          color: const Color(0xFFE2E2E2),
-          width: 1.3,
+          color: const Color(0x55D9B65A),
+          width: 1.2,
         ),
       ),
       child: Obx(() {
         return TextField(
           controller: controller,
           obscureText: !visibility.value,
+          // decoration: InputDecoration(
+          //   hintText: hint,
+          //   border: InputBorder.none,
+          //
+          //   /// 👁️ EYE ICON
+          //   suffixIcon: IconButton(
+          //     icon: Icon(
+          //       visibility.value
+          //           ? Icons.visibility
+          //           : Icons.visibility_off,
+          //     ),
+          //     onPressed: () {
+          //       visibility.value = !visibility.value;
+          //     },
+          //   ),
+          // ),
+          style: const TextStyle(
+            color: Colors.white,
+          ),
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: const TextStyle(
+              color: Colors.white54,
+            ),
             border: InputBorder.none,
-
-            /// 👁️ EYE ICON
             suffixIcon: IconButton(
               icon: Icon(
                 visibility.value
                     ? Icons.visibility
                     : Icons.visibility_off,
+                color: const Color(0xFFD9B65A),
               ),
               onPressed: () {
                 visibility.value = !visibility.value;
@@ -184,7 +237,18 @@ class ChangePasswordDialogForRetailer {
             width: Get.width * 0.9,
             padding: const EdgeInsets.only(bottom: 22),
             decoration: BoxDecoration(
-              color: Colors.white,
+              // color: Colors.white,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1B1B1B),
+                  Color(0xFF0A0A0A),
+                ],
+              ),
+              border: Border.all(
+                color: const Color(0x55D9B65A),
+              ),
               borderRadius: BorderRadius.circular(32),
               boxShadow: [
                 BoxShadow(
@@ -210,12 +274,16 @@ class ChangePasswordDialogForRetailer {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Color(0xFFF4E19C),
                         ),
                       ),
                       GestureDetector(
                         onTap: () => Get.back(),
-                        child: const Icon(Icons.close, size: 26),
+                        child: const Icon(
+                          Icons.close,
+                          size: 26,
+                          color: Color(0xFFD9B65A),
+                        )
                       ),
                     ],
                   ),
@@ -262,7 +330,16 @@ class ChangePasswordDialogForRetailer {
                       width: Get.width * 0.75,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF3B5AF6),
+                        // color: const Color(0xFF3B5AF6),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFF4E19C),
+                            Color(0xFFD9B65A),
+                            Color(0xFFB8860B),
+                          ],
+                        ),
                         borderRadius: BorderRadius.circular(40),
                       ),
                       child: Center(
@@ -306,19 +383,34 @@ class ChangePasswordDialogForRetailer {
       margin: const EdgeInsets.symmetric(horizontal: 22),
       padding: const EdgeInsets.symmetric(horizontal: 18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF151515),
         borderRadius: BorderRadius.circular(40),
         border: Border.all(
-          color: const Color(0xFFE2E2E2),
-          width: 1.3,
+          color: const Color(0x55D9B65A),
+          width: 1.2,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFD9B65A).withOpacity(.08),
+            blurRadius: 10,
+          ),
+        ],
       ),
       child: Obx(() {
         return TextField(
           controller: controller,
           obscureText: !visibility.value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+          ),
+          cursorColor: const Color(0xFFD9B65A),
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: const TextStyle(
+              color: Colors.white54,
+              fontSize: 14,
+            ),
             border: InputBorder.none,
 
             /// 👁️ EYE ICON
@@ -327,6 +419,7 @@ class ChangePasswordDialogForRetailer {
                 visibility.value
                     ? Icons.visibility
                     : Icons.visibility_off,
+                color: const Color(0xFFD9B65A),
               ),
               onPressed: () {
                 visibility.value = !visibility.value;
@@ -337,7 +430,6 @@ class ChangePasswordDialogForRetailer {
       }),
     );
   }
-
 }
 
 class CreditDebitDialog {
@@ -362,7 +454,18 @@ class CreditDebitDialog {
             width: Get.width * 0.9,
             padding: const EdgeInsets.only(bottom: 22),
             decoration: BoxDecoration(
-              color: Colors.white,
+              // color: Colors.white,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1B1B1B),
+                  Color(0xFF0A0A0A),
+                ],
+              ),
+              border: Border.all(
+                color: const Color(0x55D9B65A),
+              ),
               borderRadius: BorderRadius.circular(32),
               boxShadow: [
                 BoxShadow(
@@ -387,14 +490,18 @@ class CreditDebitDialog {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Color(0xFFF4E19C),
                         ),
                       ),
                       GestureDetector(
                         onTap: () {
                           if (!controller.isSaving.value) Get.back();
                         },
-                        child: const Icon(Icons.close, size: 26),
+                        child: const Icon(
+                          Icons.close,
+                          size: 26,
+                          color: Color(0xFFD9B65A),
+                        ),
                       ),
                     ],
                   ),
@@ -553,7 +660,16 @@ class CreditDebitDialog {
                       width: Get.width * 0.75,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF3B5AF6),
+                        // color: const Color(0xFF3B5AF6),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFF4E19C),
+                            Color(0xFFD9B65A),
+                            Color(0xFFB8860B),
+                          ],
+                        ),
                         borderRadius: BorderRadius.circular(40),
                       ),
                       child: Center(
@@ -595,17 +711,36 @@ class CreditDebitDialog {
       margin: const EdgeInsets.symmetric(horizontal: 22),
       padding: const EdgeInsets.symmetric(horizontal: 18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF151515),
         borderRadius: BorderRadius.circular(40),
-        border: Border.all(color: const Color(0xFFE2E2E2), width: 1.3),
+        border: Border.all(
+          color: const Color(0x55D9B65A),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFD9B65A).withOpacity(.08),
+            blurRadius: 10,
+          ),
+        ],
       ),
       child: TextField(
         controller: controller,
         keyboardType: TextInputType.number,
-        obscureText: false,
-        decoration: InputDecoration(
-          hintText: hint,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+        ),
+        cursorColor: const Color(0xFFD9B65A),
+        decoration: const InputDecoration(
           border: InputBorder.none,
+          hintText: "",
+        ).copyWith(
+          hintText: hint,
+          hintStyle: const TextStyle(
+            color: Colors.white54,
+            fontSize: 14,
+          ),
         ),
       ),
     );
